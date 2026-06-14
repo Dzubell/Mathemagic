@@ -1,0 +1,1877 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mathemagic — Ôn thi Toán THCS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<script src="https://www.geogebra.org/apps/deployggb.js"></script>
+<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<canvas id="canvas-bg"></canvas>
+
+<!-- TOP NAV -->
+<nav class="top-nav">
+  <div class="logo" onclick="showSection('home')"><div class="logo-icon">∑</div>Math<span>emagic</span></div>
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="showSection('home')" id="tab-home"><i class="ti ti-home-2"></i>Trang chủ</div>
+    <div class="nav-tab" onclick="showSection('knowledge')" id="tab-knowledge"><i class="ti ti-books"></i>Kho kiến thức</div>
+    <div class="nav-tab" onclick="showSection('exercises')" id="tab-exercises"><i class="ti ti-edit"></i>Kho bài tập</div>
+  </div>
+  <div class="nav-right" id="nav-right-area">
+    <!-- Injected by Clerk init -->
+  </div>
+</nav>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="bnav-tab active" onclick="showSection('home')" id="btab-home"><i class="ti ti-home-2"></i><span>Trang chủ</span></div>
+  <div class="bnav-tab" onclick="showSection('knowledge')" id="btab-knowledge"><i class="ti ti-books"></i><span>Kiến thức</span></div>
+  <div class="bnav-tab" onclick="showSection('exercises')" id="btab-exercises"><i class="ti ti-edit"></i><span>Bài tập</span></div>
+  <div class="mobile-profile-wrap" id="mobile-profile-wrap">
+    <div class="bnav-tab" onclick="toggleMobileProfileMenu(event)" id="btab-profile"><i class="ti ti-user-circle"></i><span>Hồ sơ</span></div>
+    <div class="mobile-profile-dropdown" id="mobile-profile-dropdown"></div>
+  </div>
+</nav>
+
+<main>
+
+<!-- ══ HOME ══ -->
+<section class="section active" id="section-home">
+  <div class="hero">
+    <div class="hero-badge"><i class="ti ti-sparkles" style="font-size:12px"></i>Nền tảng ôn thi lớp 10</div>
+    <h1>Chinh phục Toán THCS<br>cùng Mathemagic</h1>
+    <p>Hệ thống kiến thức toàn diện từ lớp 6 đến lớp 9 — lý thuyết rõ ràng, bài tập đa dạng, luyện thi chuyên sâu.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="showSection('knowledge')"><i class="ti ti-books" style="font-size:15px;margin-right:5px"></i>Bắt đầu học</button>
+      <button class="btn-outline" onclick="showSection('exercises')"><i class="ti ti-edit" style="font-size:15px;margin-right:5px"></i>Luyện bài tập</button>
+    </div>
+  </div>
+  <div class="home-cards">
+    <div class="home-card" onclick="showSection('knowledge')">
+      <div class="card-icon-wrap" style="background:linear-gradient(135deg,rgba(55,48,163,.18),rgba(55,48,163,.08))">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="12" y2="15"/></svg>
+      </div>
+      <h3>Kho kiến thức</h3>
+      <p>Lý thuyết, công thức và định lý được hệ thống theo từng lớp từ 6 đến 9.</p>
+      <span class="card-tag" style="background:rgba(55,48,163,.13);color:var(--primary)">16 chủ đề</span>
+    </div>
+    <div class="home-card" onclick="showSection('exercises')">
+      <div class="card-icon-wrap" style="background:linear-gradient(135deg,rgba(4,120,87,.18),rgba(4,120,87,.08))">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/><polyline points="9 9 10 9 12 11"/></svg>
+      </div>
+      <h3>Kho bài tập</h3>
+      <p>Bài tập từ cơ bản đến chuyên sâu, luyện thi với đầy đủ gợi ý và đáp án.</p>
+      <span class="card-tag" style="background:rgba(4,120,87,.13);color:var(--green)">4 cấp độ</span>
+    </div>
+    <div class="home-card" onclick="openPlayground()">
+      <div class="card-icon-wrap" style="background:linear-gradient(135deg,rgba(8,145,178,.18),rgba(8,145,178,.08))">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><line x1="3" y1="12" x2="9" y2="12"/><line x1="15" y1="12" x2="21" y2="12"/><line x1="12" y1="3" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="21"/><path d="M7.05 7.05a7 7 0 0 1 9.9 0"/><path d="M7.05 16.95a7 7 0 0 0 9.9 0"/></svg>
+      </div>
+      <h3>Sân chơi hình học</h3>
+      <p>Vẽ hình, khám phá định lý và kiểm chứng trực quan với công cụ đồ họa tương tác.</p>
+      <span class="card-tag" style="background:rgba(8,145,178,.13);color:var(--teal)">GeoGebra</span>
+    </div>
+  </div>
+  <div class="section-title"><i class="ti ti-flame"></i>Chủ đề trọng tâm thi lớp 10</div>
+  <div class="shortcut-grid">
+    <div class="shortcut-card" onclick="openLesson('can-thuc')"><div class="sc-grade">Lớp 9</div><div class="sc-title">Căn thức đại số</div><div class="sc-sub">Rút gọn, trục căn thức</div></div>
+    <div class="shortcut-card" onclick="openLesson('pt-bac2')"><div class="sc-grade">Lớp 9</div><div class="sc-title">Phương trình bậc 2</div><div class="sc-sub">Biệt thức, Vi-ét</div></div>
+    <div class="shortcut-card" onclick="openLesson('duong-tron')"><div class="sc-grade">Lớp 9</div><div class="sc-title">Đường tròn</div><div class="sc-sub">Góc, tiếp tuyến, nội tiếp</div></div>
+    <div class="shortcut-card" onclick="openLesson('bdt')"><div class="sc-grade" style="color:var(--violet)">Nâng cao</div><div class="sc-title">Bất đẳng thức</div><div class="sc-sub">AM-GM, BCS</div></div>
+  </div>
+</section>
+
+<!-- ══ KNOWLEDGE ══ -->
+<section class="section" id="section-knowledge">
+  <div id="knowledge-list">
+    <div class="section-title"><i class="ti ti-books"></i>Kho kiến thức</div>
+    <div class="book-tabs" id="book-tabs" style="display:flex;gap:6px;margin-bottom:1.2rem;flex-wrap:wrap">
+  <button class="grade-tab active" onclick="setBookTab('theory',this)" style="font-size:.78rem">📐 Lý thuyết</button>
+  <button class="grade-tab" onclick="setBookTab('ket-noi',this)" style="font-size:.78rem">📘 Kết Nối Tri Thức</button>
+</div>
+
+<div id="book-pdf-viewer" style="display:none">
+  <!-- Book list panel -->
+  <div id="pdf-panel" style="background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow)">
+    <div id="pdf-header" style="margin-bottom:1rem"></div>
+    <div id="pdf-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.85rem"></div>
+  </div>
+  <!-- Embedded PDF reader panel -->
+  <div id="pdf-embed-panel" style="display:none;background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)">
+    <div style="display:flex;align-items:center;gap:10px;padding:.9rem 1.2rem;border-bottom:1.5px solid var(--border);background:var(--bg)">
+      <button onclick="closePdfEmbed()" style="display:flex;align-items:center;gap:5px;padding:6px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg2);color:var(--primary);font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
+        <i class="ti ti-arrow-left" style="font-size:15px"></i> Quay lại
+      </button>
+      <span id="pdf-embed-title" style="font-size:.92rem;font-weight:800;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+      <a id="pdf-embed-open" href="#" target="_blank" style="display:flex;align-items:center;gap:5px;padding:6px 14px;border:1.5px solid rgba(55,48,163,.3);border-radius:var(--radius-sm);background:rgba(55,48,163,.07);color:var(--primary);font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:700;text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(55,48,163,.14)'" onmouseout="this.style.background='rgba(55,48,163,.07)'">
+        <i class="ti ti-external-link" style="font-size:14px"></i> Mở tab mới
+      </a>
+    </div>
+    <iframe id="pdf-embed-frame" src="" style="width:100%;height:calc(100vh - 220px);min-height:500px;border:0;display:block" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  </div>
+</div>
+    <div class="search-bar"><i class="ti ti-search"></i><input type="text" placeholder="Tìm kiếm chủ đề..." oninput="filterTopics(this.value)"></div>
+    <div class="grade-tabs">
+      <div class="grade-tab active" onclick="setGrade(6,this)">Lớp 6</div>
+      <div class="grade-tab" onclick="setGrade(7,this)">Lớp 7</div>
+      <div class="grade-tab" onclick="setGrade(8,this)">Lớp 8</div>
+      <div class="grade-tab" onclick="setGrade(9,this)">Lớp 9</div>
+      <div class="grade-tab" onclick="setGrade(0,this)">Tất cả</div>
+    </div>
+    <div class="topics-grid" id="topics-grid"></div>
+  </div>
+  <div id="knowledge-lesson" style="display:none"></div>
+</section>
+
+<!-- ══ EXERCISES ══ -->
+<section class="section" id="section-exercises">
+  <div id="exercise-browse">
+    <div class="section-title"><i class="ti ti-edit"></i>Kho bài tập</div>
+    <div class="search-bar"><i class="ti ti-search"></i><input type="text" id="ex-search-input" placeholder="Tìm kiếm bài tập, chủ đề, trường..." oninput="renderExercises()"></div>
+
+    <!-- Filter Panel -->
+    <div class="ex-filter-panel">
+      <!-- Row 1: Difficulty -->
+      <div class="ex-filter-row">
+        <span class="ex-filter-label"><i class="ti ti-layers" style="font-size:13px"></i> Độ khó</span>
+        <div class="ex-filter-chips">
+          <div class="fchip easy active" onclick="toggleDiffFilter('easy',this)"><i class="ti ti-circle-check" style="font-size:12px"></i> Dễ</div>
+          <div class="fchip med active" onclick="toggleDiffFilter('med',this)"><i class="ti ti-flame" style="font-size:12px"></i> Trung bình</div>
+          <div class="fchip hard active" onclick="toggleDiffFilter('hard',this)"><i class="ti ti-bolt" style="font-size:12px"></i> Khó</div>
+          <div class="fchip pro active" onclick="toggleDiffFilter('pro',this)"><i class="ti ti-star" style="font-size:12px"></i> Chuyên</div>
+        </div>
+      </div>
+      <!-- Row 2: Tags + Sort -->
+      <div class="ex-filter-row">
+        <span class="ex-filter-label"><i class="ti ti-map-pin" style="font-size:13px"></i> Lọc thêm</span>
+        <div class="ex-filter-tags">
+          <select class="ex-tag-select" id="filter-city" onchange="renderExercises()">
+            <option value="">🏙 Tất cả tỉnh/thành</option>
+          </select>
+          <select class="ex-tag-select" id="filter-year" onchange="renderExercises()">
+            <option value="">📅 Tất cả năm</option>
+          </select>
+          <select class="ex-tag-select" id="filter-school" onchange="renderExercises()">
+            <option value="">🏫 Tất cả trường</option>
+          </select>
+        </div>
+        <select class="ex-sort-select" id="ex-sort" onchange="renderExercises()">
+          <option value="default">Sắp xếp: Mặc định</option>
+          <option value="year-desc">Năm: Mới nhất</option>
+          <option value="year-asc">Năm: Cũ nhất</option>
+          <option value="diff-asc">Độ khó: Dễ → Khó</option>
+          <option value="diff-desc">Độ khó: Khó → Dễ</option>
+        </select>
+        <button class="filter-clear-btn" onclick="clearFilters()"><i class="ti ti-x" style="font-size:12px"></i> Xóa lọc</button>
+      </div>
+    </div>
+
+    <div class="ex-results-bar" id="ex-results-bar"></div>
+    <div id="exercise-list"></div>
+  </div>
+  <div id="exercise-detail" style="display:none"></div>
+</section>
+
+<!-- ══ PLAYGROUND ══ -->
+<section class="section" id="section-playground">
+  <div class="section-title" style="margin-bottom:1.1rem"><i class="ti ti-vector-triangle"></i>Sân chơi hình học</div>
+  <div class="playground-wrap" id="pg-wrap">
+    <div class="pg-canvas-wrap">
+      <div id="ggbbox" class="ggbbox"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ADMIN PANEL ══ -->
+<section class="section" id="section-admin">
+  <div id="admin-content"></div>
+</section>
+
+<!-- ══ ACCOUNT PAGE ══ -->
+<section class="section" id="section-account">
+  <div class="account-page" id="account-content"></div>
+</section>
+
+</main>
+
+<!-- FIREBASE -->
+<script type="module">
+/* ═══════════════════════════════════
+   FIREBASE CONFIG — fill in your values from the Firebase console
+   (Project settings → Your apps → SDK setup and configuration)
+═══════════════════════════════════ */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, onSnapshot }
+  from "https://www.gstatic.com/firebasejs/11.9.0/firebase-firestore.js";
+
+const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyBoOtG8R-ib9tca1HCmstkRthWuL0KJkco",
+    authDomain: "mathemagic-28c45.firebaseapp.com",
+    projectId: "mathemagic-28c45",
+    storageBucket: "mathemagic-28c45.firebasestorage.app",
+    messagingSenderId: "606105449159",
+    appId: "1:606105449159:web:ad01f39cac760eeead84e2",
+    measurementId: "G-3FMH7C7RK2"
+};
+
+const fbApp = initializeApp(FIREBASE_CONFIG);
+const db    = getFirestore(fbApp);
+
+/* ── Expose helpers to global scope so non-module scripts can use them ── */
+window._db = db;
+window._fbReady = true;
+
+// Collections: exercises/{docId}  theories/{docId}
+// Each exercise doc = the full exercise object (with diff field stored inside)
+// Each theory doc   = the full theory object
+
+window.fbGetExercises = async function(){
+  const snap = await getDocs(collection(db,'exercises'));
+  const ex = {easy:[],med:[],hard:[],pro:[]};
+  snap.forEach(d=>{ const e=d.data(); if(ex[e.diff]) ex[e.diff].push(e); });
+  return ex;
+};
+
+window.fbSaveExercise = async function(exercise){
+  await setDoc(doc(db,'exercises', exercise.id), exercise);
+};
+
+window.fbDeleteExercise = async function(id){
+  await deleteDoc(doc(db,'exercises', id));
+};
+
+window.fbGetTheories = async function(){
+  const snap = await getDocs(collection(db,'theories'));
+  return snap.docs.map(d=>d.data());
+};
+
+window.fbSaveTheory = async function(theory){
+  await setDoc(doc(db,'theories', theory.id), theory);
+};
+
+window.fbDeleteTheory = async function(id){
+  await deleteDoc(doc(db,'theories', id));
+};
+
+// Real-time listeners — update UI whenever Firestore changes
+window._setupRealtimeListeners = function(){
+  onSnapshot(collection(db,'exercises'), ()=>{ if(document.getElementById('exercise-list')) renderExercises(); });
+  onSnapshot(collection(db,'theories'),  ()=>{ renderTopics(); if(document.getElementById('manage-th-items')) renderManageList(); });
+};
+
+// Signal app that Firebase is fully ready
+window.dispatchEvent(new Event('firebase-ready'));
+</script>
+
+<script>
+window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},options:{skipHtmlTags:['script','noscript','style','textarea']},startup:{typeset:false}};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+<!-- CLERK -->
+<script
+  async
+  crossorigin="anonymous"
+  data-clerk-publishable-key="pk_test_ZmFpci13YWxsYWJ5LTIuY2xlcmsuYWNjb3VudHMuZGV2JA"
+  src="https://fair-wallaby-2.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
+  type="text/javascript"
+></script>
+
+<script>
+
+/* ═══════════════════════════════════
+   PARTICLES
+═══════════════════════════════════ */
+(function(){
+  const canvas=document.getElementById('canvas-bg');
+  const ctx=canvas.getContext('2d');
+  const syms=['∑','∫','π','√','∞','θ','Δ','α','β','∂','∇','±','≤','≥','λ','φ','ω','∀','∃','≠'];
+  const cols=['rgba(55,48,163,','rgba(109,40,217,','rgba(14,116,144,','rgba(49,46,129,'];
+  let W,H,pts=[];
+  function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight}
+  resize();addEventListener('resize',resize);
+  function P(){
+    this.r=function(){this.x=Math.random()*W;this.y=H+50;this.s=syms[~~(Math.random()*syms.length)];this.sz=28+Math.random()*28;this.sp=.3+Math.random()*.5;this.o=.16+Math.random()*.16;this.d=(Math.random()-.5)*.45;this.c=cols[~~(Math.random()*cols.length)]};
+    this.r();this.y=Math.random()*H;
+  }
+  for(let i=0;i<55;i++){const p=new P();pts.push(p);}
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(p=>{ctx.globalAlpha=p.o;ctx.fillStyle=p.c+'1)';ctx.font=`700 ${p.sz}px 'JetBrains Mono',monospace`;ctx.fillText(p.s,p.x,p.y);p.y-=p.sp;p.x+=p.d;if(p.y<-50)p.r();if(p.x<-30)p.x=W+30;if(p.x>W+30)p.x=-30;});
+    ctx.globalAlpha=1;requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ═══════════════════════════════════
+   HELPERS
+═══════════════════════════════════ */
+function mjRender(el){if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([el]);}
+function tbl(h){return`<div class="table-wrap">${h}</div>`;}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function showToast(msg,ok=true){
+  const t=document.getElementById('toast');
+  t.textContent=(ok?'✅ ':'❌ ')+msg;
+  t.style.background=ok?'var(--primary)':'var(--red)';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+/* ═══════════════════════════════════
+   AUTH STATE
+═══════════════════════════════════ */
+let isAdmin=false;
+let currentUser=null;
+
+function isAdminUser(user){
+  if(!user)return false;
+  // Check publicMetadata role
+  return user.publicMetadata?.role==='admin';
+}
+
+function updateNavForUser(user){
+  currentUser=user;
+  isAdmin=isAdminUser(user);
+
+  // Admin mode CSS
+  if(isAdmin)document.body.classList.add('admin-mode');
+  else document.body.classList.remove('admin-mode');
+
+  // Nav right button
+  renderNavBtn(user);
+
+  // Refresh visible sections
+  if(document.getElementById('section-account').classList.contains('active')) renderAccountPage();
+  if(document.getElementById('section-admin').classList.contains('active')) renderAdminContent();
+}
+
+function renderProfileMenuItems(user){
+  if(!user){
+    return `<button class="profile-menu-item" onclick="clerkSignIn();closeProfileMenus()"><i class="ti ti-login"></i> Đăng nhập</button>`;
+  }
+  return `
+    <button class="profile-menu-item" onclick="showSection('account');closeProfileMenus()"><i class="ti ti-user-circle"></i> Tài khoản</button>
+    <button class="profile-menu-item" onclick="openPlayground();closeProfileMenus()"><i class="ti ti-vector-triangle"></i> Sân chơi hình học</button>
+    ${isAdmin?`<button class="profile-menu-item" onclick="showSection('admin');closeProfileMenus()"><i class="ti ti-shield-check"></i> Quản trị</button>`:''}
+    <button class="profile-menu-item danger" onclick="doSignOut();closeProfileMenus()"><i class="ti ti-logout"></i> Đăng xuất</button>`;
+}
+
+function renderNavBtn(user){
+  const area=document.getElementById('nav-right-area');
+  const mobileMenu=document.getElementById('mobile-profile-dropdown');
+  if(!user){
+    area.innerHTML=`<button class="clerk-nav-btn" onclick="clerkSignIn()">
+      <i class="ti ti-login" style="font-size:15px"></i> Đăng nhập
+    </button>`;
+  }else{
+    const name=user.firstName||(user.emailAddresses?.[0]?.emailAddress?.split('@')[0])||'User';
+    const avatar=user.imageUrl;
+    area.innerHTML=`<div class="profile-menu" id="desktop-profile-menu">
+      <button class="profile-trigger" type="button" aria-haspopup="true" aria-expanded="false">
+        ${avatar?`<img src="${avatar}" class="user-avatar-sm" alt="avatar">`:`<i class="ti ti-user-circle" style="font-size:18px"></i>`}
+        <span>${name}${isAdmin?' Admin':''}</span>
+        <i class="ti ti-chevron-down"></i>
+      </button>
+      <div class="profile-dropdown">${renderProfileMenuItems(user)}</div>
+    </div>`;
+  }
+  if(mobileMenu)mobileMenu.innerHTML=renderProfileMenuItems(user);
+}
+
+function toggleMobileProfileMenu(ev){
+  ev?.stopPropagation();
+  const wrap=document.getElementById('mobile-profile-wrap');
+  if(wrap)wrap.classList.toggle('open');
+}
+function closeProfileMenus(){
+  document.getElementById('mobile-profile-wrap')?.classList.remove('open');
+}
+document.addEventListener('click',e=>{
+  const wrap=document.getElementById('mobile-profile-wrap');
+  if(wrap && !wrap.contains(e.target))wrap.classList.remove('open');
+});
+
+async function clerkSignIn(){
+  await window.Clerk.openSignIn({});
+}
+
+/* ═══════════════════════════════════
+   CLERK INIT
+═══════════════════════════════════ */
+window.addEventListener('load',async()=>{
+  await window.Clerk.load();
+
+  // Initial state
+  updateNavForUser(window.Clerk.user||null);
+
+  // Listen for auth changes
+  window.Clerk.addListener(({user})=>{
+    updateNavForUser(user||null);
+    // If admin panel is open but user lost admin, kick to home
+    if(!isAdminUser(user) && document.getElementById('section-admin').classList.contains('active')){
+      showSection('home');
+    }
+  });
+});
+
+/* ═══════════════════════════════════
+   ACCOUNT PAGE
+═══════════════════════════════════ */
+/* username cooldown helpers */
+const UN_COOLDOWN_MS=5*24*60*60*1000; // 5 days
+function getUnCooldown(){
+  try{return JSON.parse(localStorage.getItem('mm_un_cd')||'{}');}catch{return{};}
+}
+function setUnCooldown(uid){
+  const d=getUnCooldown();d[uid]=Date.now();
+  localStorage.setItem('mm_un_cd',JSON.stringify(d));
+}
+function canChangeUsername(uid){
+  if(isAdmin)return{ok:true,msg:''};
+  const d=getUnCooldown();
+  if(!d[uid])return{ok:true,msg:''};
+  const diff=Date.now()-d[uid];
+  if(diff>=UN_COOLDOWN_MS)return{ok:true,msg:''};
+  const rem=UN_COOLDOWN_MS-diff;
+  const days=Math.floor(rem/86400000);
+  const hrs=Math.floor((rem%86400000)/3600000);
+  const mins=Math.floor((rem%3600000)/60000);
+  let msg=`Còn ${days>0?days+'n ':''} ${hrs>0?hrs+'g ':''} ${mins}p nữa`;
+  return{ok:false,msg:msg.trim()};
+}
+
+function renderAccountPage(){
+  const el=document.getElementById('account-content');
+  const user=window.Clerk?.user;
+
+  // ── SIGNED OUT ──
+  if(!user){
+    el.innerHTML=`
+      <div class="account-card">
+        <div class="account-signed-out">
+          <i class="ti ti-user-off"></i>
+          <h3>Bạn chưa đăng nhập</h3>
+          <p>Đăng nhập để lưu tiến trình và truy cập đầy đủ tính năng của Mathemagic.</p>
+          <button class="btn-primary" onclick="clerkSignIn()">
+            <i class="ti ti-login" style="font-size:15px;margin-right:6px"></i>Đăng nhập ngay
+          </button>
+        </div>
+      </div>`;
+    return;
+  }
+
+  // ── SIGNED IN ──
+  const uid=user.id;
+  const firstName=user.firstName||'';
+  const lastName=user.lastName||'';
+  const fullName=(firstName+' '+lastName).trim()||'—';
+  const username=user.username||'—';
+  const email=user.emailAddresses?.[0]?.emailAddress||'—';
+  const avatar=user.imageUrl;
+  const joined=user.createdAt?new Date(user.createdAt).toLocaleDateString('vi-VN'):'—';
+  const role=isAdmin?'admin':'user';
+  const {ok:canUN,msg:unMsg}=canChangeUsername(uid);
+
+  el.innerHTML=`
+    <div class="account-card">
+      <div class="account-hero">
+        ${avatar
+          ?`<img src="${avatar}" class="account-avatar" alt="avatar">`
+          :`<div class="account-avatar-fallback">${(firstName||email||'U')[0].toUpperCase()}</div>`
+        }
+        <div class="account-info">
+          <div class="account-name">${fullName}</div>
+          <div class="account-email">${email}</div>
+          <span class="role-badge ${role}">
+            ${role==='admin'
+              ?'<i class="ti ti-shield-check" style="font-size:13px"></i> Quản trị viên'
+              :'<i class="ti ti-user" style="font-size:13px"></i> Học sinh'
+            }
+          </span>
+        </div>
+      </div>
+
+      <!-- Họ và tên thật -->
+      <div class="account-field" style="flex-direction:column;align-items:flex-start;gap:.6rem;padding:1rem 0">
+        <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
+          <span class="account-field-label">Họ và tên</span>
+          <button onclick="toggleRealNameEdit()" id="realname-edit-btn"
+            style="padding:4px 12px;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--primary);font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer">
+            <i class="ti ti-pencil" style="font-size:12px"></i> Sửa
+          </button>
+        </div>
+        <div id="realname-display" style="font-weight:600;color:var(--text);font-size:.9rem">${fullName}</div>
+        <div id="realname-edit" style="display:none;width:100%;gap:.5rem;flex-direction:column">
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+            <input id="inp-firstname" type="text" value="${firstName}" placeholder="Họ & tên đệm"
+              style="flex:1;min-width:120px;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:.88rem;font-family:'Nunito',sans-serif;font-weight:600;background:var(--bg);color:var(--text);outline:none">
+            <input id="inp-lastname" type="text" value="${lastName}" placeholder="Tên"
+              style="flex:1;min-width:100px;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:.88rem;font-family:'Nunito',sans-serif;font-weight:600;background:var(--bg);color:var(--text);outline:none">
+          </div>
+          <div style="display:flex;gap:.5rem">
+            <button onclick="saveRealName()"
+              style="padding:8px 18px;background:linear-gradient(135deg,var(--primary),var(--violet));color:#fff;border:none;border-radius:var(--radius-sm);font-family:'Nunito',sans-serif;font-size:.84rem;font-weight:700;cursor:pointer">
+              Lưu
+            </button>
+            <button onclick="toggleRealNameEdit()"
+              style="padding:8px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);font-family:'Nunito',sans-serif;font-size:.84rem;font-weight:700;cursor:pointer;color:var(--text2)">
+              Hủy
+            </button>
+          </div>
+          <div id="realname-err" style="font-size:.78rem;color:var(--red);font-weight:700;display:none"></div>
+        </div>
+      </div>
+
+      <!-- Tên hiển thị (username) -->
+      <div class="account-field" style="flex-direction:column;align-items:flex-start;gap:.6rem;padding:1rem 0">
+        <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
+          <span class="account-field-label">Tên hiển thị</span>
+          ${canUN
+            ?`<button onclick="toggleUsernameEdit()" id="username-edit-btn"
+                style="padding:4px 12px;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--primary);font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer">
+                <i class="ti ti-pencil" style="font-size:12px"></i> Sửa
+              </button>`
+            :`<span style="font-size:.72rem;color:var(--text3);font-weight:700;background:var(--bg3);padding:4px 10px;border-radius:8px">
+                🕐 ${unMsg}
+              </span>`
+          }
+        </div>
+        <div id="username-display" style="font-weight:600;color:var(--text);font-size:.9rem;font-family:'JetBrains Mono',monospace">@${username}</div>
+        <div id="username-edit" style="display:none;width:100%;gap:.5rem;flex-direction:column">
+          <div style="display:flex;gap:.5rem;align-items:center">
+            <span style="color:var(--text3);font-weight:700;font-size:.9rem">@</span>
+            <input id="inp-username" type="text" value="${username==='—'?'':username}" placeholder="tên_hiển_thị"
+              style="flex:1;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:.88rem;font-family:'JetBrains Mono',monospace;font-weight:600;background:var(--bg);color:var(--text);outline:none">
+          </div>
+          <div style="font-size:.74rem;color:var(--text3);font-weight:600">
+            Chỉ dùng chữ cái, số, dấu gạch dưới (_).
+            ${isAdmin?'Admin không giới hạn thay đổi.':'Có thể thay đổi mỗi <strong>5 ngày</strong> một lần.'}
+          </div>
+          <div style="display:flex;gap:.5rem">
+            <button onclick="saveUsername()"
+              style="padding:8px 18px;background:linear-gradient(135deg,var(--primary),var(--violet));color:#fff;border:none;border-radius:var(--radius-sm);font-family:'Nunito',sans-serif;font-size:.84rem;font-weight:700;cursor:pointer">
+              Lưu
+            </button>
+            <button onclick="toggleUsernameEdit()"
+              style="padding:8px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);font-family:'Nunito',sans-serif;font-size:.84rem;font-weight:700;cursor:pointer;color:var(--text2)">
+              Hủy
+            </button>
+          </div>
+          <div id="username-err" style="font-size:.78rem;color:var(--red);font-weight:700;display:none"></div>
+        </div>
+      </div>
+
+      <div class="account-field">
+        <span class="account-field-label">Email</span>
+        <span class="account-field-val">${email}</span>
+      </div>
+      <div class="account-field">
+        <span class="account-field-label">Ngày tham gia</span>
+        <span class="account-field-val">${joined}</span>
+      </div>
+      <div class="account-field">
+        <span class="account-field-label">Quyền truy cập</span>
+        <span class="account-field-val">${role==='admin'?'👑 Admin — Toàn quyền':'📖 Học sinh — Xem nội dung'}</span>
+      </div>
+    </div>
+
+    <div class="account-card">
+      <div class="account-actions">
+        ${isAdmin?`<button class="account-action-btn admin-go" onclick="showSection('admin')">
+          <i class="ti ti-shield-check"></i> Vào trang Quản trị
+        </button>`:''}
+        <button class="account-action-btn signout" onclick="doSignOut()">
+          <i class="ti ti-logout"></i> Đăng xuất
+        </button>
+      </div>
+    </div>`;
+}
+
+/* ── real name edit ── */
+function toggleRealNameEdit(){
+  const ed=document.getElementById('realname-edit');
+  const ds=document.getElementById('realname-display');
+  const btn=document.getElementById('realname-edit-btn');
+  const showing=ed.style.display==='flex';
+  ed.style.display=showing?'none':'flex';
+  ds.style.display=showing?'block':'none';
+  btn.style.display=showing?'inline-flex':'none';
+}
+async function saveRealName(){
+  const fn=document.getElementById('inp-firstname').value.trim();
+  const ln=document.getElementById('inp-lastname').value.trim();
+  const errEl=document.getElementById('realname-err');
+  if(!fn&&!ln){errEl.textContent='Vui lòng nhập ít nhất họ hoặc tên.';errEl.style.display='block';return;}
+  errEl.style.display='none';
+  try{
+    await window.Clerk.user.update({firstName:fn,lastName:ln});
+    showToast('Đã cập nhật họ và tên!');
+    renderAccountPage();
+  }catch(e){
+    errEl.textContent='Lỗi: '+(e.message||'Không thể lưu.');errEl.style.display='block';
+  }
+}
+
+/* ── username edit ── */
+function toggleUsernameEdit(){
+  const ed=document.getElementById('username-edit');
+  const ds=document.getElementById('username-display');
+  const btn=document.getElementById('username-edit-btn');
+  if(!btn)return;
+  const showing=ed.style.display==='flex';
+  ed.style.display=showing?'none':'flex';
+  ds.style.display=showing?'block':'none';
+  btn.style.display=showing?'inline-flex':'none';
+}
+async function saveUsername(){
+  const val=document.getElementById('inp-username').value.trim();
+  const errEl=document.getElementById('username-err');
+  if(!val){errEl.textContent='Tên hiển thị không được để trống.';errEl.style.display='block';return;}
+  if(!/^[a-zA-Z0-9_]{3,30}$/.test(val)){
+    errEl.textContent='Chỉ dùng chữ cái, số, dấu _ (3–30 ký tự).';errEl.style.display='block';return;
+  }
+  errEl.style.display='none';
+  const uid=window.Clerk.user.id;
+  const {ok,msg}=canChangeUsername(uid);
+  if(!ok){errEl.textContent='Chưa đến hạn đổi tên: '+msg;errEl.style.display='block';return;}
+  try{
+    await window.Clerk.user.update({username:val});
+    if(!isAdmin)setUnCooldown(uid);
+    showToast('Đã cập nhật tên hiển thị!');
+    renderAccountPage();
+  }catch(e){
+    const msg2=e.errors?.[0]?.longMessage||e.message||'Không thể lưu.';
+    errEl.textContent='Lỗi: '+msg2;errEl.style.display='block';
+  }
+}
+
+async function doSignOut(){
+  await window.Clerk.signOut();
+  showSection('home');
+  showToast('Đã đăng xuất thành công!');
+}
+
+/* ═══════════════════════════════════
+   DATA — BUILT-IN
+═══════════════════════════════════ */
+const TOPICS=[
+  {id:'so-hoc',grade:6,title:'Số học và phép tính cơ bản',icon:'ti-123',color:'rgba(55,48,163,.12)',iconColor:'var(--primary)',desc:'Số tự nhiên, số nguyên, ước bội, tính chất chia hết.',badge:'Số & Đại số',bc:'rgba(55,48,163,.1)',bt:'var(--primary)'},
+  {id:'phan-so',grade:6,title:'Phân số và số thập phân',icon:'ti-divide',color:'rgba(4,120,87,.12)',iconColor:'var(--green)',desc:'Rút gọn phân số, so sánh, các phép tính trên phân số.',badge:'Số & Đại số',bc:'rgba(55,48,163,.1)',bt:'var(--primary)'},
+  {id:'hinh-co-ban',grade:6,title:'Hình học cơ bản',icon:'ti-shape',color:'rgba(14,116,144,.12)',iconColor:'var(--teal)',desc:'Điểm, đường thẳng, góc, tam giác, tứ giác.',badge:'Hình học',bc:'rgba(14,116,144,.1)',bt:'var(--teal)'},
+  {id:'ty-le',grade:7,title:'Tỉ lệ thức & Đại lượng tỉ lệ',icon:'ti-arrows-left-right',color:'rgba(109,40,217,.12)',iconColor:'var(--violet)',desc:'Tỉ lệ thức, chia tỉ lệ, đại lượng tỉ lệ thuận/nghịch.',badge:'Số & Đại số',bc:'rgba(55,48,163,.1)',bt:'var(--primary)'},
+  {id:'ham-so-bac1',grade:7,title:'Hàm số bậc nhất y = ax+b',icon:'ti-chart-line',color:'rgba(180,83,9,.12)',iconColor:'var(--amber)',desc:'Đồ thị, tính đơn điệu, vị trí tương đối hai đường thẳng.',badge:'Hàm số',bc:'rgba(109,40,217,.1)',bt:'var(--violet)'},
+  {id:'thong-ke',grade:7,title:'Thống kê & Xác suất',icon:'ti-chart-bar',color:'rgba(4,120,87,.12)',iconColor:'var(--green)',desc:'Trung bình, trung vị, mốt, xác suất biến cố cơ bản.',badge:'Thống kê',bc:'rgba(4,120,87,.1)',bt:'var(--green)'},
+  {id:'hang-dang-thuc',grade:8,title:'7 Hằng đẳng thức đáng nhớ',icon:'ti-math-function',color:'rgba(180,83,9,.12)',iconColor:'var(--amber)',desc:'Bình phương tổng/hiệu, hiệu bình phương, lập phương...',badge:'Đại số',bc:'rgba(180,83,9,.1)',bt:'var(--amber)'},
+  {id:'phan-tich-nttu',grade:8,title:'Phân tích đa thức thành nhân tử',icon:'ti-puzzle',color:'rgba(109,40,217,.12)',iconColor:'var(--violet)',desc:'Đặt nhân tử chung, hằng đẳng thức, nhóm hạng tử.',badge:'Đại số',bc:'rgba(55,48,163,.1)',bt:'var(--primary)'},
+  {id:'pt-bac1',grade:8,title:'Phương trình & hệ PT bậc nhất',icon:'ti-equal',color:'rgba(14,116,144,.1)',iconColor:'var(--teal)',desc:'Phương pháp thế, cộng đại số; bài toán thực tế.',badge:'Đại số',bc:'rgba(55,48,163,.1)',bt:'var(--primary)'},
+  {id:'can-thuc',grade:9,title:'Căn thức và biến đổi căn thức',icon:'ti-square-root',color:'rgba(14,116,144,.1)',iconColor:'var(--teal)',desc:'Điều kiện xác định, rút gọn, trục căn thức, liên hợp.',badge:'Đại số',bc:'rgba(55,48,163,.1)',bt:'var(--primary)'},
+  {id:'ham-so-bac2',grade:9,title:'Hàm số bậc hai y = ax²',icon:'ti-chart-arcs',color:'rgba(109,40,217,.12)',iconColor:'var(--violet)',desc:'Đồ thị parabol, đỉnh, trục đối xứng, tính đơn điệu.',badge:'Hàm số',bc:'rgba(109,40,217,.1)',bt:'var(--violet)'},
+  {id:'pt-bac2',grade:9,title:'Phương trình bậc hai & Vi-ét',icon:'ti-calculator',color:'rgba(185,28,28,.1)',iconColor:'var(--red)',desc:'Biệt thức Δ, nhẩm nghiệm, hệ thức Vi-ét, ứng dụng.',badge:'Đại số',bc:'rgba(55,48,163,.1)',bt:'var(--primary)'},
+  {id:'he-thuc-luong',grade:9,title:'Hệ thức lượng trong tam giác vuông',icon:'ti-triangle',color:'rgba(4,120,87,.12)',iconColor:'var(--green)',desc:'Đường cao, hình chiếu, tỉ số lượng giác.',badge:'Hình học',bc:'rgba(14,116,144,.1)',bt:'var(--teal)'},
+  {id:'duong-tron',grade:9,title:'Đường tròn & tứ giác nội tiếp',icon:'ti-circle',color:'rgba(180,83,9,.1)',iconColor:'var(--amber)',desc:'Góc nội tiếp, tiếp tuyến, chứng minh tứ giác nội tiếp.',badge:'Hình học',bc:'rgba(14,116,144,.1)',bt:'var(--teal)'},
+  {id:'hinh-khong-gian',grade:9,title:'Hình học không gian',icon:'ti-3d-cube-sphere',color:'rgba(185,28,28,.1)',iconColor:'var(--red)',desc:'Trụ, nón, cầu — diện tích & thể tích.',badge:'Hình học',bc:'rgba(14,116,144,.1)',bt:'var(--teal)'},
+  {id:'bdt',grade:9,title:'Bất đẳng thức — AM-GM & BCS',icon:'ti-math-greater',color:'rgba(109,40,217,.12)',iconColor:'var(--violet)',desc:'Cauchy, AM-GM, Bunhiacopski — tìm min/max.',badge:'Nâng cao',bc:'rgba(109,40,217,.1)',bt:'var(--violet)'},
+];
+
+const LESSONS = {
+
+/* ══════════ LỚP 6 ══════════ */
+'so-hoc': `
+<div class="cb"><div class="cb-heading">Số nguyên và tập hợp số</div>
+<div class="defbox">Tập hợp số: \\(\\mathbb{N}\\subset\\mathbb{Z}\\subset\\mathbb{Q}\\subset\\mathbb{R}\\).</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Chia hết cho tổng</span><span class="val">Nếu \\(a\\vdots m\\) và \\(b\\vdots m\\) thì \\((a+b)\\vdots m\\)</span></div>
+  <div class="frow"><span class="lbl">Số ước của \\(n\\)</span><span class="val">\\(n=p_1^{a_1}\\cdot p_2^{a_2}\\cdots\\) → số ước \\(=(a_1+1)(a_2+1)\\cdots\\)</span></div>
+  <div class="frow"><span class="lbl">Quy tắc dấu ngoặc</span><span class="val">\\(a-(b-c)=a-b+c\\)</span></div>
+</div>
+<div class="note"><strong>Lỗi thường gặp:</strong> Bỏ ngoặc sau dấu trừ phải đổi dấu <em>tất cả</em> hạng tử.</div>
+</div>`,
+
+'phan-so': `
+<div class="cb"><div class="cb-heading">Phân số và các phép tính</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Rút gọn</span><span class="val">\\(\\dfrac{a}{b}=\\dfrac{a\\div d}{b\\div d}\\), \\(d=\\text{ƯCLN}(a,b)\\)</span></div>
+  <div class="frow"><span class="lbl">Cộng / Trừ</span><span class="val">\\(\\dfrac{a}{b}\\pm\\dfrac{c}{d}=\\dfrac{ad\\pm bc}{bd}\\)</span></div>
+  <div class="frow"><span class="lbl">Nhân / Chia</span><span class="val">\\(\\dfrac{a}{b}\\times\\dfrac{c}{d}=\\dfrac{ac}{bd}\\); \\(\\dfrac{a}{b}\\div\\dfrac{c}{d}=\\dfrac{ad}{bc}\\)</span></div>
+</div></div>`,
+
+'hinh-co-ban': `
+<div class="cb"><div class="cb-heading">Tam giác cơ bản</div>
+<div class="fbox green">
+  <div class="frow"><span class="lbl">Tổng 3 góc</span><span class="val">\\(\\widehat{A}+\\widehat{B}+\\widehat{C}=180°\\)</span></div>
+  <div class="frow"><span class="lbl">Diện tích</span><span class="val">\\(S=\\dfrac{1}{2}\\times\\text{đáy}\\times h\\)</span></div>
+</div></div>`,
+
+/* ══════════ LỚP 7 ══════════ */
+'ty-le': `
+<div class="cb"><div class="cb-heading">Tỉ lệ thức</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Định nghĩa</span><span class="val">\\(\\dfrac{a}{b}=\\dfrac{c}{d}\\Leftrightarrow a\\cdot d=b\\cdot c\\)</span></div>
+  <div class="frow"><span class="lbl">Tính chất dãy tỉ số</span><span class="val">\\(\\dfrac{a}{b}=\\dfrac{c}{d}=\\dfrac{a+c}{b+d}\\)</span></div>
+</div></div>
+<div class="cb"><div class="cb-heading">Đại lượng tỉ lệ</div>
+<div class="fbox green">
+  <div class="frow"><span class="lbl">Tỉ lệ thuận</span><span class="val">\\(y=kx\\)</span></div>
+  <div class="frow"><span class="lbl">Tỉ lệ nghịch</span><span class="val">\\(xy=k\\) (hằng số)</span></div>
+</div></div>`,
+
+'ham-so-bac1': `
+<div class="cb"><div class="cb-heading">Hàm số bậc nhất \\(y=ax+b\\)</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Đồng biến / Nghịch biến</span><span class="val">\\(a>0\\) tăng; \\(a<0\\) giảm</span></div>
+  <div class="frow"><span class="lbl">Giao trục \\(Oy\\)</span><span class="val">\\((0,b)\\)</span></div>
+  <div class="frow"><span class="lbl">Giao trục \\(Ox\\)</span><span class="val">\\((-b/a,0)\\)</span></div>
+</div></div>
+<div class="cb"><div class="cb-heading">Vị trí tương đối</div>
+${tbl('<table class="kbt"><tr><th>Vị trí</th><th>Điều kiện</th></tr><tr><td>Cắt nhau</td><td>\\(a_1\\neq a_2\\)</td></tr><tr><td>Song song</td><td>\\(a_1=a_2,b_1\\neq b_2\\)</td></tr><tr><td>Trùng nhau</td><td>\\(a_1=a_2,b_1=b_2\\)</td></tr><tr><td>Vuông góc</td><td>\\(a_1 a_2=-1\\)</td></tr></table>')}
+</div>`,
+
+'thong-ke': `
+<div class="cb"><div class="cb-heading">Số đặc trưng & Xác suất</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Trung bình</span><span class="val">\\(\\bar{x}=(x_1+\\cdots+x_n)/n\\)</span></div>
+  <div class="frow"><span class="lbl">Xác suất</span><span class="val">\\(P(A)=\\text{số thuận lợi}/\\text{tổng}\\)</span></div>
+</div></div>`,
+
+/* ══════════ LỚP 8 ══════════ */
+'hang-dang-thuc': `
+<div class="cb"><div class="cb-heading">7 Hằng đẳng thức đáng nhớ</div>
+${tbl('<table class="kbt"><tr><th>#</th><th>Tên</th><th>Công thức</th></tr><tr><td>1</td><td>Bình phương tổng</td><td>\\((a+b)^2=a^2+2ab+b^2\\)</td></tr><tr><td>2</td><td>Bình phương hiệu</td><td>\\((a-b)^2=a^2-2ab+b^2\\)</td></tr><tr><td>3</td><td>Hiệu hai bình phương</td><td>\\(a^2-b^2=(a+b)(a-b)\\)</td></tr><tr><td>4</td><td>Lập phương tổng</td><td>\\((a+b)^3=a^3+3a^2b+3ab^2+b^3\\)</td></tr><tr><td>5</td><td>Lập phương hiệu</td><td>\\((a-b)^3=a^3-3a^2b+3ab^2-b^3\\)</td></tr><tr><td>6</td><td>Tổng hai lập phương</td><td>\\(a^3+b^3=(a+b)(a^2-ab+b^2)\\)</td></tr><tr><td>7</td><td>Hiệu hai lập phương</td><td>\\(a^3-b^3=(a-b)(a^2+ab+b^2)\\)</td></tr></table>')}
+<div class="note"><strong>Lỗi thường gặp:</strong> \\((a+b)^2\\neq a^2+b^2\\).</div></div>`,
+
+'phan-tich-nttu': `
+<div class="cb"><div class="cb-heading">Các phương pháp phân tích</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Đặt nhân tử chung</span><span class="val">\\(ab+ac=a(b+c)\\)</span></div>
+  <div class="frow"><span class="lbl">Hằng đẳng thức</span><span class="val">\\(x^2-4=(x+2)(x-2)\\)</span></div>
+  <div class="frow"><span class="lbl">Nhóm hạng tử</span><span class="val">\\(ac+bc+ad+bd=(a+b)(c+d)\\)</span></div>
+</div>
+<div class="note"><strong>Thứ tự:</strong> ① Đặt nhân tử chung → ② HĐT → ③ Nhóm</div></div>`,
+
+'pt-bac1': `
+<div class="cb"><div class="cb-heading">Phương trình & Hệ phương trình</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">PT bậc nhất</span><span class="val">\\(ax+b=0\\Rightarrow x=-b/a\\)</span></div>
+</div></div>
+<div class="cb"><div class="cb-heading">Hệ PT 2 ẩn</div>
+<div class="fbox green">
+  <div class="frow"><span class="lbl">Phương pháp thế</span><span class="val">Biểu diễn \\(x\\) qua \\(y\\), thế vào PT kia</span></div>
+  <div class="frow"><span class="lbl">Phương pháp cộng</span><span class="val">Triệt tiêu 1 ẩn bằng cách nhân và cộng</span></div>
+</div></div>`,
+
+/* ══════════════════════════════════════════════
+   LỚP 9 — ĐẦY ĐỦ LÝ THUYẾT + VÍ DỤ MINH HỌA
+══════════════════════════════════════════════ */
+
+'can-thuc': `
+<div class="cb"><div class="cb-heading">1. Căn bậc hai — Định nghĩa & Điều kiện</div>
+<div class="defbox">
+  Với \\(A\\geq0\\): \\(\\sqrt{A}\\) là số không âm sao cho \\((\\sqrt{A})^2=A\\).<br>
+  \\(\\sqrt{A}\\) xác định \\(\\Leftrightarrow A\\geq0\\).
+</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">\\(\\sqrt{A^2}=|A|\\)</span><span class="val">\\(\\sqrt{(-3)^2}=\\sqrt{9}=3\\)</span></div>
+  <div class="frow"><span class="lbl">\\(\\sqrt{AB}=\\sqrt{A}\\cdot\\sqrt{B}\\)</span><span class="val">\\(A,B\\geq0\\)</span></div>
+  <div class="frow"><span class="lbl">\\(\\sqrt{\\dfrac{A}{B}}=\\dfrac{\\sqrt{A}}{\\sqrt{B}}\\)</span><span class="val">\\(A\\geq0,B>0\\)</span></div>
+</div>
+<div class="note">
+  <strong>Ví dụ:</strong> ĐK xác định của \\(\\sqrt{3x-6}\\): \\(3x-6\\geq0\\Rightarrow x\\geq2\\).
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">2. Rút gọn căn thức</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Đưa thừa số ra ngoài</span><span class="val">\\(\\sqrt{a^2b}=|a|\\sqrt{b}\\) (\\(b\\geq0\\))</span></div>
+  <div class="frow"><span class="lbl">Đưa vào trong căn</span><span class="val">\\(a\\sqrt{b}=\\sqrt{a^2b}\\) (\\(a\\geq0,b\\geq0\\))</span></div>
+  <div class="frow"><span class="lbl">Khử mẫu</span><span class="val">\\(\\sqrt{\\dfrac{a}{b}}=\\dfrac{\\sqrt{ab}}{b}\\) (\\(a\\geq0,b>0\\))</span></div>
+</div>
+<div class="fbox amber">
+  <strong>Ví dụ rút gọn:</strong><br>
+  \\(\\sqrt{12}-\\sqrt{27}+\\sqrt{48}=2\\sqrt{3}-3\\sqrt{3}+4\\sqrt{3}=3\\sqrt{3}\\)
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">3. Trục căn thức ở mẫu</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Dạng \\(\\dfrac{A}{\\sqrt{B}}\\)</span><span class="val">\\(=\\dfrac{A\\sqrt{B}}{B}\\quad(B>0)\\)</span></div>
+  <div class="frow"><span class="lbl">Dạng \\(\\dfrac{A}{\\sqrt{B}+\\sqrt{C}}\\)</span><span class="val">Nhân tử-mẫu với \\((\\sqrt{B}-\\sqrt{C})\\)</span></div>
+  <div class="frow"><span class="lbl">Dạng \\(\\dfrac{A}{\\sqrt{B}-\\sqrt{C}}\\)</span><span class="val">Nhân tử-mẫu với \\((\\sqrt{B}+\\sqrt{C})\\)</span></div>
+</div>
+<div class="fbox amber">
+  <strong>Ví dụ:</strong> \\(\\dfrac{3}{\\sqrt{5}-\\sqrt{2}}=\\dfrac{3(\\sqrt{5}+\\sqrt{2})}{5-2}=\\sqrt{5}+\\sqrt{2}\\)
+</div>
+<div class="note"><strong>Bắt buộc:</strong> Xét ĐK xác định trước khi biến đổi.</div>
+</div>
+
+<div class="cb"><div class="cb-heading">4. Phương trình vô tỉ — Phương pháp giải</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Dạng \\(\\sqrt{f(x)}=g(x)\\)</span><span class="val">\\(\\Leftrightarrow\\begin{cases}g(x)\\geq0\\\\f(x)=g^2(x)\\end{cases}\\)</span></div>
+  <div class="frow"><span class="lbl">Dạng \\(\\sqrt{f(x)}=\\sqrt{g(x)}\\)</span><span class="val">\\(\\Leftrightarrow\\begin{cases}f(x)\\geq0\\\\f(x)=g(x)\\end{cases}\\)</span></div>
+</div>
+<div class="fbox green">
+  <strong>Ví dụ:</strong> Giải \\(\\sqrt{2x-1}=3\\)<br>
+  ĐK: \\(2x-1\\geq0\\Rightarrow x\\geq\\dfrac{1}{2}\\).<br>
+  \\(2x-1=9\\Rightarrow x=5\\) (thỏa ĐK). ✓
+</div>
+</div>`,
+
+'ham-so-bac2': `
+<div class="cb"><div class="cb-heading">1. Hàm số bậc hai \\(y=ax^2\\;(a\\neq0)\\)</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Tập xác định</span><span class="val">\\(\\mathbb{R}\\) (mọi số thực)</span></div>
+  <div class="frow"><span class="lbl">\\(a>0\\)</span><span class="val">Parabol ∪, đồng biến trên \\([0;+\\infty)\\), nghịch biến trên \\((-\\infty;0]\\)</span></div>
+  <div class="frow"><span class="lbl">\\(a<0\\)</span><span class="val">Parabol ∩, nghịch biến trên \\([0;+\\infty)\\), đồng biến trên \\((-\\infty;0]\\)</span></div>
+  <div class="frow"><span class="lbl">Đỉnh & Trục ĐX</span><span class="val">Đỉnh \\(O(0,0)\\), trục \\(Oy\\)</span></div>
+</div>
+<div class="note">
+  <strong>Bảng giá trị mẫu</strong> \\(y=2x^2\\):
+  \\(x\\in\\{-2,-1,0,1,2\\}\\Rightarrow y\\in\\{8,2,0,2,8\\}\\)
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">2. Hàm số bậc hai tổng quát \\(y=ax^2+bx+c\\)</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Đỉnh parabol</span><span class="val">\\(I\\!\\left(-\\dfrac{b}{2a};\,-\\dfrac{\\Delta}{4a}\\right)\\)</span></div>
+  <div class="frow"><span class="lbl">Trục đối xứng</span><span class="val">\\(x=-\\dfrac{b}{2a}\\)</span></div>
+  <div class="frow"><span class="lbl">Chiều mở</span><span class="val">\\(a>0\\): mở lên; \\(a<0\\): mở xuống</span></div>
+  <div class="frow"><span class="lbl">Giao \\(Oy\\)</span><span class="val">\\((0,c)\\)</span></div>
+</div>
+<div class="fbox green">
+  <strong>Ví dụ:</strong> \\(y=x^2-4x+3\\)<br>
+  Đỉnh: \\(x_0=\\dfrac{4}{2}=2\\); \\(y_0=4-8+3=-1\\). Đỉnh \\(I(2;-1)\\), trục \\(x=2\\).
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">3. Giao điểm với trục \\(Ox\\) & ứng dụng</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Số giao điểm với \\(Ox\\)</span><span class="val">\\(\\Delta>0\\): 2 điểm; \\(\\Delta=0\\): 1 điểm; \\(\\Delta<0\\): 0 điểm</span></div>
+  <div class="frow"><span class="lbl">GTNN (\\(a>0\\))</span><span class="val">\\(y_{\\min}=-\\dfrac{\\Delta}{4a}\\) tại \\(x=-\\dfrac{b}{2a}\\)</span></div>
+  <div class="frow"><span class="lbl">GTLN (\\(a<0\\))</span><span class="val">\\(y_{\\max}=-\\dfrac{\\Delta}{4a}\\) tại \\(x=-\\dfrac{b}{2a}\\)</span></div>
+</div>
+<div class="note">
+  <strong>Lưu ý:</strong> Đường thẳng \\(y=mx+n\\) cắt parabol \\(y=ax^2\\) khi PT \\(ax^2-mx-n=0\\) có nghiệm, tức \\(\\Delta\\geq0\\).
+</div>
+</div>`,
+
+'pt-bac2': `
+<div class="cb"><div class="cb-heading">1. Phương trình bậc hai — Công thức nghiệm</div>
+<div class="defbox">
+  PT: \\(ax^2+bx+c=0\\;(a\\neq0)\\).<br>
+  Biệt thức: \\(\\Delta=b^2-4ac\\).
+</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">\\(\\Delta>0\\)</span><span class="val">2 nghiệm phân biệt: \\(x_{1,2}=\\dfrac{-b\\pm\\sqrt{\\Delta}}{2a}\\)</span></div>
+  <div class="frow"><span class="lbl">\\(\\Delta=0\\)</span><span class="val">Nghiệm kép: \\(x_1=x_2=-\\dfrac{b}{2a}\\)</span></div>
+  <div class="frow"><span class="lbl">\\(\\Delta<0\\)</span><span class="val">Vô nghiệm (trên \\(\\mathbb{R}\\))</span></div>
+</div>
+<div class="fbox amber">
+  <strong>Công thức nghiệm thu gọn</strong> (khi \\(b=2b'\\)):<br>
+  \\(\\Delta'=b'^2-ac\\); \\(x_{1,2}=\\dfrac{-b'\\pm\\sqrt{\\Delta'}}{a}\\)
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">2. Nhẩm nghiệm nhanh</div>
+<div class="fbox green">
+  <div class="frow"><span class="lbl">\\(a+b+c=0\\)</span><span class="val">\\(x_1=1,\\;x_2=c/a\\)</span></div>
+  <div class="frow"><span class="lbl">\\(a-b+c=0\\)</span><span class="val">\\(x_1=-1,\\;x_2=-c/a\\)</span></div>
+</div>
+<div class="note">
+  <strong>Ví dụ:</strong> \\(3x^2-5x+2=0\\): \\(3-5+2=0\\Rightarrow x_1=1,x_2=\\dfrac{2}{3}\\).
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">3. Định lý Vi-ét & Ứng dụng</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Tổng nghiệm</span><span class="val">\\(x_1+x_2=-\\dfrac{b}{a}\\)</span></div>
+  <div class="frow"><span class="lbl">Tích nghiệm</span><span class="val">\\(x_1\\cdot x_2=\\dfrac{c}{a}\\)</span></div>
+</div>
+<div class="fbox green">
+  <strong>Các biểu thức hay dùng:</strong><br>
+  \\(x_1^2+x_2^2=(x_1+x_2)^2-2x_1x_2\\)<br>
+  \\(|x_1-x_2|=\\sqrt{(x_1+x_2)^2-4x_1x_2}=\\dfrac{\\sqrt{\\Delta}}{|a|}\\)<br>
+  \\(x_1^3+x_2^3=(x_1+x_2)^3-3x_1x_2(x_1+x_2)\\)<br>
+  \\(x_1^2-x_2^2=(x_1+x_2)(x_1-x_2)\\)
+</div>
+<div class="fbox amber">
+  <strong>Ví dụ:</strong> PT \\(x^2-5x+4=0\\). Tính \\(x_1^2+x_2^2\\).<br>
+  Vi-ét: \\(S=5,P=4\\). \\(x_1^2+x_2^2=S^2-2P=25-8=17\\).
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">4. Điều kiện để PT có nghiệm thỏa mãn tính chất</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">2 nghiệm phân biệt</span><span class="val">\\(\\Delta>0\\)</span></div>
+  <div class="frow"><span class="lbl">2 nghiệm dương</span><span class="val">\\(\\Delta\\geq0,\\;S>0,\\;P>0\\)</span></div>
+  <div class="frow"><span class="lbl">2 nghiệm âm</span><span class="val">\\(\\Delta\\geq0,\\;S<0,\\;P>0\\)</span></div>
+  <div class="frow"><span class="lbl">2 nghiệm trái dấu</span><span class="val">\\(P<0\\) (không cần xét \\(\\Delta\\))</span></div>
+  <div class="frow"><span class="lbl">2 nghiệm cùng dấu</span><span class="val">\\(P>0\\) và \\(S\\neq0\\)</span></div>
+</div>
+</div>`,
+
+'he-thuc-luong': `
+<div class="cb"><div class="cb-heading">1. Hệ thức lượng trong tam giác vuông</div>
+<div class="defbox">
+  Tam giác \\(ABC\\) vuông tại \\(A\\), đường cao \\(AH\\).<br>
+  Ký hiệu: \\(BC=a,\\;AB=c,\\;AC=b,\\;AH=h,\\;BH=c',\\;CH=b'\\).
+</div>
+${tbl('<table class="kbt"><tr><th>Định lý</th><th>Công thức</th><th>Ý nghĩa</th></tr><tr><td>Cạnh góc vuông</td><td>\\(b^2=a\\cdot b\'\\quad c^2=a\\cdot c\'\\)</td><td>Bình phương cạnh = huyền × hình chiếu</td></tr><tr><td>Đường cao</td><td>\\(h^2=b\'\\cdot c\'\\)</td><td>Bình phương đường cao = tích 2 hình chiếu</td></tr><tr><td>Pythagore</td><td>\\(a^2=b^2+c^2\\)</td><td>—</td></tr><tr><td>Nghịch đảo</td><td>\\(\\dfrac{1}{h^2}=\\dfrac{1}{b^2}+\\dfrac{1}{c^2}\\)</td><td>—</td></tr><tr><td>Quan hệ</td><td>\\(b\\cdot c=a\\cdot h\\)</td><td>Tích 2 cạnh = huyền × đường cao</td></tr></table>')}
+<div class="fbox amber">
+  <strong>Ví dụ:</strong> \\(BH=4,\\;HC=9\\). Tính \\(AH,AB,AC\\).<br>
+  \\(AH^2=4\\times9=36\\Rightarrow AH=6\\).<br>
+  \\(AB^2=BC\\times BH=13\\times4=52\\Rightarrow AB=2\\sqrt{13}\\).<br>
+  \\(AC^2=BC\\times HC=13\\times9=117\\Rightarrow AC=3\\sqrt{13}\\).
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">2. Tỉ số lượng giác của góc nhọn</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">\\(\\sin\\alpha\\)</span><span class="val">cạnh đối / cạnh huyền</span></div>
+  <div class="frow"><span class="lbl">\\(\\cos\\alpha\\)</span><span class="val">cạnh kề / cạnh huyền</span></div>
+  <div class="frow"><span class="lbl">\\(\\tan\\alpha\\)</span><span class="val">cạnh đối / cạnh kề \\(=\\dfrac{\\sin\\alpha}{\\cos\\alpha}\\)</span></div>
+  <div class="frow"><span class="lbl">\\(\\cot\\alpha\\)</span><span class="val">cạnh kề / cạnh đối \\(=\\dfrac{\\cos\\alpha}{\\sin\\alpha}\\)</span></div>
+</div>
+<div class="fbox green">
+  <div class="frow"><span class="lbl">Hệ thức cơ bản</span><span class="val">\\(\\sin^2\\alpha+\\cos^2\\alpha=1\\)</span></div>
+  <div class="frow"><span class="lbl">Quan hệ bù nhau</span><span class="val">\\(\\sin\\alpha=\\cos(90°-\\alpha)\\)</span></div>
+  <div class="frow"><span class="lbl">Quan hệ bù nhau</span><span class="val">\\(\\tan\\alpha=\\cot(90°-\\alpha)\\)</span></div>
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">3. Bảng giá trị đặc biệt</div>
+${tbl('<table class="kbt"><tr><th>Góc</th><th>\\(30°\\)</th><th>\\(45°\\)</th><th>\\(60°\\)</th></tr><tr><td>\\(\\sin\\)</td><td>\\(\\dfrac{1}{2}\\)</td><td>\\(\\dfrac{\\sqrt{2}}{2}\\)</td><td>\\(\\dfrac{\\sqrt{3}}{2}\\)</td></tr><tr><td>\\(\\cos\\)</td><td>\\(\\dfrac{\\sqrt{3}}{2}\\)</td><td>\\(\\dfrac{\\sqrt{2}}{2}\\)</td><td>\\(\\dfrac{1}{2}\\)</td></tr><tr><td>\\(\\tan\\)</td><td>\\(\\dfrac{\\sqrt{3}}{3}\\)</td><td>\\(1\\)</td><td>\\(\\sqrt{3}\\)</td></tr><tr><td>\\(\\cot\\)</td><td>\\(\\sqrt{3}\\)</td><td>\\(1\\)</td><td>\\(\\dfrac{\\sqrt{3}}{3}\\)</td></tr></table>')}
+</div>
+
+<div class="cb"><div class="cb-heading">4. Ứng dụng — Giải tam giác vuông</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Biết cạnh huyền + góc</span><span class="val">cạnh đối \\(=c\\sin\\alpha\\); cạnh kề \\(=c\\cos\\alpha\\)</span></div>
+  <div class="frow"><span class="lbl">Biết 2 cạnh → góc</span><span class="val">\\(\\tan\\alpha=\\dfrac{\\text{đối}}{\\text{kề}}\\Rightarrow\\alpha\\) tra bảng hoặc máy tính</span></div>
+</div>
+<div class="fbox amber">
+  <strong>Ví dụ thực tế:</strong> Thang dài 5m dựa vào tường, chân thang cách tường 3m. Góc thang với mặt đất:<br>
+  \\(\\cos\\alpha=\\dfrac{3}{5}=0{,}6\\Rightarrow\\alpha\\approx53°8'\\).
+</div>
+</div>`,
+
+'duong-tron': `
+<div class="cb"><div class="cb-heading">1. Đường tròn — Định nghĩa & Công thức</div>
+<div class="defbox">
+  Đường tròn \\((O;R)\\): tập hợp các điểm cách \\(O\\) một khoảng \\(R\\).
+</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Chu vi</span><span class="val">\\(C=2\\pi R\\)</span></div>
+  <div class="frow"><span class="lbl">Diện tích</span><span class="val">\\(S=\\pi R^2\\)</span></div>
+  <div class="frow"><span class="lbl">Cung \\(n°\\)</span><span class="val">Độ dài cung: \\(l=\\dfrac{\\pi R n}{180}\\)</span></div>
+  <div class="frow"><span class="lbl">Hình quạt \\(n°\\)</span><span class="val">Diện tích: \\(S_{quạt}=\\dfrac{\\pi R^2 n}{360}\\)</span></div>
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">2. Quan hệ đường thẳng & đường tròn</div>
+${tbl('<table class="kbt"><tr><th>Quan hệ</th><th>Điều kiện (\\(d\\) = khoảng cách tâm đến đường thẳng)</th></tr><tr><td>Cắt nhau (2 điểm chung)</td><td>\\(d < R\\)</td></tr><tr><td>Tiếp xúc (1 điểm chung)</td><td>\\(d = R\\)</td></tr><tr><td>Không giao (0 điểm chung)</td><td>\\(d > R\\)</td></tr></table>')}
+<div class="fbox amber">
+  <strong>Tính chất dây:</strong> Dây \\(AB=8\\;\\text{cm}\\), khoảng cách \\(O\\) đến \\(AB\\) là \\(d=3\\;\\text{cm}\\).<br>
+  \\(R^2=d^2+\\left(\\dfrac{AB}{2}\\right)^2=9+16=25\\Rightarrow R=5\\;\\text{cm}\\).
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">3. Tiếp tuyến đường tròn</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Định nghĩa</span><span class="val">Đường thẳng có đúng 1 điểm chung với đường tròn</span></div>
+  <div class="frow"><span class="lbl">Tính chất</span><span class="val">Tiếp tuyến \\(\\perp\\) bán kính tại tiếp điểm</span></div>
+  <div class="frow"><span class="lbl">Hai tiếp tuyến từ ngoài</span><span class="val">\\(MA=MB\\) (\\(M\\) ngoài đường tròn, \\(A,B\\) tiếp điểm)</span></div>
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">4. Góc nội tiếp — Góc ở tâm</div>
+<div class="fbox green">
+  <div class="frow"><span class="lbl">Góc ở tâm</span><span class="val">= số đo cung bị chắn</span></div>
+  <div class="frow"><span class="lbl">Góc nội tiếp</span><span class="val">= \\(\\dfrac{1}{2}\\) số đo cung bị chắn</span></div>
+  <div class="frow"><span class="lbl">Góc nội tiếp chắn nửa đường tròn</span><span class="val">= \\(90°\\)</span></div>
+</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Góc tạo bởi TT và dây</span><span class="val">= góc nội tiếp chắn cùng cung</span></div>
+  <div class="frow"><span class="lbl">Góc có đỉnh trong đường tròn</span><span class="val">= \\(\\dfrac{1}{2}\\)(cung lớn + cung nhỏ)</span></div>
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">5. Tứ giác nội tiếp</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Điều kiện</span><span class="val">4 đỉnh cùng thuộc 1 đường tròn</span></div>
+  <div class="frow"><span class="lbl">Tính chất 1</span><span class="val">Hai góc đối bù: \\(\\widehat{A}+\\widehat{C}=180°\\), \\(\\widehat{B}+\\widehat{D}=180°\\)</span></div>
+  <div class="frow"><span class="lbl">Dấu hiệu nhận biết</span><span class="val">Hai góc đối bù HOẶC cùng nhìn một cạnh dưới góc bằng nhau</span></div>
+</div>
+<div class="fbox amber">
+  <strong>Ví dụ:</strong> \\(ABCD\\) nội tiếp, \\(\\widehat{A}=70°,\\widehat{B}=80°\\).<br>
+  \\(\\widehat{C}=180°-70°=110°\\); \\(\\widehat{D}=180°-80°=100°\\).
+</div>
+</div>`,
+
+'hinh-khong-gian': `
+<div class="cb"><div class="cb-heading">1. Hình trụ</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Diện tích xq</span><span class="val">\\(S_{xq}=2\\pi Rh\\)</span></div>
+  <div class="frow"><span class="lbl">Diện tích toàn phần</span><span class="val">\\(S_{tp}=2\\pi R(h+R)\\)</span></div>
+  <div class="frow"><span class="lbl">Thể tích</span><span class="val">\\(V=\\pi R^2h\\)</span></div>
+</div>
+<div class="fbox amber">
+  <strong>Ví dụ:</strong> \\(R=3\\;\\text{cm},\\;h=7\\;\\text{cm}\\).<br>
+  \\(V=\\pi\\times9\\times7=63\\pi\\approx197{,}9\\;\\text{cm}^3\\).
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">2. Hình nón</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Đường sinh</span><span class="val">\\(l=\\sqrt{R^2+h^2}\\)</span></div>
+  <div class="frow"><span class="lbl">Diện tích xq</span><span class="val">\\(S_{xq}=\\pi Rl\\)</span></div>
+  <div class="frow"><span class="lbl">Diện tích toàn phần</span><span class="val">\\(S_{tp}=\\pi R(l+R)\\)</span></div>
+  <div class="frow"><span class="lbl">Thể tích</span><span class="val">\\(V=\\dfrac{1}{3}\\pi R^2h\\)</span></div>
+</div>
+<div class="fbox amber">
+  <strong>Ví dụ:</strong> \\(R=6,h=8\\Rightarrow l=\\sqrt{36+64}=10\\).<br>
+  \\(S_{tp}=\\pi\\cdot6\\cdot(10+6)=96\\pi\\approx301{,}6\\;\\text{cm}^2\\).
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">3. Hình cầu</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Diện tích mặt cầu</span><span class="val">\\(S=4\\pi R^2\\)</span></div>
+  <div class="frow"><span class="lbl">Thể tích</span><span class="val">\\(V=\\dfrac{4}{3}\\pi R^3\\)</span></div>
+</div>
+<div class="fbox amber">
+  <strong>Ví dụ:</strong> Quả bóng \\(R=10\\;\\text{cm}\\).<br>
+  \\(S=4\\pi\\times100=400\\pi\\approx1256\\;\\text{cm}^2\\).<br>
+  \\(V=\\dfrac{4}{3}\\pi\\times1000\\approx4189\\;\\text{cm}^3\\).
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">4. Bảng tổng hợp</div>
+${tbl('<table class="kbt"><tr><th>Hình</th><th>\\(S_{tp}\\)</th><th>\\(V\\)</th></tr><tr><td>Trụ (\\(R,h\\))</td><td>\\(2\\pi R(h+R)\\)</td><td>\\(\\pi R^2h\\)</td></tr><tr><td>Nón (\\(R,h,l\\))</td><td>\\(\\pi R(l+R)\\)</td><td>\\(\\dfrac{1}{3}\\pi R^2h\\)</td></tr><tr><td>Cầu (\\(R\\))</td><td>\\(4\\pi R^2\\)</td><td>\\(\\dfrac{4}{3}\\pi R^3\\)</td></tr></table>')}
+<div class="note">
+  <strong>Mẹo nhớ:</strong> Hình nón = \\(\\dfrac{1}{3}\\) hình trụ cùng đáy cùng chiều cao.
+</div>
+</div>`,
+
+'bdt': `
+<div class="cb"><div class="cb-heading">1. Bất đẳng thức cơ bản</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">BĐT tam giác</span><span class="val">\\(|a-b|\\leq a+b\\) với \\(a,b\\geq0\\)</span></div>
+  <div class="frow"><span class="lbl">Bình phương không âm</span><span class="val">\\(a^2\\geq0\\), dấu \\(=\\) khi \\(a=0\\)</span></div>
+  <div class="frow"><span class="lbl">\\((a-b)^2\\geq0\\)</span><span class="val">\\(\\Leftrightarrow a^2+b^2\\geq2ab\\)</span></div>
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">2. Bất đẳng thức Cô-si (AM-GM)</div>
+<div class="fbox green">
+  <div class="frow"><span class="lbl">2 số không âm</span><span class="val">\\(\\dfrac{a+b}{2}\\geq\\sqrt{ab}\\) hay \\(a+b\\geq2\\sqrt{ab}\\)</span></div>
+  <div class="frow"><span class="lbl">Dấu \\(=\\) khi</span><span class="val">\\(a=b\\)</span></div>
+  <div class="frow"><span class="lbl">3 số không âm</span><span class="val">\\(\\dfrac{a+b+c}{3}\\geq\\sqrt[3]{abc}\\)</span></div>
+  <div class="frow"><span class="lbl">Dạng hay dùng</span><span class="val">\\(x+\\dfrac{k}{x}\\geq2\\sqrt{k}\\) với \\(x>0,k>0\\)</span></div>
+</div>
+<div class="fbox amber">
+  <strong>Ví dụ 1:</strong> Tìm GTNN của \\(f(x)=x+\\dfrac{9}{x}+6\\;(x>0)\\).<br>
+  AM-GM: \\(x+\\dfrac{9}{x}\\geq2\\sqrt{9}=6\\Rightarrow f(x)\\geq12\\).<br>
+  Dấu \\(=\\) khi \\(x=3\\). Vậy \\(\\min f=12\\).
+</div>
+<div class="fbox amber">
+  <strong>Ví dụ 2:</strong> \\(x,y>0,x+y=2\\). GTNN của \\(P=\\dfrac{1}{x}+\\dfrac{1}{y}\\).<br>
+  \\(P=\\dfrac{x+y}{xy}=\\dfrac{2}{xy}\\). AM-GM: \\(xy\\leq\\left(\\dfrac{x+y}{2}\\right)^2=1\\Rightarrow P\\geq2\\).<br>
+  Dấu \\(=\\) khi \\(x=y=1\\).
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">3. Bất đẳng thức Bunhiacopski (BCS)</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Dạng chuẩn</span><span class="val">\\((a_1b_1+a_2b_2)^2\\leq(a_1^2+a_2^2)(b_1^2+b_2^2)\\)</span></div>
+  <div class="frow"><span class="lbl">Tổng quát</span><span class="val">\\(\\left(\\sum a_ib_i\\right)^2\\leq\\left(\\sum a_i^2\\right)\\left(\\sum b_i^2\\right)\\)</span></div>
+  <div class="frow"><span class="lbl">Dấu \\(=\\) khi</span><span class="val">\\(\\dfrac{a_1}{b_1}=\\dfrac{a_2}{b_2}=\\cdots\\)</span></div>
+</div>
+<div class="fbox amber">
+  <strong>Ví dụ:</strong> \\(x+y+z=1,x,y,z>0\\). Tìm GTNN của \\(P=\\dfrac{1}{x}+\\dfrac{4}{y}+\\dfrac{9}{z}\\).<br>
+  BCS: \\((x+y+z)\\cdot P\\geq(1+2+3)^2=36\\Rightarrow P\\geq36\\).<br>
+  Dấu \\(=\\) khi \\(\\dfrac{x}{1}=\\dfrac{y}{2}=\\dfrac{z}{3}\\Rightarrow x=\\tfrac{1}{6},y=\\tfrac{1}{3},z=\\tfrac{1}{2}\\).
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">4. Chiến lược chứng minh BĐT</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Biến đổi tương đương</span><span class="val">Biến đổi về BĐT đã biết</span></div>
+  <div class="frow"><span class="lbl">Dùng \\((a-b)^2\\geq0\\)</span><span class="val">Mở rộng và nhóm</span></div>
+  <div class="frow"><span class="lbl">Dùng AM-GM</span><span class="val">Tìm dấu \\(=\\) để xác định min/max</span></div>
+  <div class="frow"><span class="lbl">Dùng BCS</span><span class="val">Khi có dạng tổng \\(\\dfrac{a^2}{x}+\\dfrac{b^2}{y}+...\\)</span></div>
+</div>
+<div class="note">
+  <strong>Quan trọng:</strong> Sau khi tìm min/max bằng BĐT, phải kiểm tra dấu \\(=\\) có đạt được không (tìm \\(x,y,...\\) cụ thể thỏa mãn điều kiện đề bài).
+</div>
+</div>`,
+
+};
+
+const BASE_EXERCISES={
+easy:[
+  {id:'e1', title:'HĐT_1',      topic:'Hằng đẳng thức', grade:8, q:'Khai triển: \\((x+3)^2\\)',                                                         hint:'Áp dụng HĐT số 1: \\((a+b)^2=a^2+2ab+b^2\\)',                                   ans:'\\((x+3)^2=x^2+6x+9\\)'},
+  {id:'e2', title:'HĐT_2',      topic:'Hằng đẳng thức', grade:8, q:'Khai triển: \\((2x-1)^2\\)',                                                         hint:'Áp dụng HĐT số 2: \\((a-b)^2=a^2-2ab+b^2\\)',                                   ans:'\\((2x-1)^2=4x^2-4x+1\\)'},
+  {id:'e3', title:'HĐT_3',      topic:'Hằng đẳng thức', grade:8, q:'Tính nhanh: \\(99^2\\)',                                                             hint:'Viết \\(99=100-1\\), dùng HĐT bình phương hiệu',                                 ans:'\\(99^2=(100-1)^2=10000-200+1=9801\\)'},
+  {id:'e4', title:'CanThuc_1',  topic:'Căn thức',        grade:9, q:'Tìm điều kiện xác định của \\(\\sqrt{2x-6}\\)',                                      hint:'\\(\\sqrt{A}\\) xác định khi \\(A\\geq0\\)',                                     ans:'\\(2x-6\\geq0\\Rightarrow x\\geq3\\)'},
+  {id:'e5', title:'CanThuc_2',  topic:'Căn thức',        grade:9, q:'Rút gọn: \\(\\sqrt{12}-\\sqrt{27}+\\sqrt{48}\\)',                                   hint:'Đưa về dạng \\(k\\sqrt{3}\\)',                                                   ans:'\\(2\\sqrt{3}-3\\sqrt{3}+4\\sqrt{3}=3\\sqrt{3}\\)'},
+  {id:'e6', title:'PTBac2_1',   topic:'PT bậc 2',        grade:9, q:'Giải phương trình: \\(x^2-5x+6=0\\)',                                               hint:'Tính \\(\\Delta=b^2-4ac\\), hoặc nhẩm nghiệm tổng 5 tích 6',                    ans:'\\(\\Delta=1>0\\)<br>\\(x_1=3,\\quad x_2=2\\)'},
+  {id:'e7', title:'PTBac2_2',   topic:'PT bậc 2',        grade:9, q:'Giải phương trình: \\(x^2-4=0\\)',                                                  hint:'Phân tích: \\(x^2-4=(x-2)(x+2)\\)',                                             ans:'\\(x=2\\) hoặc \\(x=-2\\)'},
+  {id:'e8', title:'ThongKe_1',  topic:'Thống kê',        grade:7, q:'Tập dữ liệu: 2, 3, 5, 7, 7, 9. Tính trung bình cộng và mốt.',                      hint:'\\(\\bar{x}=\\dfrac{\\text{tổng}}{n}\\); Mốt là giá trị xuất hiện nhiều nhất',  ans:'\\(\\bar{x}=\\dfrac{33}{6}=5{,}5\\)<br>Mốt \\(M_0=7\\)'},
+  {id:'e9', title:'LuongGiac_1',topic:'Lượng giác',      grade:9, q:'Tam giác \\(ABC\\) vuông tại \\(A\\), \\(BC=10\\), \\(AB=6\\). Tính \\(\\sin C\\).',hint:'\\(\\sin C=\\dfrac{AB}{BC}\\)',                                                   ans:'\\(\\sin C=\\dfrac{6}{10}=0{,}6\\)'},
+  {id:'e10',title:'HinhKhoi_1', topic:'Hình khối',       grade:9, q:'Tính thể tích hình trụ có \\(R=3\\) cm, \\(h=7\\) cm.',                             hint:'\\(V=\\pi R^2h\\)',                                                               ans:'\\(V=63\\pi\\approx197{,}9\\) cm³'},
+  {id:'e11',title:'TiLe_1',     topic:'Tỉ lệ thức',     grade:7, q:'Tìm \\(x\\) biết: \\(\\dfrac{x}{5}=\\dfrac{12}{20}\\)',                             hint:'Tích ngoại = tích nội',                                                          ans:'\\(x=\\dfrac{5\\times12}{20}=3\\)'},
+  {id:'e12',title:'PhanSo_1',   topic:'Phân số',         grade:6, q:'Tính: \\(\\dfrac{2}{3}+\\dfrac{1}{4}\\)',                                           hint:'Quy đồng mẫu số: \\(\\text{BCNN}(3,4)=12\\)',                                   ans:'\\(\\dfrac{8}{12}+\\dfrac{3}{12}=\\dfrac{11}{12}\\)'},
+],
+med:[
+  {id:'m1', title:'Viet_1',     topic:'Vi-ét',           grade:9, q:'PT \\(x^2-5x+4=0\\) có hai nghiệm \\(x_1,x_2\\). Tính \\(x_1^2+x_2^2\\).',        hint:'\\(x_1^2+x_2^2=(x_1+x_2)^2-2x_1x_2\\)',                                         ans:'\\(x_1^2+x_2^2=25-8=17\\)'},
+  {id:'m2', title:'Viet_2',     topic:'Vi-ét',           grade:9, q:'PT \\(x^2-7x+10=0\\). Tính \\(|x_1-x_2|\\).',                                      hint:'\\((x_1-x_2)^2=(x_1+x_2)^2-4x_1x_2\\)',                                        ans:'\\(|x_1-x_2|=\\sqrt{49-40}=3\\)'},
+  {id:'m3', title:'CanThuc_3',  topic:'Căn thức',        grade:9, q:'Rút gọn: \\(\\dfrac{\\sqrt{x}-2}{x-4}\\) với \\(x>0,x\\neq4\\)',                    hint:'Phân tích: \\(x-4=(\\sqrt{x}-2)(\\sqrt{x}+2)\\)',                                ans:'\\(\\dfrac{1}{\\sqrt{x}+2}\\)'},
+  {id:'m4', title:'CanThuc_4',  topic:'Căn thức',        grade:9, q:'Trục căn thức: \\(\\dfrac{3}{\\sqrt{5}-\\sqrt{2}}\\)',                               hint:'Nhân tử và mẫu với \\((\\sqrt{5}+\\sqrt{2})\\)',                                 ans:'\\(\\dfrac{3(\\sqrt{5}+\\sqrt{2})}{3}=\\sqrt{5}+\\sqrt{2}\\)'},
+  {id:'m5', title:'HePT_1',     topic:'Hệ PT',           grade:8, q:'Giải hệ: \\(\\begin{cases}2x+y=7\\\\x-y=2\\end{cases}\\)',                          hint:'Cộng hai PT để khử \\(y\\)',                                                     ans:'\\(x=3,\\quad y=1\\)'},
+  {id:'m6', title:'HamSo_1',    topic:'Hàm số',          grade:7, q:'Tìm \\(a,b\\) biết \\(y=ax+b\\) đi qua \\(A(1;3)\\) và \\(B(-1;-1)\\).',          hint:'Thế tọa độ từng điểm vào \\(y=ax+b\\)',                                          ans:'\\(a=2,\\quad b=1\\) → \\(y=2x+1\\)'},
+  {id:'m7', title:'DuongTron_1',topic:'Đường tròn',      grade:9, q:'Đường tròn \\((O;R)\\), dây \\(AB=8\\) cm, khoảng cách từ \\(O\\) đến \\(AB\\) là 3 cm. Tính \\(R\\).', hint:'\\(R^2=OM^2+AM^2\\) với \\(M\\) là trung điểm \\(AB\\)',        ans:'\\(R^2=9+16=25\\Rightarrow R=5\\) cm'},
+  {id:'m8', title:'HeThuLuong_1',topic:'Hệ thức lượng', grade:9, q:'Tam giác vuông tại \\(A\\), đường cao \\(AH\\). Biết \\(BH=4\\), \\(HC=9\\). Tính \\(AH\\) và \\(AB\\).', hint:'\\(AH^2=BH\\cdot HC\\); \\(AB^2=BC\\cdot BH\\)',             ans:'\\(AH=6\\quad AB=2\\sqrt{13}\\)'},
+  {id:'m9', title:'Parabol_1',  topic:'Hàm số bậc 2',   grade:9, q:'Cho \\(y=2x^2\\). Điền bảng giá trị tại \\(x\\in\\{-2,-1,0,1,2\\}\\) rồi vẽ parabol.',hint:'\\(y=2x^2\\geq0\\); điểm đỉnh là \\((0,0)\\)',                              ans:'\\(y: 8,\\;2,\\;0,\\;2,\\;8\\). Parabol lõm lên, đỉnh \\(O(0,0)\\).'},
+  {id:'m10',title:'PhanTich_1', topic:'Phân tích nhân tử',grade:8,q:'Phân tích: \\(x^3-3x^2+3x-1\\)',                                                   hint:'Nhận dạng HĐT lập phương hiệu với \\(a=x,b=1\\)',                               ans:'\\((x-1)^3\\)'},
+],
+hard:[
+  {id:'h1', title:'Viet_3',     topic:'PT bậc 2 + Vi-ét',grade:9,q:'PT \\(x^2-(m+1)x+m=0\\). Tìm \\(m\\) để PT có hai nghiệm dương phân biệt.',        hint:'Cần: \\(\\Delta>0\\); \\(x_1+x_2>0\\); \\(x_1x_2>0\\)',                          ans:'\\(m>0\\) và \\(m\\neq1\\)'},
+  {id:'h2', title:'Viet_4',     topic:'PT bậc 2 + Vi-ét',grade:9,q:'PT \\(x^2-2(m-1)x+m^2-3m=0\\). Tìm \\(m\\) để \\(x_1^2+x_2^2=10\\).',             hint:'\\(x_1^2+x_2^2=(x_1+x_2)^2-2x_1x_2\\)',                                        ans:'\\(4(m-1)^2-2(m^2-3m)=10\\Rightarrow m=\\pm\\sqrt{...}\\) → \\(m=3\\) hoặc \\(m=-\\frac{1}{2}\\) (kiểm tra \\(\\Delta\\geq0\\))'},
+  {id:'h3', title:'CanThuc_5',  topic:'Căn thức nâng cao',grade:9,q:'Rút gọn: \\(P=\\dfrac{\\sqrt{x}+1}{\\sqrt{x}-1}-\\dfrac{\\sqrt{x}-1}{\\sqrt{x}+1}-\\dfrac{4}{1-x}\\) với \\(x\\geq0,x\\neq1\\)', hint:'Quy đồng mẫu \\((x-1)\\), chú ý \\(1-x=-(x-1)\\)', ans:'\\(P=\\dfrac{4}{\\sqrt{x}-1}\\)'},
+  {id:'h4', title:'AM-GM_1',    topic:'AM-GM',           grade:9, q:'Cho \\(x,y>0\\) và \\(x+y=2\\). Tìm GTNN của \\(P=\\dfrac{1}{x}+\\dfrac{1}{y}\\).',hint:'\\(P=\\dfrac{2}{xy}\\). Tìm GTLN của \\(xy\\) theo AM-GM.',                     ans:'\\(\\min P=2\\) khi \\(x=y=1\\)'},
+  {id:'h5', title:'AM-GM_2',    topic:'AM-GM',           grade:9, q:'Cho \\(x>0\\). Tìm GTNN của \\(f(x)=x+\\dfrac{9}{x}+6\\).',                        hint:'AM-GM: \\(x+\\dfrac{9}{x}\\geq 2\\sqrt{9}=6\\)',                                ans:'\\(\\min f=12\\) khi \\(x=3\\)'},
+  {id:'h6', title:'NiTiep_1',   topic:'Tứ giác nội tiếp',grade:9,q:'Tứ giác \\(ABCD\\) nội tiếp. Biết \\(\\widehat{A}=70°,\\widehat{B}=80°\\). Tính \\(\\widehat{C}\\) và \\(\\widehat{D}\\).',hint:'Hai góc đối bù nhau',                   ans:'\\(\\widehat{C}=110°,\\quad\\widehat{D}=100°\\)'},
+  {id:'h7', title:'HePT_2',     topic:'Hệ PT thực tế',  grade:9, q:'Hai vòi cùng chảy đầy bể sau 6 giờ. Vòi 1 một mình mất 10 giờ. Hỏi vòi 2 một mình mất bao lâu?',hint:'\\(\\dfrac{1}{10}+\\dfrac{1}{x}=\\dfrac{1}{6}\\)',             ans:'Vòi 2 mất <strong>15 giờ</strong>'},
+  {id:'h8', title:'Parabol_2',  topic:'Parabol',         grade:9, q:'Tìm tọa độ giao điểm của \\(y=x^2\\) và \\(y=x+2\\).',                             hint:'Giải \\(x^2=x+2\\)',                                                             ans:'\\(x^2-x-2=0\\Rightarrow x=2\\) hoặc \\(x=-1\\)<br>Giao điểm: \\((2;4)\\) và \\((-1;1)\\)'},
+  {id:'h9', title:'HinhKhoi_2', topic:'Hình khối',       grade:9, q:'Hình nón có \\(R=6\\), \\(h=8\\). Tính diện tích toàn phần.',                       hint:'Đường sinh \\(l=\\sqrt{R^2+h^2}\\), sau đó \\(S_{tp}=\\pi Rl+\\pi R^2\\)',      ans:'\\(l=10\\)<br>\\(S_{tp}=60\\pi+36\\pi=96\\pi\\approx301{,}6\\) cm²'},
+],
+pro:[
+  {id:'p1', title:'BDT_1',      topic:'Chứng minh BĐT',  grade:9, q:'Cho \\(a,b,c>0\\), \\(a+b+c=3\\). Chứng minh: \\(a^2+b^2+c^2\\geq3\\).',          hint:'Khai triển \\((a-1)^2+(b-1)^2+(c-1)^2\\geq0\\)',                                ans:'\\((a-1)^2+(b-1)^2+(c-1)^2\\geq0\\)<br>\\(\\Leftrightarrow a^2+b^2+c^2\\geq2\\cdot3-3=3\\) ✓'},
+  {id:'p2', title:'BCS_1',      topic:'BCS',             grade:9, q:'Cho \\(x,y,z>0\\), \\(x+y+z=1\\). Tìm GTNN của \\(P=\\dfrac{1}{x}+\\dfrac{4}{y}+\\dfrac{9}{z}\\).', hint:'BCS: \\((x+y+z)(\\frac{1}{x}+\\frac{4}{y}+\\frac{9}{z})\\geq(1+2+3)^2\\)', ans:'\\(\\min P=36\\) khi \\(x=\\tfrac{1}{6},y=\\tfrac{1}{3},z=\\tfrac{1}{2}\\)'},
+  {id:'p3', title:'BDT_2',      topic:'AM-GM nâng cao',  grade:9, q:'Cho \\(a,b,c>0\\). Chứng minh: \\(\\dfrac{a}{b+c}+\\dfrac{b}{a+c}+\\dfrac{c}{a+b}\\geq\\dfrac{3}{2}\\).', hint:'Viết \\(\\dfrac{a}{b+c}=\\dfrac{a+b+c}{b+c}-1\\), rồi dùng BCS hoặc AM-GM.', ans:'Dùng BCS (Cauchy-Schwarz): tổng \\(\\geq\\dfrac{(a+b+c)^2}{a(b+c)+b(a+c)+c(a+b)}=\\dfrac{(a+b+c)^2}{2(ab+bc+ca)}\\geq\\dfrac{3}{2}\\) ✓'},
+  {id:'p4', title:'Parabol_3',  topic:'Parabol',         grade:9, q:'(Đề chuyên) Cho \\((P):y=x^2\\) và \\((d):y=mx+1\\). Tìm \\(m\\) để \\((d)\\) cắt \\((P)\\) tại \\(A,B\\) với \\(AB=2\\sqrt{5}\\).', hint:'\\(|AB|^2=(1+m^2)(x_1-x_2)^2=(1+m^2)(m^2+4)\\)', ans:'\\((1+m^2)(m^2+4)=20\\Rightarrow m=\\pm\\sqrt{\\dfrac{-5+\\sqrt{89}}{2}}\\)'},
+  {id:'p5', title:'HinhHoc_1',  topic:'Hình học chứng minh',grade:9,q:'(Đề chuyên) Cho tam giác \\(ABC\\) nội tiếp \\((O)\\), trực tâm \\(H\\). Chứng minh \\(\\overrightarrow{OH}=\\overrightarrow{OA}+\\overrightarrow{OB}+\\overrightarrow{OC}\\).', hint:'Gọi \\(O\'\\) đối xứng \\(O\\) qua trung điểm \\(M\\) của \\(BC\\).', ans:'\\(\\overrightarrow{OO\'}=\\overrightarrow{OB}+\\overrightarrow{OC}\\). Chứng minh \\(AO\'\\perp BC\\) → \\(H\\equiv O\'\\) ✓'},
+  {id:'p6', title:'BCS_2',      topic:'BCS nâng cao',    grade:9, q:'Cho \\(a^2+b^2+c^2=1\\). Tìm GTLN của \\(M=a+2b+3c\\).',                           hint:'BCS: \\((1^2+2^2+3^2)(a^2+b^2+c^2)\\geq(a+2b+3c)^2\\)',                        ans:'\\(M\\leq\\sqrt{14}\\), dấu \\(=\\) khi \\(\\dfrac{a}{1}=\\dfrac{b}{2}=\\dfrac{c}{3}\\)'},
+  {id:'p7', title:'Viet_5',     topic:'PT bậc 2 chuyên', grade:9, q:'(Đề chuyên) PT \\(x^2-2(m+1)x+4m=0\\) có hai nghiệm \\(x_1,x_2\\). Tìm \\(m\\) để \\(\\dfrac{1}{x_1}+\\dfrac{1}{x_2}=1\\).', hint:'\\(\\dfrac{1}{x_1}+\\dfrac{1}{x_2}=\\dfrac{x_1+x_2}{x_1x_2}\\)', ans:'\\(\\dfrac{2(m+1)}{4m}=1\\Rightarrow m=2\\). Kiểm tra: \\(\\Delta=4(m-1)^2\\geq0\\) ✓'},
+  {id:'p8', title:'CTVG-LA2025-B1', topic:'Rút gọn và chứng minh biểu thức', grade:9, q:'Cho biểu thức \\(P = \\frac{x\\sqrt{x}-3}{x-2\\sqrt{x}-3} - \\frac{2(\\sqrt{x}-3)}{\\sqrt{x}+1} - \\frac{\\sqrt{x}+3}{\\sqrt{x}-3}\\) với \\(x \\geq 0; x \\neq 9\\).<br>a) Rút gọn biểu thức \\(P\\).<br>b) Chứng minh: \\(P \\geq 4\\).', hint:'Phân tích mẫu thức đầu tiên thành nhân tử: \\(x-2\\sqrt{x}-3 = (\\sqrt{x}+1)(\\sqrt{x}-3)\\). Đối với hai hạng tử cuối, thực hiện quy đồng hai hạng tử này trước để biểu thức gọn hơn.', ans:'**a) Rút gọn biểu thức \\(P\\):**<br>Điều kiện: \\(x \\geq 0, x \\neq 9\\).<br>Phân tích mẫu số đầu tiên: \\(x-2\\sqrt{x}-3 = (\\sqrt{x}+1)(\\sqrt{x}-3)\\).<br>Quy đồng và thu gọn hai hạng tử cuối:<br>\\(-\\left[ \\frac{2(\\sqrt{x}-3)^2 + (\\sqrt{x}+3)(\\sqrt{x}+1)}{(\\sqrt{x}+1)(\\sqrt{x}-3)} \\right] = -\\left[ \\frac{2(x-6\\sqrt{x}+9) + (x+4\\sqrt{x}+3)}{(\\sqrt{x}+1)(\\sqrt{x}-3)} \\right] = -\\frac{3x-8\\sqrt{x}+21}{(\\sqrt{x}+1)(\\sqrt{x}-3)}\\).<br>Kết hợp với hạng tử đầu tiên:<br>\\(P = \\frac{x\\sqrt{x}-3 - (3x-8\\sqrt{x}+21)}{(\\sqrt{x}+1)(\\sqrt{x}-3)} = \\frac{x\\sqrt{x}-3x+8\\sqrt{x}-24}{(\\sqrt{x}+1)(\\sqrt{x}-3)}\\)<br>\\(\\Leftrightarrow P = \\frac{x(\\sqrt{x}-3) + 8(\\sqrt{x}-3)}{(\\sqrt{x}+1)(\\sqrt{x}-3)} = \\frac{(\\sqrt{x}-3)(x+8)}{(\\sqrt{x}+1)(\\sqrt{x}-3)} = \\frac{x+8}{\\sqrt{x}+1}\\).<br><br>**b) Chứng minh \\(P \\geq 4\\):**<br>Ta có: \\(P = \\frac{x+8}{\\sqrt{x}+1} = \\frac{(x-1)+9}{\\sqrt{x}+1} = \\frac{(\\sqrt{x}-1)(\\sqrt{x}+1)+9}{\\sqrt{x}+1} = \\sqrt{x}-1 + \\frac{9}{\\sqrt{x}+1}\\)<br>\\(\\Leftrightarrow P = (\\sqrt{x}+1) + \\frac{9}{\\sqrt{x}+1} - 2\\).<br>Áp dụng bất đẳng thức Cô-si cho hai số dương \\(\\sqrt{x}+1\\) và \\(\\frac{9}{\\sqrt{x}+1}\\):<br>\\((\\sqrt{x}+1) + \\frac{9}{\\sqrt{x}+1} \\geq 2\\sqrt{(\\sqrt{x}+1) \\cdot \\frac{9}{\\sqrt{x}+1}} = 2 \\cdot 3 = 6\\).<br>Suy ra: \\(P \\geq 6 - 2 = 4\\) (đpcm).<br>Dấu "=" xảy ra khi \\(\\sqrt{x}+1 = \\frac{9}{\\sqrt{x}+1} \\Leftrightarrow (\\sqrt{x}+1)^2 = 9 \\Leftrightarrow \\sqrt{x}+1 = 3 \\Leftrightarrow x = 4\\) (thỏa mãn ĐK). ✓'},
+  {id:'p9', title:'CTVG-LA2025-B2', topic:'PT bậc 2 + Vi-ét', grade:9, q:'Cho phương trình: \\(x^2 + x - m^2 = 0\\) (\\(m\\) là tham số).<br>a) Chứng minh phương trình luôn có hai nghiệm phân biệt \\(x_1, x_2\\).<br>b) Tính giá trị của \\(P = \\frac{x_2^2 + 2x_2 + x_1 + 2x_1x_2}{x_1^2 - x_2}\\).', hint:'Sử dụng \\(\\Delta\\) để chứng minh phương trình luôn có nghiệm với mọi \\(m\\). Với câu b, thay vì biến đổi hoàn toàn sang tổng và tích thông thường, hãy chú ý việc thay trực tiếp nghiệm vào phương trình gốc: \\(x_1^2 = -x_1 + m^2\\) và \\(x_2^2 = -x_2 + m^2\\) để hạ bậc biểu thức.', ans:'**a) Chứng minh phương trình luôn có hai nghiệm phân biệt:**<br>Phương trình có các hệ số: \\(a = 1, b = 1, c = -m^2\\).<br>Ta có: \\(\\Delta = b^2 - 4ac = 1^2 - 4 \\cdot 1 \\cdot (-m^2) = 1 + 4m^2\\).<br>Vì \\(m^2 \\geq 0\\) với mọi \\(m\\) nên \\(1 + 4m^2 \\geq 1 > 0\\) với mọi \\(m\\).<br>Do \\(\\Delta > 0\\) với mọi \\(m\\), phương trình luôn có hai nghiệm phân biệt \\(x_1, x_2\\) với mọi tham số \\(m\\).<br><br>**b) Tính giá trị của biểu thức \\(P\\):**<br>Theo hệ thức Vi-ét, ta có:<br>\\(\\begin{cases} x_1 + x_2 = -1 \\\\ x_1x_2 = -m^2 \\end{cases}\\)<br>Vì \\(x_1, x_2\\) là nghiệm của phương trình nên ta có hệ thức hạ bậc:<br>\\(x_1^2 + x_1 - m^2 = 0 \\Rightarrow x_1^2 = -x_1 + m^2\\)<br>\\(x_2^2 + x_2 - m^2 = 0 \\Rightarrow x_2^2 = -x_2 + m^2\\)<br>Thay vào biểu thức \\(P\\), ta được:<br>Tử số: \\(x_2^2 + 2x_2 + x_1 + 2x_1x_2\\)<br>\\(= (-x_2 + m^2) + 2x_2 + x_1 + 2(-m^2)\\)<br>\\(= x_1 + x_2 - m^2\\)<br>\\(= -1 - m^2\\)<br>\\(= -(m^2 + 1)\\).<br><br>Mẫu số: \\(x_1^2 - x_2\\)<br>\\(= (-x_1 + m^2) - x_2\\)<br>\\(= -(x_1 + x_2) + m^2\\)<br>\\(= -(-1) + m^2\\)<br>\\(= m^2 + 1\\).<br><br>Vậy \\(P = \\frac{-(m^2 + 1)}{m^2 + 1} = -1\\). ✓'},
+  {id:'p10', title:'CTVG-LA2025-B3', topic:'PT vô tỉ', grade:9, q:'Giải phương trình: \\(x^4 - 4x^3 + 6x^2 - 4x + \\sqrt{x^2 - 2x + 17} = 3\\).', hint:'Nhận xét vế trái có chứa các cụm có thể đưa về hằng đẳng thức. Hãy thử thêm bớt để xuất hiện \\((x-1)^4\\) ở phần đa thức và \\((x-1)^2\\) ở phần trong căn. Sau đó dùng phương pháp đánh giá (bất đẳng thức).', ans:'**Giải phương trình:**<br>Ta có phương trình ban đầu:<br>\\(x^4 - 4x^3 + 6x^2 - 4x + \\sqrt{x^2 - 2x + 17} = 3\\).<br><br>Biến đổi phần đa thức ngoài căn:<br>\\(x^4 - 4x^3 + 6x^2 - 4x\\)<br>\\(= (x^4 - 4x^3 + 6x^2 - 4x + 1) - 1\\)<br>\\(= (x-1)^4 - 1\\).<br><br>Biến đổi biểu thức trong căn:<br>\\(x^2 - 2x + 17\\)<br>\\(= (x^2 - 2x + 1) + 16\\)<br>\\(= (x-1)^2 + 16\\).<br><br>Thay các biểu thức vừa biến đổi vào phương trình ban đầu, ta được:<br>\\((x-1)^4 - 1 + \\sqrt{(x-1)^2 + 16} = 3\\)<br>\\(\\Leftrightarrow (x-1)^4 + \\sqrt{(x-1)^2 + 16} = 4\\).<br><br>Sử dụng phương pháp đánh giá:<br>Với mọi số thực \\(x\\), ta luôn có:<br>\\((x-1)^4 \\geq 0\\).<br>\\((x-1)^2 \\geq 0 \\Rightarrow (x-1)^2 + 16 \\geq 16 \\Rightarrow \\sqrt{(x-1)^2 + 16} \\geq \\sqrt{16} = 4\\).<br><br>Cộng vế theo vế hai bất đẳng thức trên, ta có:<br>\\((x-1)^4 + \\sqrt{(x-1)^2 + 16} \\geq 0 + 4 = 4\\).<br><br>Dấu "=" của phương trình xảy ra khi và chỉ khi cả hai dấu "=" ở các bất đẳng thức trên cùng xảy ra:<br>\\(\\begin{cases} (x-1)^4 = 0 \\\\ (x-1)^2 = 0 \\end{cases}\\)<br>\\(\\Leftrightarrow x - 1 = 0\\)<br>\\(\\Leftrightarrow x = 1\\).<br><br>Vậy phương trình có nghiệm duy nhất là \\(x = 1\\). ✓'},
+  {id:'p11', title:'CTVG-LA2025-B4', topic:'Hình học phẳng', grade:9, q:'Cho tứ giác \\(ABCD\\) nội tiếp đường tròn tâm \\(O\\). Gọi \\(M\\) là điểm trên cạnh \\(AC\\) sao cho \\(\\widehat{ABD} = \\widehat{MBC}\\).<br>a) Chứng minh: \\(\\Delta ABD \\sim \\Delta MBC\\).<br>b) Chứng minh: \\(AB.CD = BD.AM\\).<br>c) Chứng minh: \\(AD.BC + AB.CD = BD.AC\\).', hint:'Phần a) sử dụng trường hợp đồng dạng góc - góc (chú ý góc nội tiếp). Phần b) chứng minh tương tự \\(\\Delta ABM \\sim \\Delta DBC\\). Phần c) cộng vế theo vế các đẳng thức tỉ số từ hai cặp tam giác đồng dạng ở câu a và b.', ans:'<div style="text-align: center; margin: 15px 0;"><svg width="250" height="250" viewBox="0 0 300 300"><circle cx="150" cy="150" r="100" fill="none" stroke="black" stroke-width="1.5"/><polygon points="100,63 56,184 221,221 237,100" fill="none" stroke="black" stroke-width="1.5"/><line x1="100" y1="63" x2="221" y2="221" stroke="black" stroke-width="1"/><line x1="56" y1="184" x2="237" y2="100" stroke="black" stroke-width="1"/><line x1="56" y1="184" x2="148" y2="126" stroke="black" stroke-width="1"/><circle cx="150" cy="150" r="2.5" fill="black"/><circle cx="148" cy="126" r="2.5" fill="black"/><text x="90" y="55" font-family="Arial" font-size="16">A</text><text x="40" y="195" font-family="Arial" font-size="16">B</text><text x="225" y="240" font-family="Arial" font-size="16">C</text><text x="245" y="95" font-family="Arial" font-size="16">D</text><text x="140" y="115" font-family="Arial" font-size="16">M</text><text x="155" y="165" font-family="Arial" font-size="16">O</text></svg></div>**a) Chứng minh \\(\\Delta ABD \\sim \\Delta MBC\\):**<br>Xét \\(\\Delta ABD\\) và \\(\\Delta MBC\\) có:<br>\\(\\widehat{ABD} = \\widehat{MBC}\\) (giả thiết).<br>\\(\\widehat{ADB} = \\widehat{MCB}\\) (hai góc nội tiếp cùng chắn cung \\(AB\\) của đường tròn \\((O)\\)).<br>\\(\\Rightarrow \\Delta ABD \\sim \\Delta MBC\\) (g-g).<br><br>**b) Chứng minh \\(AB.CD = BD.AM\\):**<br>Ta có: \\(\\widehat{ABM} = \\widehat{ABC} - \\widehat{MBC}\\)<br>\\(\\widehat{DBC} = \\widehat{ABC} - \\widehat{ABD}\\)<br>Vì \\(\\widehat{ABD} = \\widehat{MBC}\\) nên \\(\\widehat{ABM} = \\widehat{DBC}\\).<br>Xét \\(\\Delta ABM\\) và \\(\\Delta DBC\\) có:<br>\\(\\widehat{ABM} = \\widehat{DBC}\\) (chứng minh trên).<br>\\(\\widehat{BAM} = \\widehat{BDC}\\) (hai góc nội tiếp cùng chắn cung \\(BC\\)).<br>\\(\\Rightarrow \\Delta ABM \\sim \\Delta DBC\\) (g-g).<br>\\(\\Rightarrow \\frac{AB}{BD} = \\frac{AM}{CD}\\) (tỉ số đồng dạng).<br>\\(\\Rightarrow AB.CD = BD.AM\\) (1).<br><br>**c) Chứng minh \\(AD.BC + AB.CD = BD.AC\\):**<br>Từ \\(\\Delta ABD \\sim \\Delta MBC\\) (chứng minh ở câu a), ta có:<br>\\(\\frac{AD}{MC} = \\frac{BD}{BC} \\Rightarrow AD.BC = BD.MC\\) (2).<br>Cộng vế theo vế (1) và (2), ta được:<br>\\(AB.CD + AD.BC = BD.AM + BD.MC\\)<br>\\(\\Leftrightarrow AD.BC + AB.CD = BD.(AM + MC)\\).<br>Vì \\(M\\) nằm trên đoạn thẳng \\(AC\\) nên \\(AM + MC = AC\\).<br>Vậy \\(AD.BC + AB.CD = BD.AC\\) (đpcm). ✓'},
+  {id:'p12', title:'CTVG-LA2025-B5', topic:'Số học', grade:9, q:'Cho \\(n,m\\) là các số tự nhiên và \\(n^4 + m^4\\) chia hết cho 5. Tìm số dư khi chia \\(n^{2025} + m^{2025}\\) cho 5.', hint:'Xét các số dư có thể có của một số lũy thừa bậc 4 (như \\(a^4\\)) khi chia cho 5. Từ đó lập luận để tìm tính chia hết của \\(n\\) và \\(m\\) đối với 5.', ans:'**Giải:**<br>Xét số tự nhiên \\(a\\) bất kỳ, khi chia \\(a\\) cho 5 ta có các số dư có thể là \\(0, 1, 2, 3, 4\\).<br>- Nếu \\(a \\equiv 0 \\pmod 5\\) thì \\(a^4 \\equiv 0 \\pmod 5\\).<br>- Nếu \\(a \\equiv 1 \\pmod 5\\) thì \\(a^4 \\equiv 1 \\pmod 5\\).<br>- Nếu \\(a \\equiv 2 \\pmod 5\\) thì \\(a^4 \\equiv 16 \\equiv 1 \\pmod 5\\).<br>- Nếu \\(a \\equiv 3 \\pmod 5\\) thì \\(a^4 \\equiv 81 \\equiv 1 \\pmod 5\\).<br>- Nếu \\(a \\equiv 4 \\pmod 5\\) thì \\(a^4 \\equiv 256 \\equiv 1 \\pmod 5\\).<br>Vậy với mọi số tự nhiên \\(a\\), ta luôn có \\(a^4 \\equiv 0\\) hoặc \\(a^4 \\equiv 1 \\pmod 5\\).<br><br>Áp dụng vào bài toán, ta có \\(n^4 \\equiv 0\\) hoặc \\(1 \\pmod 5\\) và \\(m^4 \\equiv 0\\) hoặc \\(1 \\pmod 5\\).<br>Suy ra tổng \\(n^4 + m^4\\) khi chia cho 5 chỉ có thể có các số dư là: \\(0+0=0\\); \\(1+0=1\\); \\(0+1=1\\); \\(1+1=2\\).<br><br>Theo giả thiết, \\(n^4 + m^4\\) chia hết cho 5, tức là tổng này đồng dư với 0 theo mô-đun 5.<br>Trường hợp này chỉ xảy ra khi và chỉ khi cả hai số hạng đều chia hết cho 5:<br>\\(\\begin{cases} n^4 \\equiv 0 \\pmod 5 \\\\ m^4 \\equiv 0 \\pmod 5 \\end{cases}\\)<br>\\(\\Rightarrow \\begin{cases} n \\vdots 5 \\\\ m \\vdots 5 \\end{cases}\\)<br><br>Vì \\(n \\vdots 5\\) và \\(m \\vdots 5\\) nên với số mũ 2025, ta cũng có \\(n^{2025} \\vdots 5\\) và \\(m^{2025} \\vdots 5\\).<br>Do đó: \\(n^{2025} + m^{2025} \\vdots 5\\).<br>Vậy số dư khi chia \\(n^{2025} + m^{2025}\\) cho 5 là 0. ✓'},
+  {id:'p13', title:'CTVG-LA2025-B6', topic:'Đại số', grade:9, q:'Cho \\(a,b\\) là các số thực dương sao cho: \\(\\frac{a-b}{3a+b} = \\frac{b^2}{a^2+b^2+ab}\\).<br>Tìm giá trị nhỏ nhất của biểu thức: \\(P = \\frac{a^2+2ab+a+2}{2b+a+1}\\).', hint:'Nhân chéo giả thiết để tìm mối liên hệ giữa \\(a\\) và \\(b\\) (đưa về phương trình bậc 3 theo ẩn \\(\\frac{a}{b}\\)). Sau đó thế \\(a\\) theo \\(b\\) (hoặc ngược lại) vào biểu thức \\(P\\) và sử dụng bất đẳng thức Cô-si (AM-GM).', ans:'**Giải:**<br>Từ giả thiết: \\(\\frac{a-b}{3a+b} = \\frac{b^2}{a^2+b^2+ab}\\)<br>\\(\\Rightarrow (a-b)(a^2+b^2+ab) = b^2(3a+b)\\)<br>\\(\\Leftrightarrow a^3 - b^3 = 3ab^2 + b^3\\)<br>\\(\\Leftrightarrow a^3 - 3ab^2 - 2b^3 = 0\\).<br><br>Do \\(b > 0\\), chia cả hai vế cho \\(b^3\\) ta được:<br>\\(\\left(\\frac{a}{b}\\right)^3 - 3\\left(\\frac{a}{b}\\right) - 2 = 0\\).<br>Đặt \\(t = \\frac{a}{b}\\) (với \\(t > 0\\)), phương trình trở thành:<br>\\(t^3 - 3t - 2 = 0\\)<br>\\(\\Leftrightarrow t^3 - t - 2t - 2 = 0\\)<br>\\(\\Leftrightarrow t(t^2 - 1) - 2(t + 1) = 0\\)<br>\\(\\Leftrightarrow (t + 1)[t(t - 1) - 2] = 0\\)<br>\\(\\Leftrightarrow (t + 1)(t^2 - t - 2) = 0\\)<br>\\(\\Leftrightarrow (t + 1)^2(t - 2) = 0\\).<br>Vì \\(t > 0\\) nên \\(t = 2\\), suy ra \\(\\frac{a}{b} = 2 \\Rightarrow a = 2b\\).<br><br>Thay \\(2b = a\\) vào biểu thức \\(P\\), ta được:<br>\\(P = \\frac{a^2 + a \\cdot a + a + 2}{a + a + 1}\\)<br>\\(= \\frac{2a^2 + a + 2}{2a + 1}\\).<br><br>Thực hiện phép chia tử cho mẫu:<br>\\(P = \\frac{a(2a + 1) + 2}{2a + 1}\\)<br>\\(= a + \\frac{2}{2a + 1}\\).<br><br>Nhân cả hai vế với 2 để áp dụng bất đẳng thức Cô-si:<br>\\(2P = 2a + \\frac{4}{2a + 1}\\)<br>\\(= (2a + 1) + \\frac{4}{2a + 1} - 1\\).<br><br>Vì \\(a > 0\\) nên \\(2a + 1 > 0\\). Áp dụng bất đẳng thức Cô-si cho hai số dương \\(2a + 1\\) và \\(\\frac{4}{2a + 1}\\):<br>\\((2a + 1) + \\frac{4}{2a + 1} \\geq 2\\sqrt{(2a + 1) \\cdot \\frac{4}{2a + 1}}\\)<br>\\(= 2\\sqrt{4}\\)<br>\\(= 4\\).<br><br>Suy ra: \\(2P \\geq 4 - 1 = 3\\)<br>\\(\\Leftrightarrow P \\geq \\frac{3}{2}\\).<br><br>Dấu "=" xảy ra khi và chỉ khi:<br>\\(2a + 1 = \\frac{4}{2a + 1}\\)<br>\\(\\Leftrightarrow (2a + 1)^2 = 4\\)<br>\\(\\Leftrightarrow 2a + 1 = 2\\) (do \\(2a + 1 > 0\\))<br>\\(\\Leftrightarrow a = \\frac{1}{2}\\).<br>Với \\(a = \\frac{1}{2}\\), ta có \\(b = \\frac{a}{2} = \\frac{1}{4}\\) (thỏa mãn \\(a, b > 0\\)).<br><br>Vậy giá trị nhỏ nhất của biểu thức \\(P\\) là \\(\\frac{3}{2}\\). ✓'},
+  {id:'p14', title:'CTVG-LA2025-B7', topic:'Hình học / Cực trị', grade:9, q:'<div style="text-align: center; margin: 15px 0;"><svg width="350" height="220" viewBox="0 0 350 220"><line x1="20" y1="180" x2="330" y2="180" stroke="black" stroke-width="1.5"/><line x1="50" y1="40" x2="50" y2="180" stroke="black" stroke-width="1.5"/><line x1="290" y1="140" x2="290" y2="180" stroke="black" stroke-width="1.5"/><line x1="50" y1="40" x2="290" y2="140" stroke="black" stroke-width="1"/><line x1="50" y1="40" x2="210" y2="180" stroke="black" stroke-width="1"/><line x1="210" y1="180" x2="290" y2="140" stroke="black" stroke-width="1"/><circle cx="50" cy="40" r="3" fill="black"/><circle cx="290" cy="140" r="3" fill="black"/><circle cx="50" cy="180" r="3" fill="black"/><circle cx="290" cy="180" r="3" fill="black"/><circle cx="210" cy="180" r="3" fill="black"/><text x="40" y="30" font-family="Arial" font-size="16">A</text><text x="300" y="135" font-family="Arial" font-size="16">B</text><text x="40" y="200" font-family="Arial" font-size="16">D</text><text x="285" y="200" font-family="Arial" font-size="16">C</text><text x="205" y="200" font-family="Arial" font-size="16">E</text></svg></div>Trên hình vẽ minh họa, các điểm \\(A, B\\) là vị trí hai hòn đảo và đường thẳng \\(DC\\) là bờ biển. Biết rằng khoảng cách giữa hai đảo là \\(AB = 130km\\). Khoảng cách từ đảo \\(A\\) đến bờ biển là \\(AD = 70km\\), khoảng cách từ đảo \\(B\\) đến bờ biển là \\(BC = 20km\\).<br>Trên bờ biển, người ta thiết kế một trạm trung chuyển \\(E\\). Tàu hàng di chuyển theo hành trình đi từ \\(A\\) đến \\(E\\) rồi đi từ \\(E\\) đến \\(B\\). Vị trí trạm trung chuyển \\(E\\) phải cách vị trí \\(C\\) bao nhiêu \\(km\\) để hành trình của tàu hàng là ngắn nhất?', 
+	  hint:'Để tìm hành trình ngắn nhất (tổng \\(AE + EB\\) nhỏ nhất), hãy lấy điểm \\(B\'\\) đối xứng với \\(B\\) qua bờ biển \\(DC\\). Khi đó \\(AE + EB = AE + EB\'\\). Kẻ thêm đường vuông góc từ \\(B\\) sang \\(AD\\) để tính độ dài đoạn \\(DC\\), sau đó sử dụng tam giác đồng dạng để tìm vị trí điểm \\(E\\).', 
+	  ans:'<div style="text-align: center; margin: 15px 0;"><svg width="350" height="260" viewBox="0 0 350 260"><line x1="20" y1="180" x2="330" y2="180" stroke="black" stroke-width="1.5"/><line x1="50" y1="40" x2="50" y2="180" stroke="black" stroke-width="1.5"/><line x1="290" y1="140" x2="290" y2="220" stroke="black" stroke-width="1.5" stroke-dasharray="4"/><line x1="50" y1="140" x2="290" y2="140" stroke="black" stroke-width="1" stroke-dasharray="4"/><line x1="50" y1="40" x2="237" y2="180" stroke="black" stroke-width="1"/><line x1="237" y1="180" x2="290" y2="140" stroke="black" stroke-width="1"/><line x1="237" y1="180" x2="290" y2="220" stroke="black" stroke-width="1"/><line x1="50" y1="40" x2="290" y2="220" stroke="red" stroke-width="1.5" stroke-dasharray="4"/><circle cx="50" cy="40" r="3" fill="black"/><circle cx="290" cy="140" r="3" fill="black"/><circle cx="50" cy="180" r="3" fill="black"/><circle cx="290" cy="180" r="3" fill="black"/><circle cx="237" cy="180" r="3" fill="black"/><circle cx="290" cy="220" r="3" fill="black"/><circle cx="50" cy="140" r="3" fill="black"/><text x="40" y="30" font-family="Arial" font-size="16">A</text><text x="300" y="135" font-family="Arial" font-size="16">B</text><text x="40" y="200" font-family="Arial" font-size="16">D</text><text x="295" y="175" font-family="Arial" font-size="16">C</text><text x="232" y="200" font-family="Arial" font-size="16">E</text><text x="300" y="225" font-family="Arial" font-size="16">B\'</text><text x="30" y="145" font-family="Arial" font-size="16">K</text></svg></div>**Giải:**<br>**Bước 1: Tính chiều dài đoạn bờ biển \\(DC\\)**<br>Kẻ \\(BK \\perp AD\\) tại \\(K\\).<br>Tứ giác \\(KDCB\\) có \\(\\widehat{KDC} = \\widehat{DCB} = \\widehat{BKD} = 90^\\circ\\) nên là hình chữ nhật.<br>\\(\\Rightarrow KD = BC = 20\\) (km) và \\(KB = DC\\).<br>Ta có: \\(AK = AD - KD = 70 - 20 = 50\\) (km).<br>Áp dụng định lý Pytago trong tam giác vuông \\(AKB\\):<br>\\(AB^2 = AK^2 + KB^2\\)<br>\\(\\Rightarrow 130^2 = 50^2 + KB^2\\)<br>\\(\\Rightarrow KB^2 = 16900 - 2500 = 14400\\)<br>\\(\\Rightarrow KB = 120\\) (km).<br>Suy ra \\(DC = 120\\) (km).<br><br>**Bước 2: Tìm vị trí điểm \\(E\\) để hành trình ngắn nhất**<br>Lấy điểm \\(B\'\\) đối xứng với điểm \\(B\\) qua bờ biển \\(DC\\).<br>Vì \\(BC \\perp DC\\) tại \\(C\\) nên \\(C\\) là trung điểm của \\(BB\'\\).<br>\\(\\Rightarrow B\'C = BC = 20\\) (km).<br>Với mọi vị trí của \\(E\\) nằm trên \\(DC\\), do tính chất đối xứng trục ta luôn có \\(EB = EB\'\\).<br>Hành trình của tàu là: \\(S = AE + EB = AE + EB\'\\).<br>Áp dụng bất đẳng thức tam giác đối với ba điểm \\(A, E, B\'\\), ta luôn có:<br>\\(AE + EB\' \\geq AB\'\\).<br>Dấu "=" xảy ra (tức là quãng đường ngắn nhất) khi và chỉ khi \\(A, E, B\'\\) thẳng hàng, hay \\(E\\) là giao điểm của đoạn thẳng \\(AB\'\\) và \\(DC\\) (đường đứt nét màu đỏ trên hình vẽ).<br><br>**Bước 3: Tính khoảng cách \\(CE\\)**<br>Khi \\(A, E, B\'\\) thẳng hàng, xét \\(\\Delta ADE\\) và \\(\\Delta B\'CE\\) có:<br>\\(\\widehat{ADE} = \\widehat{B\'CE} = 90^\\circ\\)<br>\\(\\widehat{AED} = \\widehat{B\'EC}\\) (hai góc đối đỉnh).<br>\\(\\Rightarrow \\Delta ADE \\sim \\Delta B\'CE\\) (g-g).<br>\\(\\Rightarrow \\frac{DE}{CE} = \\frac{AD}{B\'C} = \\frac{70}{20} = \\frac{7}{2}\\).<br>Mặt khác, \\(E\\) nằm trên \\(DC\\) nên:<br>\\(DE + CE = DC = 120\\)<br>\\(\\Rightarrow \\frac{7}{2}CE + CE = 120\\)<br>\\(\\Rightarrow \\frac{9}{2}CE = 120\\)<br>\\(\\Rightarrow CE = \\frac{240}{9} = \\frac{80}{3} \\approx 26,67\\) (km).<br><br>Vậy trạm trung chuyển \\(E\\) phải cách vị trí \\(C\\) một khoảng là \\(\\frac{80}{3}\\) km để hành trình của tàu là ngắn nhất. ✓'},
+]};
+
+/* ═══════════════════════════════════
+   DYNAMIC DATA (Firestore)
+   — exercises and theories live in Firebase.
+   — mm_un_cd (username cooldown) stays in localStorage.
+═══════════════════════════════════ */
+
+// In-memory cache so renders are instant after first load
+let _exCache = null;   // {easy:[], med:[], hard:[], pro:[]}
+let _thCache  = null;  // []
+let _fbReady  = false;
+
+window.addEventListener('firebase-ready', ()=>{
+  _fbReady = true;
+  loadAllData().then(()=>{
+    renderExercises();
+    renderTopics();
+    window._setupRealtimeListeners();
+  });
+});
+
+async function loadAllData(){
+  try{
+    [_exCache, _thCache] = await Promise.all([
+      window.fbGetExercises(),
+      window.fbGetTheories()
+    ]);
+  }catch(e){
+    console.error('Firebase load error:',e);
+    showToast('Lỗi kết nối Firebase. Kiểm tra cấu hình!', false);
+    _exCache = {easy:[],med:[],hard:[],pro:[]};
+    _thCache = [];
+  }
+}
+
+function getExCache(){ return _exCache || {easy:[],med:[],hard:[],pro:[]}; }
+function getThCache(){ return _thCache || []; }
+
+async function saveExercises_fb(exercise){
+  try{
+    await window.fbSaveExercise(exercise);
+  }catch(e){ showToast('Lỗi lưu Firebase: '+e.message, false); throw e; }
+}
+
+async function deleteExercise_fb(id){
+  try{
+    await window.fbDeleteExercise(id);
+    if(_exCache){ for(const d of Object.keys(_exCache)) _exCache[d]=_exCache[d].filter(e=>e.id!==id); }
+  }catch(e){ showToast('Lỗi xóa Firebase: '+e.message, false); throw e; }
+}
+
+async function saveTheory_fb(theory){
+  try{
+    await window.fbSaveTheory(theory);
+  }catch(e){ showToast('Lỗi lưu Firebase: '+e.message, false); throw e; }
+}
+
+async function deleteTheory_fb(id){
+  try{
+    await window.fbDeleteTheory(id);
+    if(_thCache) _thCache=_thCache.filter(t=>t.id!==id);
+  }catch(e){ showToast('Lỗi xóa Firebase: '+e.message, false); throw e; }
+}
+
+function getAllTopics(){
+  const th=getThCache();
+  const extra=th.map(t=>({
+    id:'th-'+t.id,grade:parseInt(t.grade),title:t.title,
+    icon:'ti-file-text',color:'rgba(55,48,163,.1)',iconColor:'var(--primary)',
+    desc:t.desc,badge:t.badge,bc:'rgba(55,48,163,.09)',bt:'var(--primary)',
+    _custom:true,_content:t.content
+  }));
+  return [...TOPICS,...extra];
+}
+
+/* ═══════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════ */
+let currentGrade=6;
+function showSection(n){
+  closeProfileMenus();
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.bnav-tab').forEach(t=>t.classList.remove('active'));
+  const dt=document.getElementById('tab-'+n);if(dt)dt.classList.add('active');
+  const bt=document.getElementById('btab-'+n);if(bt)bt.classList.add('active');
+  document.getElementById('section-'+n).classList.add('active');
+  if(n==='knowledge'){renderTopics();showKnowledgeList();}
+  if(n==='exercises'){showExerciseList();renderExercises();}
+  if(n==='admin')renderAdminContent();
+  if(n==='account')renderAccountPage();
+  if(n==='playground'){setTimeout(()=>pgInit(),80);}
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function openPlayground(){showSection('playground');}
+
+/* ═══════════════════════════════════
+   KNOWLEDGE
+═══════════════════════════════════ */
+function setGrade(g,el){currentGrade=g;document.querySelectorAll('.grade-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');renderTopics();}
+function renderTopics(f=''){
+  const grid=document.getElementById('topics-grid');
+  const all=getAllTopics();
+  let list=all.filter(t=>(currentGrade===0||t.grade===currentGrade)&&(!f||(t.title+t.desc).toLowerCase().includes(f.toLowerCase())));
+  grid.innerHTML=list.length?list.map(t=>`<div class="topic-card" onclick="openLesson('${t.id}')"><div class="tc-icon" style="background:${t.color};color:${t.iconColor}"><i class="ti ${t.icon}"></i></div><h3>${t.title}</h3><p>${t.desc}</p><span class="tc-badge" style="background:${t.bc};color:${t.bt}">Lớp ${t.grade} · ${t.badge}</span></div>`).join(''):'<div class="empty-state"><i class="ti ti-search-off"></i><p>Không tìm thấy kết quả</p></div>';
+}
+function filterTopics(v){renderTopics(v);}
+function openLesson(id){
+  const all=getAllTopics();
+  const t=all.find(x=>x.id===id);if(!t)return;
+  let content='';
+  if(t._custom){
+    content=`<div class="cb"><div class="cb-heading">${t.title}</div><div class="fbox" style="white-space:pre-wrap;line-height:1.85;font-size:.9rem;font-weight:500;color:var(--text)">${t._content}</div></div>`;
+  }else{
+    content=LESSONS[id]||'<p style="color:var(--text3);font-weight:600;padding:1rem">Nội dung đang được cập nhật...</p>';
+  }
+  document.getElementById('knowledge-list').style.display='none';
+  const lv=document.getElementById('knowledge-lesson');lv.style.display='block';
+  lv.innerHTML=`<div class="lesson-view"><div class="lesson-header"><button class="back-btn" onclick="showKnowledgeList()"><i class="ti ti-arrow-left"></i> Quay lại</button><div><div class="lesson-title">${t.title}</div><div class="lesson-subtitle">Lớp ${t.grade} · ${t.badge}</div></div></div>${content}</div>`;
+  document.getElementById('section-knowledge').classList.add('active');
+  document.getElementById('section-home').classList.remove('active');
+  mjRender(lv);window.scrollTo({top:0,behavior:'smooth'});
+}
+function showKnowledgeList(){document.getElementById('knowledge-list').style.display='block';document.getElementById('knowledge-lesson').style.display='none';renderTopics();}
+
+const BOOK_DATA = {
+  'ket-noi': {
+    label: '📘 Kết Nối Tri Thức',
+    color: 'rgba(55,48,163,.08)',
+    border: '#a5b0d8',
+    books: [
+      { grade: 6, title: 'Toán 6 — Tập 1', url: 'https://drive.google.com/file/d/1cJISsu7cQtc5yIp2mpp9RCC3gJL5AUTz/view?usp=drive_link' },
+      { grade: 6, title: 'Toán 6 — Tập 2', url: 'https://drive.google.com/file/d/1hmi7K8g7J8DmkwAYhIq1SDSu14Pu1XBU/view?usp=sharing' },
+      { grade: 7, title: 'Toán 7 — Tập 1', url: 'https://drive.google.com/file/d/1YAqFmgwwCjlLSGBIiejLwKoChpbjpwCa/view?usp=sharing' },
+      { grade: 7, title: 'Toán 7 — Tập 2', url: 'https://drive.google.com/file/d/1ZwVO2q4UX4M-lPG_rFUAHJ9-75W7EV2D/view?usp=sharing' },
+      { grade: 8, title: 'Toán 8 — Tập 1', url: 'https://drive.google.com/file/d/1tU6VaQbbubmzBnmBwBLr4HUl78WfHGbk/view?usp=sharing' },
+      { grade: 8, title: 'Toán 8 — Tập 2', url: 'https://drive.google.com/file/d/1ACjlFiGnClpztuT8qh67oQ5dO5x4IMT_/view?usp=sharing' },
+      { grade: 9, title: 'Toán 9 — Tập 1', url: 'https://drive.google.com/file/d/13dluA8PFkIQ76d85xZOd1eVzS3voG2Pd/view?usp=sharing' },
+      { grade: 9, title: 'Toán 9 — Tập 2', url: 'https://drive.google.com/file/d/1Hr1s-c_Wv5-fEr8dR6mbTspF0MfISITD/view?usp=sharing' },
+    ]
+  }
+};
+
+let currentBookTab = 'theory';
+
+function setBookTab(tab, el) {
+  currentBookTab = tab;
+  // update active tab style
+  document.querySelectorAll('#book-tabs .grade-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+
+  const theoryEl  = document.getElementById('topics-grid').parentElement; // grade-tabs + search + grid
+  const pdfViewer = document.getElementById('book-pdf-viewer');
+  const searchBar = document.querySelector('#knowledge-list .search-bar');
+  const gradeTabs = document.querySelector('#knowledge-list .grade-tabs');
+
+  if (tab === 'theory') {
+    pdfViewer.style.display = 'none';
+    searchBar.style.display = '';
+    gradeTabs.style.display = '';
+    document.getElementById('topics-grid').style.display = '';
+    renderTopics();
+  } else {
+    searchBar.style.display = 'none';
+    gradeTabs.style.display = 'none';
+    document.getElementById('topics-grid').style.display = 'none';
+    pdfViewer.style.display = 'block';
+    renderBookPanel(tab);
+  }
+}
+
+function renderBookPanel(tab) {
+  const data = BOOK_DATA[tab];
+  if (!data) return;
+  const header = document.getElementById('pdf-header');
+  const list   = document.getElementById('pdf-list');
+
+  header.innerHTML = `<div style="font-size:1rem;font-weight:800;color:var(--text);margin-bottom:.25rem">${data.label}</div>
+    <div style="font-size:.82rem;color:var(--text3);font-weight:600">Nhấn vào sách để đọc ngay trong trang.</div>`;
+
+  list.innerHTML = [6,7,8,9].map(g => {
+    const gradeBooks = data.books.filter(b => b.grade === g);
+    return `<div style="background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:1rem;box-shadow:var(--shadow)">
+      <div style="font-size:.7rem;font-weight:800;color:var(--primary);letter-spacing:.5px;text-transform:uppercase;margin-bottom:.6rem">LỚP ${g}</div>
+      ${gradeBooks.map(b => `
+        <div onclick="${b.url ? `openPdfEmbed('${b.url}','${b.title.replace(/'/g,"\\'")}')` : `showToast('Chưa có file PDF cho sách này. Admin vui lòng thêm URL vào BOOK_DATA.',false)`}"
+          style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;cursor:pointer;transition:background .18s;margin-bottom:4px;background:var(--bg2);border:1px solid var(--border)"
+          onmouseover="this.style.background='rgba(55,48,163,.08)'" onmouseout="this.style.background='var(--bg2)'">
+          <i class="ti ti-file-type-pdf" style="font-size:20px;color:#dc2626;flex-shrink:0"></i>
+          <span style="font-size:.84rem;font-weight:700;color:var(--text)">${b.title}</span>
+          ${b.url ? '<i class="ti ti-book-open" style="font-size:13px;color:var(--text3);margin-left:auto"></i>' : '<span style="font-size:.68rem;color:var(--text3);margin-left:auto;font-weight:600">Sắp có</span>'}
+        </div>`).join('')}
+    </div>`;
+  }).join('');
+}
+
+function openPdfEmbed(url, title) {
+  document.getElementById('pdf-panel').style.display = 'none';
+  const embedPanel = document.getElementById('pdf-embed-panel');
+  document.getElementById('pdf-embed-title').textContent = title;
+  document.getElementById('pdf-embed-open').href = url;
+  // Convert Google Drive /view links to /preview for proper embedding
+  const embedUrl = url.replace(/\/file\/d\/([^/]+)\/view[^"]*/, '/file/d/$1/preview');
+  document.getElementById('pdf-embed-frame').src = embedUrl;
+  embedPanel.style.display = 'block';
+  embedPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function closePdfEmbed() {
+  document.getElementById('pdf-embed-panel').style.display = 'none';
+  document.getElementById('pdf-embed-frame').src = '';
+  document.getElementById('pdf-panel').style.display = 'block';
+}
+
+/* ═══════════════════════════════════
+   EXERCISES — FILTER STATE
+═══════════════════════════════════ */
+let exFilterDiff=new Set(['easy','med','hard','pro']);
+
+function toggleDiffFilter(d,el){
+  if(exFilterDiff.has(d)){
+    if(exFilterDiff.size===1){showToast('Phải chọn ít nhất một cấp độ!',false);return;}
+    exFilterDiff.delete(d);el.classList.remove('active');
+  }else{
+    exFilterDiff.add(d);el.classList.add('active');
+  }
+  renderExercises();
+}
+
+function clearFilters(){
+  exFilterDiff=new Set(['easy','med','hard','pro']);
+  document.querySelectorAll('.fchip').forEach(c=>c.classList.add('active'));
+  document.getElementById('filter-city').value='';
+  document.getElementById('filter-year').value='';
+  document.getElementById('filter-school').value='';
+  document.getElementById('ex-sort').value='default';
+  document.getElementById('ex-search-input').value='';
+  renderExercises();
+}
+
+function getAllExercisesFlat(){
+  const ex=getExCache();
+  const diffs=['easy','med','hard','pro'];
+  let all=[];
+  diffs.forEach(d=>{
+    (BASE_EXERCISES[d]||[]).forEach(e=>all.push({...e,diff:d,_custom:false}));
+    (ex[d]||[]).forEach(e=>all.push({...e,diff:d,_custom:true}));
+  });
+  return all;
+}
+
+function rebuildTagDropdowns(allExercises){
+  const cities=[...new Set(allExercises.map(e=>e.city).filter(Boolean))].sort();
+  const years=[...new Set(allExercises.map(e=>e.year).filter(Boolean))].sort((a,b)=>b-a);
+  const schools=[...new Set(allExercises.map(e=>e.school).filter(Boolean))].sort();
+  const cityEl=document.getElementById('filter-city');
+  const yearEl=document.getElementById('filter-year');
+  const schoolEl=document.getElementById('filter-school');
+  if(!cityEl)return;
+  const cv=cityEl.value,yv=yearEl.value,sv=schoolEl.value;
+  cityEl.innerHTML=`<option value="">🏙 Tất cả tỉnh/thành</option>`+cities.map(c=>`<option value="${c}">${c}</option>`).join('');
+  yearEl.innerHTML=`<option value="">📅 Tất cả năm</option>`+years.map(y=>`<option value="${y}">${y}</option>`).join('');
+  schoolEl.innerHTML=`<option value="">🏫 Tất cả trường</option>`+schools.map(s=>`<option value="${s}">${s}</option>`).join('');
+  cityEl.value=cv;yearEl.value=yv;schoolEl.value=sv;
+}
+
+const DIFF_ORDER={easy:0,med:1,hard:2,pro:3};
+
+function renderExercises(){
+  const el=document.getElementById('exercise-list');
+  const rb=document.getElementById('ex-results-bar');
+  if(!el)return;
+
+  const f=(document.getElementById('ex-search-input')?.value||'').toLowerCase();
+  const cityF=document.getElementById('filter-city')?.value||'';
+  const yearF=document.getElementById('filter-year')?.value||'';
+  const schoolF=document.getElementById('filter-school')?.value||'';
+  const sortV=document.getElementById('ex-sort')?.value||'default';
+
+  let all=getAllExercisesFlat();
+  rebuildTagDropdowns(all);
+
+  // Filter
+  let exs=all.filter(e=>{
+    if(!exFilterDiff.has(e.diff))return false;
+    if(cityF&&e.city!==cityF)return false;
+    if(yearF&&String(e.year)!==yearF)return false;
+    if(schoolF&&e.school!==schoolF)return false;
+    if(f&&!((e.title||'')+e.q+(e.topic||'')+(e.city||'')+(e.school||'')).toLowerCase().includes(f))return false;
+    return true;
+  });
+
+  // Sort
+  if(sortV==='year-desc') exs.sort((a,b)=>(b.year||0)-(a.year||0));
+  else if(sortV==='year-asc') exs.sort((a,b)=>(a.year||0)-(b.year||0));
+  else if(sortV==='diff-asc') exs.sort((a,b)=>DIFF_ORDER[a.diff]-DIFF_ORDER[b.diff]);
+  else if(sortV==='diff-desc') exs.sort((a,b)=>DIFF_ORDER[b.diff]-DIFF_ORDER[a.diff]);
+
+  const lbl={easy:'Dễ',med:'Trung bình',hard:'Khó',pro:'Chuyên'};
+
+  if(rb) rb.innerHTML=`Hiển thị <span>${exs.length} bài tập</span>`;
+
+  el.innerHTML=exs.length?exs.map(e=>`
+    <div class="exercise-card" onclick="openExercise('${e.id}','${e.diff}')">
+      <div class="ex-card-inner">
+        <div class="ex-card-body">
+          <div class="ex-meta">
+            ${e.title?`<span class="ex-title">${e.title}</span>`:''}
+            <span class="badge ${e.diff}">${lbl[e.diff]}</span>
+            <span class="badge topic">${e.topic||'—'} · L${e.grade}</span>
+            ${e.city?`<span class="badge" style="background:rgba(14,116,144,.1);color:var(--teal)">📍 ${e.city}</span>`:''}
+            ${e.year?`<span class="badge" style="background:rgba(55,48,163,.09);color:var(--primary)">📅 ${e.year}</span>`:''}
+            ${e.school?`<span class="badge" style="background:rgba(109,40,217,.09);color:var(--violet)">🏫 ${e.school}</span>`:''}
+            ${e._custom?'<span class="badge" style="background:rgba(55,48,163,.12);color:var(--primary)">Mới</span>':''}
+          </div>
+          <div class="ex-preview">${e.q}</div>
+        </div>
+        <i class="ti ti-chevron-right ex-chevron"></i>
+      </div>
+    </div>`).join(''):'<div class="empty-state"><i class="ti ti-mood-empty"></i><p>Không có bài tập phù hợp</p></div>';
+  mjRender(el);
+}
+
+function openExercise(id, diff){
+  const allExs=getAllExercisesFlat();
+  const e=allExs.find(x=>x.id===id&&x.diff===diff);
+  if(!e)return;
+  const lbl={easy:'Dễ',med:'Trung bình',hard:'Khó',pro:'Chuyên'};
+  document.getElementById('exercise-browse').style.display='none';
+  const dv=document.getElementById('exercise-detail');
+  dv.style.display='block';
+  dv.innerHTML=`<div class="ex-detail-view">
+    <div class="ex-detail-header">
+      <button class="back-btn" onclick="showExerciseList()"><i class="ti ti-arrow-left"></i> Quay lại</button>
+      <div class="ex-detail-meta">
+        <div class="ex-detail-title">${e.title||'Bài tập'}</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">
+          <span class="badge ${diff}">${lbl[diff]}</span>
+          <span class="badge topic">${e.topic||'—'} · L${e.grade}</span>
+          ${e.city?`<span class="badge" style="background:rgba(14,116,144,.1);color:var(--teal)">📍 ${e.city}</span>`:''}
+          ${e.year?`<span class="badge" style="background:rgba(55,48,163,.09);color:var(--primary)">📅 ${e.year}</span>`:''}
+          ${e.school?`<span class="badge" style="background:rgba(109,40,217,.09);color:var(--violet)">🏫 ${e.school}</span>`:''}
+          ${e._custom?'<span class="badge" style="background:rgba(55,48,163,.12);color:var(--primary)">Mới</span>':''}
+        </div>
+      </div>
+      ${e._custom?`<button class="del-btn" onclick="deleteExercise('${e.id}','${diff}')"><i class="ti ti-trash" style="font-size:13px"></i> Xóa</button>`:''}
+    </div>
+    <div class="ex-detail-question">${e.q}</div>
+    <div class="ex-detail-btns">
+      <button class="show-hint-btn" onclick="toggleBox('hint-${e.id}',this,'Ẩn gợi ý','💡 Gợi ý')">💡 Gợi ý</button>
+      <button class="show-ans-btn" onclick="toggleBox('ans-${e.id}',this,'Ẩn đáp án','✅ Đáp án')">✅ Đáp án</button>
+      ${e.sol?`<button class="show-sol-btn" onclick="toggleBox('sol-${e.id}',this,'Ẩn lời giải','📝 Lời giải')">📝 Lời giải</button>`:''}
+    </div>
+    <div class="hint-box" id="hint-${e.id}"><strong>Gợi ý:</strong> ${e.hint||'Không có gợi ý.'}</div>
+    <div class="ans-box" id="ans-${e.id}"><strong>Đáp án:</strong> ${e.ans}</div>
+    ${e.sol?`<div class="sol-box" id="sol-${e.id}"><strong>Lời giải:</strong><br>${e.sol}</div>`:''}
+  </div>`;
+  mjRender(dv);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showExerciseList(){
+  document.getElementById('exercise-browse').style.display='';
+  document.getElementById('exercise-detail').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function toggleBox(id,btn,h,s){const b=document.getElementById(id);const v=b.classList.toggle('visible');btn.textContent=v?h:s;if(v)mjRender(b);}
+
+async function deleteExercise(id,diff){
+  if(!isAdmin){showToast('Bạn không có quyền xóa!',false);return;}
+  if(!confirm('Xóa bài tập này?'))return;
+  await deleteExercise_fb(id);
+  renderExercises();renderManageList();
+  showExerciseList();
+  showToast('Đã xóa bài tập!');
+}
+
+/* ═══════════════════════════════════
+   ADMIN CONTENT RENDER
+═══════════════════════════════════ */
+function renderAdminContent(){
+  const el=document.getElementById('admin-content');
+  if(!isAdmin){
+    el.innerHTML=`<div class="access-denied">
+      <i class="ti ti-shield-off"></i>
+      <h3>Không có quyền truy cập</h3>
+      <p>${window.Clerk?.user
+        ?'Tài khoản của bạn không có quyền Admin.'
+        :'Vui lòng đăng nhập với tài khoản Admin.'
+      }</p>
+    </div>`;
+    return;
+  }
+  el.innerHTML=`
+  <div class="admin-panel">
+    <div class="admin-panel-header">
+      <div class="admin-panel-title"><i class="ti ti-shield-check"></i>Bảng quản trị nội dung</div>
+      <button onclick="doSignOut()" style="padding:7px 16px;border-radius:var(--radius-sm);border:1.5px solid rgba(185,28,28,.3);background:rgba(185,28,28,.06);color:var(--red);font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px">
+        <i class="ti ti-logout"></i> Đăng xuất
+      </button>
+    </div>
+    <div class="admin-tabs">
+      <div class="admin-tab active" onclick="setAdminTab('add-ex')" id="atab-add-ex"><i class="ti ti-plus"></i> Thêm bài tập</div>
+      <div class="admin-tab" onclick="setAdminTab('add-theory')" id="atab-add-theory"><i class="ti ti-book-2"></i> Thêm lý thuyết</div>
+      <div class="admin-tab" onclick="setAdminTab('manage')" id="atab-manage"><i class="ti ti-list"></i> Quản lý nội dung</div>
+      <div class="admin-tab" onclick="setAdminTab('import')" id="atab-import"><i class="ti ti-file-upload"></i> Nhập hàng loạt</div>
+    </div>
+    <!-- Thêm bài tập -->
+    <div class="admin-form active" id="aform-add-ex">
+      <div class="form-row trio">
+        <div class="form-field"><label><i class="ti ti-school" style="font-size:13px"></i> Lớp</label>
+          <select id="ex-grade"><option value="6">Lớp 6</option><option value="7">Lớp 7</option><option value="8">Lớp 8</option><option value="9" selected>Lớp 9</option></select></div>
+        <div class="form-field"><label><i class="ti ti-layers" style="font-size:13px"></i> Cấp độ</label>
+          <select id="ex-diff"><option value="easy">Dễ</option><option value="med" selected>Trung bình</option><option value="hard">Khó</option><option value="pro">Chuyên</option></select></div>
+        <div class="form-field"><label><i class="ti ti-tag" style="font-size:13px"></i> Chủ đề</label>
+          <input type="text" id="ex-topic" placeholder="VD: Căn thức, Vi-ét..."></div>
+      </div>
+      <div class="form-row trio">
+        <div class="form-field"><label><i class="ti ti-map-pin" style="font-size:13px"></i> Tỉnh/Thành phố</label>
+          <input type="text" id="ex-city" placeholder="VD: TP. Hồ Chí Minh, Hà Nội..."></div>
+        <div class="form-field"><label><i class="ti ti-calendar" style="font-size:13px"></i> Năm thi</label>
+          <input type="number" id="ex-year" placeholder="VD: 2025" min="2000" max="2099"></div>
+        <div class="form-field"><label><i class="ti ti-building-school" style="font-size:13px"></i> Trường</label>
+          <input type="text" id="ex-school" placeholder="VD: THPT Chuyên Lê Hồng Phong..."></div>
+      </div>
+      <div class="form-field" style="margin-bottom:1rem">
+        <label><i class="ti ti-heading" style="font-size:13px"></i> Tiêu đề bài <span style="color:var(--red)">*</span></label>
+        <input type="text" id="ex-title" placeholder="VD: CTVG-LA2025-B1, Viet_1...">
+      </div>
+      <div class="form-field" style="margin-bottom:1rem">
+        <label><i class="ti ti-question-mark" style="font-size:13px"></i> Đề bài <span style="color:var(--red)">*</span></label>
+        <textarea id="ex-question" class="tall" placeholder="Nhập đề bài...&#10;LaTeX: \\( x^2+1=0 \\) hoặc \\[ \\Delta=b^2-4ac \\]"></textarea>
+        <div class="form-hint">💡 Hỗ trợ LaTeX: dùng \\( ... \\) inline, \\[ ... \\] dòng riêng</div>
+      </div>
+      <div class="form-row">
+        <div class="form-field"><label><i class="ti ti-bulb" style="font-size:13px"></i> Gợi ý</label><textarea id="ex-hint" placeholder="Gợi ý hướng giải..."></textarea></div>
+        <div class="form-field"><label><i class="ti ti-check" style="font-size:13px"></i> Đáp án <span style="color:var(--red)">*</span></label><textarea id="ex-answer" placeholder="Đáp án cuối cùng..."></textarea></div>
+      </div>
+      <div class="form-field" style="margin-bottom:0">
+        <label><i class="ti ti-writing" style="font-size:13px"></i> Lời giải chi tiết</label>
+        <textarea id="ex-solution" class="tall" placeholder="Lời giải từng bước (tùy chọn)..."></textarea>
+      </div>
+      <button class="submit-btn" onclick="submitExercise()"><i class="ti ti-send"></i> Đăng bài tập</button>
+    </div>
+    <!-- Thêm lý thuyết -->
+    <div class="admin-form" id="aform-add-theory">
+      <div class="form-row">
+        <div class="form-field"><label><i class="ti ti-school" style="font-size:13px"></i> Lớp</label>
+          <select id="th-grade"><option value="6">Lớp 6</option><option value="7">Lớp 7</option><option value="8">Lớp 8</option><option value="9" selected>Lớp 9</option></select></div>
+        <div class="form-field"><label><i class="ti ti-folder" style="font-size:13px"></i> Nhóm chủ đề</label>
+          <select id="th-badge"><option>Số & Đại số</option><option>Đại số</option><option>Hình học</option><option>Hàm số</option><option>Thống kê</option><option>Nâng cao</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-field"><label><i class="ti ti-heading" style="font-size:13px"></i> Tiêu đề <span style="color:var(--red)">*</span></label><input type="text" id="th-title" placeholder="VD: Định lý Pythagore"></div>
+        <div class="form-field"><label><i class="ti ti-text-size" style="font-size:13px"></i> Mô tả ngắn <span style="color:var(--red)">*</span></label><input type="text" id="th-desc" placeholder="VD: Định lý, hệ quả và ứng dụng"></div>
+      </div>
+      <div class="form-field" style="margin-bottom:0">
+        <label><i class="ti ti-file-text" style="font-size:13px"></i> Nội dung lý thuyết <span style="color:var(--red)">*</span></label>
+        <textarea id="th-content" style="min-height:180px;resize:vertical" placeholder="Nhập nội dung lý thuyết...&#10;Hỗ trợ LaTeX: \\( công thức \\)"></textarea>
+        <div class="form-hint">💡 Nội dung sẽ hiển thị với công thức LaTeX</div>
+      </div>
+      <button class="submit-btn" onclick="submitTheory()"><i class="ti ti-send"></i> Đăng lý thuyết</button>
+    </div>
+    <!-- Quản lý -->
+    <div class="admin-form" id="aform-manage">
+      <div class="admin-list" id="manage-ex-list">
+        <div class="admin-list-title"><i class="ti ti-list-check"></i> Bài tập đã thêm (từ Admin)</div>
+        <div id="manage-ex-items"></div>
+      </div>
+      <div class="admin-list" style="margin-top:1.5rem">
+        <div class="admin-list-title"><i class="ti ti-books"></i> Lý thuyết đã thêm (từ Admin)</div>
+        <div id="manage-th-items"></div>
+      </div>
+    </div>
+    <!-- Nhập hàng loạt -->
+    <div class="admin-form" id="aform-import">
+      <div class="import-drop-zone" id="import-drop-zone">
+        <input type="file" id="import-file-input" accept=".json" onchange="handleImportFile(this.files[0])">
+        <i class="ti ti-file-type-js"></i>
+        <p>Kéo thả file JSON hoặc nhấn để chọn</p>
+        <small>Chấp nhận file <code>.json</code> — mảng bài tập hoặc gói đề thi</small>
+      </div>
+      <div class="import-schema-hint">
+        <strong>📋 Định dạng JSON hỗ trợ:</strong><br>
+        Mảng bài tập đơn giản: <code>[{"title":"...", "q":"...", "ans":"...", ...}, ...]</code><br>
+        Gói đề thi (metadata tự điền): <code>{"meta":{"city":"TP. HCM","year":2025,"school":"..."}, "exercises":[...]}</code><br><br>
+        <strong>Các trường của bài tập:</strong>
+        <code>title</code> · <code>q</code> <em>(đề bài, bắt buộc)</em> · <code>ans</code> <em>(đáp án, bắt buộc)</em> · <code>hint</code> · <code>sol</code> · <code>topic</code> · <code>grade</code> · <code>diff</code> <em>(easy/med/hard/pro)</em> · <code>city</code> · <code>year</code> · <code>school</code>
+      </div>
+      <!-- Review queue (shown after parse) -->
+      <div id="import-queue-wrap" style="display:none">
+        <div class="import-queue-header">
+          <div class="import-queue-title">
+            <i class="ti ti-list-check" style="color:var(--primary);font-size:18px"></i>
+            Hàng chờ kiểm duyệt
+            <span class="import-count-badge green" id="iq-approved-count">0 duyệt</span>
+            <span class="import-count-badge red" id="iq-rejected-count">0 bỏ</span>
+          </div>
+          <div class="import-queue-actions">
+            <button class="import-queue-btn select-all" onclick="iqSelectAll()"><i class="ti ti-check-all" style="font-size:14px"></i> Duyệt tất cả</button>
+            <button class="import-queue-btn reject-all" onclick="iqRejectAll()"><i class="ti ti-x" style="font-size:14px"></i> Bỏ tất cả</button>
+            <button class="import-queue-btn commit" id="iq-commit-btn" onclick="iqCommit()"><i class="ti ti-database-import" style="font-size:14px"></i> Đăng các bài đã duyệt</button>
+            <button class="import-queue-btn clear" onclick="iqClear()"><i class="ti ti-trash" style="font-size:14px"></i> Xóa queue</button>
+          </div>
+        </div>
+        <div id="import-queue-list"></div>
+        <div class="import-progress" id="import-progress">
+          <div class="import-progress-text" id="import-progress-text">Đang đăng bài tập...</div>
+          <div class="import-progress-bar-wrap"><div class="import-progress-bar" id="import-progress-bar"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function setAdminTab(name){
+  document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.admin-form').forEach(f=>f.classList.remove('active'));
+  document.getElementById('atab-'+name).classList.add('active');
+  document.getElementById('aform-'+name).classList.add('active');
+  if(name==='manage')renderManageList();
+  if(name==='import')setTimeout(initImportDragDrop,50);
+}
+
+async function submitExercise(){
+  if(!isAdmin){showToast('Bạn không có quyền!',false);return;}
+  const grade=document.getElementById('ex-grade').value;
+  const diff=document.getElementById('ex-diff').value;
+  const topic=document.getElementById('ex-topic').value.trim()||'Tổng hợp';
+  const title=document.getElementById('ex-title').value.trim();
+  const city=document.getElementById('ex-city').value.trim();
+  const year=document.getElementById('ex-year').value.trim();
+  const school=document.getElementById('ex-school').value.trim();
+  const q=document.getElementById('ex-question').value.trim();
+  const hint=document.getElementById('ex-hint').value.trim();
+  const ans=document.getElementById('ex-answer').value.trim();
+  const sol=document.getElementById('ex-solution').value.trim();
+  if(!title||!q||!ans){showToast('Vui lòng điền tiêu đề, đề bài và đáp án!',false);return;}
+  const exercise={id:uid(),title,topic,grade:parseInt(grade),diff,
+    city:city||null,year:year?parseInt(year):null,school:school||null,
+    q,hint,ans,sol};
+  const btn=document.querySelector('#aform-add-ex .submit-btn');
+  if(btn){btn.disabled=true;btn.textContent='Đang lưu...';}
+  try{
+    await saveExercises_fb(exercise);
+    if(!_exCache[diff])_exCache[diff]=[];
+    _exCache[diff].push(exercise);
+    ['ex-topic','ex-title','ex-city','ex-year','ex-school','ex-question','ex-hint','ex-answer','ex-solution'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    showToast('Đã thêm bài tập thành công!');
+    renderExercises();renderManageList();
+  }finally{
+    if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-send"></i> Đăng bài tập';}
+  }
+}
+
+async function submitTheory(){
+  if(!isAdmin){showToast('Bạn không có quyền!',false);return;}
+  const grade=document.getElementById('th-grade').value;
+  const badge=document.getElementById('th-badge').value;
+  const title=document.getElementById('th-title').value.trim();
+  const desc=document.getElementById('th-desc').value.trim();
+  const content=document.getElementById('th-content').value.trim();
+  if(!title||!desc||!content){showToast('Vui lòng điền đầy đủ thông tin!',false);return;}
+  const theory={id:uid(),grade:parseInt(grade),badge,title,desc,content};
+  const btn=document.querySelector('#aform-add-theory .submit-btn');
+  if(btn){btn.disabled=true;btn.textContent='Đang lưu...';}
+  try{
+    await saveTheory_fb(theory);
+    if(!_thCache)_thCache=[];
+    _thCache.push(theory);
+    ['th-title','th-desc','th-content'].forEach(id=>document.getElementById(id).value='');
+    showToast('Đã thêm lý thuyết thành công!');
+    renderManageList();renderTopics();
+  }finally{
+    if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-send"></i> Đăng lý thuyết';}
+  }
+}
+
+async function deleteTheory(id){
+  if(!isAdmin){showToast('Bạn không có quyền!',false);return;}
+  if(!confirm('Xóa lý thuyết này?'))return;
+  await deleteTheory_fb(id);
+  renderManageList();renderTopics();
+  showToast('Đã xóa lý thuyết!');
+}
+
+function renderManageList(){
+  const ex=getExCache();
+  const th=getThCache();
+  const lbl={easy:'Dễ',med:'Trung bình',hard:'Khó',pro:'Chuyên'};
+  const exEl=document.getElementById('manage-ex-items');
+  const thEl=document.getElementById('manage-th-items');
+  if(!exEl||!thEl)return;
+  const allCustomEx=[
+    ...((ex.easy||[]).map(e=>({...e,diff:'easy'}))),
+    ...((ex.med||[]).map(e=>({...e,diff:'med'}))),
+    ...((ex.hard||[]).map(e=>({...e,diff:'hard'}))),
+    ...((ex.pro||[]).map(e=>({...e,diff:'pro'})))
+  ];
+  exEl.innerHTML=allCustomEx.length?allCustomEx.map(e=>`
+    <div class="admin-item">
+      <div class="admin-item-body">
+        <div class="admin-item-meta"><span>Lớp ${e.grade}</span><span>${lbl[e.diff]}</span><span>${e.topic}</span>${e.city?`<span>📍 ${e.city}</span>`:''}${e.year?`<span>📅 ${e.year}</span>`:''}${e.school?`<span>🏫 ${e.school}</span>`:''}</div>
+        <div class="admin-item-q" title="${(e.title||e.q).replace(/"/g,'&quot;')}">${e.title?`${e.title} - `:''}${e.q.replace(/<[^>]+>/g,'').slice(0,80)}${e.q.length>80?'…':''}</div>
+      </div>
+      <button class="admin-item-del" onclick="deleteExercise('${e.id}','${e.diff}')"><i class="ti ti-trash" style="font-size:13px"></i> Xóa</button>
+    </div>`).join(''):'<div class="empty-state" style="padding:1.25rem"><i class="ti ti-mood-empty"></i><p>Chưa có bài tập nào được thêm</p></div>';
+  thEl.innerHTML=th.length?th.map(t=>`
+    <div class="admin-item">
+      <div class="admin-item-body">
+        <div class="admin-item-meta"><span>Lớp ${t.grade}</span><span>${t.badge}</span></div>
+        <div class="admin-item-q">${t.title}</div>
+      </div>
+      <button class="admin-item-del" onclick="deleteTheory('${t.id}')"><i class="ti ti-trash" style="font-size:13px"></i> Xóa</button>
+    </div>`).join(''):'<div class="empty-state" style="padding:1.25rem"><i class="ti ti-mood-empty"></i><p>Chưa có lý thuyết nào được thêm</p></div>';
+}
+
+/* ═══════════════════════════════════
+   INIT
+═══════════════════════════════════ */
+// Show loading skeleton until Firebase is ready
+renderTopics();
+renderExercises();
+
+// Warn if Firebase config is still placeholder
+window.addEventListener('firebase-ready', ()=>{
+  const cfg = typeof FIREBASE_CONFIG !== 'undefined' ? FIREBASE_CONFIG : null;
+  // cfg is in the module scope so we can't access it here directly —
+  // the module sets window._fbReady=true when actually initialised
+});
+
+/* ═══════════════════════════════════
+   PLAYGROUND (GeoGebra UI)
+═══════════════════════════════════ */
+let _pgApplet = null;
+let _pgInitDone = false;
+let _pgAppletReady = false;
+
+window.pgGgbReady = function(){
+  _pgApplet = window.ggbApplet;
+  _pgAppletReady = true;
+  try{
+    _pgApplet.setCoordSystem(-10,10,-10,10);
+    _pgApplet.setAxesVisible(true,true);
+    _pgApplet.setGridVisible(true);
+  }catch(e){console.warn('GeoGebra init warning',e);}
+};
+
+function pgInit(){
+  if(_pgInitDone) return;
+  const wrap=document.getElementById('ggbbox');
+  if(!wrap)return;
+  if(typeof GGBApplet==='undefined'){
+    showToast('Không tải được GeoGebra API. Kiểm tra kết nối mạng.',false);
+    return;
+  }
+  const params={
+    appName:'geometry',
+    id:'ggbApplet',
+    width:wrap.clientWidth||900,
+    height:wrap.clientHeight||620,
+    showToolBar:true,
+    showToolBarHelp:true,
+    showAlgebraInput:true,
+    showMenuBar:true,
+    showResetIcon:true,
+    showZoomButtons:true,
+    showFullscreenButton:true,
+    allowStyleBar:true,
+    enableLabelDrags:true,
+    enableShiftDragZoom:true,
+    enableRightClick:true,
+    appletOnLoad:'pgGgbReady',
+    borderColor:'#ffffff',
+    language:'vi',
+    useBrowserForJS:false
+  };
+  new GGBApplet(params,true).inject('ggbbox');
+  _pgInitDone=true;
+  window.addEventListener('resize',pgResizeApplet);
+}
+
+function pgResizeApplet(){
+  const wrap=document.getElementById('ggbbox');
+  if(!_pgAppletReady||!wrap)return;
+  try{_pgApplet.setSize(wrap.clientWidth,wrap.clientHeight);}catch(e){}
+}
+</script>
+</body>
+</html>
+<!--  
+update logs are written by Dzubell ( mathemagic dev )
+
+  clerck login problem has been fixed by replacing password with OTP verification
+  furhter changes of login system will not be authorized unless consennted by Devs team. ( Dzubell and Min )
+
+  11/6/26
+  added firebase data storage
+  exercise and knowlegde are now universal
+
+  13/6/26
+  added playground with GeoGebra integration
+  added bulk import for admin
+-->
