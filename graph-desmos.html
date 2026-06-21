@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sân chơi hình học — Desmos | Mathemagic</title>
+
+<script src="https://www.desmos.com/api/v1.12/calculator.js?apiKey=383291b199c14dcf920952d83ebe8b73"></script>
+
+<style>
+  html, body{
+    margin:0; height:100%;
+    font-family:sans-serif;
+  }
+  body{
+    display:flex; flex-direction:column;
+  }
+  header{
+    flex:none;
+    padding:12px 20px;
+    border-bottom:1.5px solid #e3e0ee;
+    display:flex; align-items:center; gap:12px;
+  }
+  header a{
+    color:#3730a3; font-weight:700; text-decoration:none;
+    font-size:.9rem;
+    padding:6px 14px;
+    border:1.5px solid #e3e0ee;
+    border-radius:8px;
+  }
+  header a:hover{
+    border-color:#3730a3;
+  }
+  #geometry-box{
+    flex:1;
+    min-height:0;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html">← Mathemagic</a>
+</header>
+
+<div id="geometry-box"></div>
+
+<script>
+let geometry = null;
+
+function init(){
+  if(typeof Desmos === 'undefined'){
+    document.getElementById('geometry-box').textContent = 'Desmos script không tải được (kiểm tra API key).';
+    return;
+  }
+  if(!Desmos.enabledFeatures || !Desmos.enabledFeatures.GeometryCalculator){
+    document.getElementById('geometry-box').textContent = 'API key chưa có quyền Geometry Calculator.';
+    return;
+  }
+
+  const elt = document.getElementById('geometry-box');
+  geometry = Desmos.Geometry(elt, {
+    expressions: true,
+    settingsMenu: true,
+    keypad: true
+  });
+
+  requestAnimationFrame(() => geometry.resize());
+  window.addEventListener('resize', () => geometry && geometry.resize());
+}
+
+init();
+</script>
+
+</body>
+</html>

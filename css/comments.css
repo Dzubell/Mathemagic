@@ -1,0 +1,236 @@
+/* ═══════════════════════════════════
+   COMMENTS CSS — Thảo luận dưới bài tập
+═══════════════════════════════════ */
+
+.cmt-panel {
+  margin-top: 1.75rem;
+  padding-top: 1.5rem;
+  border-top: 1.5px solid var(--border);
+}
+.cmt-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 1.1rem;
+  flex-wrap: wrap;
+}
+.cmt-panel-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+#cmt-count { color: var(--text3); font-weight: 700; font-size: .85rem; }
+
+.cmt-sort-select {
+  padding: 6px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text2);
+  font-family: 'Nunito', sans-serif;
+  font-size: .8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.cmt-sort-select:focus { outline: none; border-color: var(--primary); }
+
+/* ── Compose box ──────────────────── */
+.cmt-compose {
+  display: flex;
+  gap: .7rem;
+  margin-bottom: 1.5rem;
+}
+.cmt-compose-body { flex: 1; display: flex; flex-direction: column; gap: .5rem; }
+.cmt-compose textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 56px;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Nunito', sans-serif;
+  font-size: .88rem;
+  line-height: 1.5;
+}
+.cmt-compose textarea:focus { outline: none; border-color: var(--primary); }
+.cmt-submit-btn {
+  align-self: flex-end;
+  padding: 8px 20px;
+  background: linear-gradient(135deg, var(--primary), var(--violet));
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'Nunito', sans-serif;
+  font-size: .85rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: opacity .18s;
+}
+.cmt-submit-btn:hover { opacity: .88; }
+.cmt-submit-btn:disabled { opacity: .6; cursor: not-allowed; }
+
+/* ── Locked state (not signed in) ──── */
+.cmt-locked {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  background: var(--bg3);
+  border: 1.5px dashed var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 1.5rem;
+  font-size: .88rem;
+  font-weight: 700;
+  color: var(--text3);
+}
+.cmt-locked i { font-size: 1.1rem; }
+.cmt-signin-btn {
+  margin-left: auto;
+  padding: 6px 16px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'Nunito', sans-serif;
+  font-size: .82rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+.cmt-signin-btn:hover { opacity: .88; }
+
+/* ── List ─────────────────────────── */
+.cmt-list { display: flex; flex-direction: column; }
+.cmt-loading, .cmt-empty {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text3);
+  font-size: .86rem;
+  font-weight: 600;
+  padding: 1.25rem 0;
+  justify-content: center;
+}
+
+.cmt-item {
+  display: flex;
+  gap: .7rem;
+  align-items: flex-start;
+  padding: .9rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.cmt-item:last-child { border-bottom: none; }
+
+.cmt-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--violet));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .85rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.cmt-body { flex: 1; min-width: 0; }
+.cmt-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.cmt-name { font-size: .87rem; font-weight: 800; color: var(--text); }
+.cmt-time { font-size: .74rem; color: var(--text3); font-weight: 600; }
+.cmt-text {
+  font-size: .87rem;
+  color: var(--text2);
+  line-height: 1.6;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+/* ── Vote pill ─────────────────────── */
+.cmt-vote-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  border: 1.5px solid var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 6px;
+  width: fit-content;
+}
+.cmt-vote-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 3px 9px;
+  display: flex;
+  align-items: center;
+  color: var(--text3);
+  font-size: 13px;
+  transition: background .15s, color .15s;
+}
+.cmt-vote-btn:hover { background: var(--bg3); }
+.cmt-vote-btn.up.active { color: var(--green); background: rgba(4,120,87,.1); }
+.cmt-vote-btn.down.active { color: #e11d48; background: rgba(225,29,72,.1); }
+.cmt-vote-score {
+  font-size: .8rem;
+  font-weight: 800;
+  padding: 0 8px;
+  border-left: 1.5px solid var(--border);
+  border-right: 1.5px solid var(--border);
+  color: var(--text2);
+  min-width: 22px;
+  text-align: center;
+}
+
+.cmt-del-btn {
+  background: none;
+  border: none;
+  color: var(--text3);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  transition: color .15s, background .15s;
+}
+.cmt-del-btn:hover { color: var(--red); background: rgba(185,28,28,.08); }
+
+/* ── Load more ─────────────────────── */
+.cmt-loadmore-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 9px 0;
+  background: var(--bg3);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text2);
+  font-family: 'Nunito', sans-serif;
+  font-size: .84rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+.cmt-loadmore-btn:hover { background: var(--bg); border-color: var(--primary); }
+
+@media (max-width: 600px) {
+  .cmt-compose { flex-direction: column; }
+  .cmt-locked { flex-wrap: wrap; }
+  .cmt-signin-btn { margin-left: 0; }
+  .cmt-panel-head { justify-content: flex-start; }
+}

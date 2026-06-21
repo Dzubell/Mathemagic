@@ -8,8 +8,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
-<script src="https://www.geogebra.org/apps/deployggb.js"></script>
 <link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="js/bulk_import.js">
+<link rel="stylesheet" href="css/comments.css">
 </head>
 <body>
 
@@ -25,6 +26,7 @@
     <div class="nav-tab active" onclick="showSection('home')" id="tab-home"><i class="ti ti-home-2"></i>Trang chủ</div>
     <div class="nav-tab" onclick="showSection('knowledge')" id="tab-knowledge"><i class="ti ti-books"></i>Kho kiến thức</div>
     <div class="nav-tab" onclick="showSection('exercises')" id="tab-exercises"><i class="ti ti-edit"></i>Kho bài tập</div>
+    <div class="nav-tab" onclick="showSection('quiz')" id="tab-quiz"><i class="ti ti-list-check"></i>Trắc nghiệm</div>
   </div>
   <div class="nav-right" id="nav-right-area">
     <!-- Injected by Clerk init -->
@@ -36,6 +38,7 @@
   <div class="bnav-tab active" onclick="showSection('home')" id="btab-home"><i class="ti ti-home-2"></i><span>Trang chủ</span></div>
   <div class="bnav-tab" onclick="showSection('knowledge')" id="btab-knowledge"><i class="ti ti-books"></i><span>Kiến thức</span></div>
   <div class="bnav-tab" onclick="showSection('exercises')" id="btab-exercises"><i class="ti ti-edit"></i><span>Bài tập</span></div>
+  <div class="bnav-tab" onclick="showSection('quiz')" id="btab-quiz"><i class="ti ti-list-check"></i><span>Trắc nghiệm</span></div>
   <div class="mobile-profile-wrap" id="mobile-profile-wrap">
     <div class="bnav-tab" onclick="toggleMobileProfileMenu(event)" id="btab-profile"><i class="ti ti-user-circle"></i><span>Hồ sơ</span></div>
     <div class="mobile-profile-dropdown" id="mobile-profile-dropdown"></div>
@@ -78,7 +81,7 @@
       </div>
       <h3>Sân chơi hình học</h3>
       <p>Vẽ hình, khám phá định lý và kiểm chứng trực quan với công cụ đồ họa tương tác.</p>
-      <span class="card-tag" style="background:rgba(8,145,178,.13);color:var(--teal)">GeoGebra</span>
+      <span class="card-tag" style="background:rgba(8,145,178,.13);color:var(--teal)">Desmos</span>
     </div>
   </div>
   <div class="section-title"><i class="ti ti-flame"></i>Chủ đề trọng tâm thi lớp 10</div>
@@ -181,14 +184,10 @@
   <div id="exercise-detail" style="display:none"></div>
 </section>
 
-<!-- ══ PLAYGROUND ══ -->
-<section class="section" id="section-playground">
-  <div class="section-title" style="margin-bottom:1.1rem"><i class="ti ti-vector-triangle"></i>Sân chơi hình học</div>
-  <div class="playground-wrap" id="pg-wrap">
-    <div class="pg-canvas-wrap">
-      <div id="ggbbox" class="ggbbox"></div>
-    </div>
-  </div>
+<!-- ══ QUIZ ══ -->
+<section class="section" id="section-quiz">
+  <div class="section-title"><i class="ti ti-list-check"></i>Trắc nghiệm</div>
+  <div id="quiz-content"></div>
 </section>
 
 <!-- ══ ADMIN PANEL ══ -->
@@ -223,6 +222,10 @@ window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},opt
 
 <script src="js/data.js"></script>
 <script src="js/app.js"></script>
+<script src="js/bulk_import.js"></script>
+<script src="js/comments.js"></script>
+<script src="js/quiz.js"></script>
+<script src="js/quiz-admin.js"></script>
 
 </body>
 </html>
@@ -243,4 +246,9 @@ update logs are written by Dzubell ( mathemagic dev )
   17/6/26
   added extended url for esercises and lessons using harsh routing
   user can now bookmark specific exercise or lesson and share the link to others
+
+  20/6/26
+  replace geogebra playground with desmos for better performance and user experience
+  added comment section for each exercise, users can now discuss with each other
+  
 -->

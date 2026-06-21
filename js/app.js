@@ -431,13 +431,13 @@ function showSection(n){
   document.getElementById('section-'+n).classList.add('active');
   if(n==='knowledge'){renderTopics();showKnowledgeList();}
   if(n==='exercises'){showExerciseList();renderExercises();}
+  if(n==='quiz'){initQuizSection();}
   if(n==='admin')renderAdminContent();
   if(n==='account')renderAccountPage();
-  if(n==='playground'){setTimeout(()=>pgInit(),80);}
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function openPlayground(){showSection('playground');}
+function openPlayground(){window.location='graph-desmos.html';}
 
 /* ═══════════════════════════════════
    HASH ROUTING
@@ -696,14 +696,17 @@ function openExercise(id,diff){
     <div class="hint-box" id="hint-${e.id}"><strong>Gợi ý:</strong> ${e.hint||'Không có gợi ý.'}</div>
     <div class="ans-box" id="ans-${e.id}"><strong>Đáp án:</strong> ${e.ans}</div>
     ${e.sol?`<div class="sol-box" id="sol-${e.id}"><strong>Lời giải:</strong><br>${e.sol}</div>`:''}
+    ${renderCommentPanel(e)}
   </div>`;
   mjRender(dv);
+  initCommentListener(e.id);
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
 function showExerciseList(){
   document.getElementById('exercise-browse').style.display='';
   document.getElementById('exercise-detail').style.display='none';
+  cleanupCommentListener();
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -747,6 +750,7 @@ function renderAdminContent(){
       <div class="admin-tab" onclick="setAdminTab('add-theory')" id="atab-add-theory"><i class="ti ti-book-2"></i> Thêm lý thuyết</div>
       <div class="admin-tab" onclick="setAdminTab('manage')" id="atab-manage"><i class="ti ti-list"></i> Quản lý nội dung</div>
       <div class="admin-tab" onclick="setAdminTab('import')" id="atab-import"><i class="ti ti-file-upload"></i> Nhập hàng loạt</div>
+      <div class="admin-tab" onclick="setAdminTab('add-quiz')" id="atab-add-quiz"><i class="ti ti-list-check"></i> Trắc nghiệm</div>
     </div>
     <div class="admin-form active" id="aform-add-ex">
       <div class="form-row trio">
@@ -813,18 +817,29 @@ function renderAdminContent(){
       </div>
     </div>
     <div class="admin-form" id="aform-import">
+      <div class="imp-mode-tabs">
+        <button class="imp-mode-tab active" id="imp-mode-exercise" onclick="impSetMode('exercise')"><i class="ti ti-edit"></i> Bài tập tự luận</button>
+        <button class="imp-mode-tab" id="imp-mode-quiz" onclick="impSetMode('quiz')"><i class="ti ti-list-check"></i> Trắc nghiệm</button>
+      </div>
       <div class="import-drop-zone" id="import-drop-zone">
         <input type="file" id="import-file-input" accept=".json" onchange="handleImportFile(this.files[0])">
         <i class="ti ti-file-type-js"></i>
         <p>Kéo thả file JSON hoặc nhấn để chọn</p>
         <small>Chấp nhận file <code>.json</code> — mảng bài tập hoặc gói đề thi</small>
       </div>
-      <div class="import-schema-hint">
-        <strong>📋 Định dạng JSON hỗ trợ:</strong><br>
-        Mảng bài tập đơn giản: <code>[{"title":"...", "q":"...", "ans":"...", ...}, ...]</code><br>
+      <div class="import-schema-hint" id="imp-hint-exercise">
+        <strong>📋 Định dạng JSON — Bài tập tự luận:</strong><br>
+        Mảng đơn giản: <code>[{"title":"...", "q":"...", "ans":"...", ...}, ...]</code><br>
         Gói đề thi (metadata tự điền): <code>{"meta":{"city":"TP. HCM","year":2025,"school":"..."}, "exercises":[...]}</code><br><br>
-        <strong>Các trường của bài tập:</strong>
+        <strong>Các trường:</strong>
         <code>title</code> · <code>q</code> <em>(đề bài, bắt buộc)</em> · <code>ans</code> <em>(đáp án, bắt buộc)</em> · <code>hint</code> · <code>sol</code> · <code>topic</code> · <code>grade</code> · <code>diff</code> <em>(easy/med/hard/pro)</em> · <code>city</code> · <code>year</code> · <code>school</code>
+      </div>
+      <div class="import-schema-hint" id="imp-hint-quiz" style="display:none">
+        <strong>📋 Định dạng JSON — Trắc nghiệm:</strong><br>
+        Mảng đơn giản: <code>[{"q":"...", "opts":["A..","B..","C..","D.."], "ans":0, ...}, ...]</code><br>
+        Gói đề thi: <code>{"meta":{"city":"...","year":2025,"school":"..."}, "quizzes":[...]}</code><br><br>
+        <strong>Các trường:</strong>
+        <code>q</code> <em>(đề bài, bắt buộc)</em> · <code>opts</code> <em>(mảng 4 đáp án, bắt buộc)</em> · <code>ans</code> <em>(index đáp án đúng 0–3, bắt buộc)</em> · <code>sol</code> · <code>topic</code> · <code>grade</code> · <code>diff</code> <em>(easy/hard/pro)</em> · <code>city</code> · <code>year</code> · <code>school</code>
       </div>
       <div id="import-queue-wrap" style="display:none">
         <div class="import-queue-header">
@@ -848,6 +863,51 @@ function renderAdminContent(){
         </div>
       </div>
     </div>
+    <div class="admin-form" id="aform-add-quiz">
+      <div class="form-row trio">
+        <div class="form-field"><label><i class="ti ti-school" style="font-size:13px"></i> Lớp</label>
+          <select id="qz-grade"><option value="6">Lớp 6</option><option value="7">Lớp 7</option><option value="8">Lớp 8</option><option value="9" selected>Lớp 9</option></select></div>
+        <div class="form-field"><label><i class="ti ti-layers" style="font-size:13px"></i> Độ khó</label>
+          <select id="qz-diff"><option value="easy">Dễ</option><option value="hard">Khó</option><option value="pro">Chuyên</option></select></div>
+        <div class="form-field"><label><i class="ti ti-tag" style="font-size:13px"></i> Chủ đề</label>
+          <input type="text" id="qz-topic" placeholder="VD: Căn thức, Vi-ét..."></div>
+      </div>
+      <div class="form-row trio">
+        <div class="form-field"><label><i class="ti ti-map-pin" style="font-size:13px"></i> Tỉnh/Thành phố</label>
+          <input type="text" id="qz-city" placeholder="VD: TP. Hồ Chí Minh"></div>
+        <div class="form-field"><label><i class="ti ti-calendar" style="font-size:13px"></i> Năm thi</label>
+          <input type="number" id="qz-year" placeholder="VD: 2025" min="2000" max="2099"></div>
+        <div class="form-field"><label><i class="ti ti-building-school" style="font-size:13px"></i> Trường</label>
+          <input type="text" id="qz-school" placeholder="VD: THPT Chuyên LHP..."></div>
+      </div>
+      <div class="form-field" style="margin-bottom:1rem">
+        <label><i class="ti ti-question-mark" style="font-size:13px"></i> Đề bài <span style="color:var(--red)">*</span></label>
+        <textarea id="qz-question" class="tall" placeholder="Nhập đề bài... LaTeX: \\( x^2 \\) hoặc \\[ \\Delta \\]"></textarea>
+        <div class="form-hint">💡 Hỗ trợ LaTeX</div>
+      </div>
+      <div class="form-row">
+        <div class="form-field"><label>A. <span style="color:var(--red)">*</span></label><input type="text" id="qz-optA" placeholder="Đáp án A"></div>
+        <div class="form-field"><label>B. <span style="color:var(--red)">*</span></label><input type="text" id="qz-optB" placeholder="Đáp án B"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-field"><label>C. <span style="color:var(--red)">*</span></label><input type="text" id="qz-optC" placeholder="Đáp án C"></div>
+        <div class="form-field"><label>D. <span style="color:var(--red)">*</span></label><input type="text" id="qz-optD" placeholder="Đáp án D"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-field"><label><i class="ti ti-check" style="font-size:13px"></i> Đáp án đúng <span style="color:var(--red)">*</span></label>
+          <select id="qz-ans">
+            <option value="0">A</option><option value="1">B</option>
+            <option value="2">C</option><option value="3">D</option>
+          </select></div>
+        <div class="form-field"><label><i class="ti ti-writing" style="font-size:13px"></i> Giải thích (tùy chọn)</label>
+          <input type="text" id="qz-sol" placeholder="Giải thích ngắn gọn..."></div>
+      </div>
+      <button class="submit-btn" onclick="submitQuizQuestion()"><i class="ti ti-send"></i> Đăng câu hỏi</button>
+      <div class="admin-list" style="margin-top:2rem">
+        <div class="admin-list-title"><i class="ti ti-list-check"></i> Câu trắc nghiệm đã thêm</div>
+        <div id="quiz-manage-items"></div>
+      </div>
+    </div>
   </div>`;
 }
 
@@ -858,6 +918,7 @@ function setAdminTab(name){
   document.getElementById('aform-'+name).classList.add('active');
   if(name==='manage')renderManageList();
   if(name==='import')setTimeout(initImportDragDrop,50);
+  if(name==='add-quiz')renderQuizAdminTab();
 }
 
 async function submitExercise(){
@@ -951,52 +1012,6 @@ function renderManageList(){
       </div>
       <button class="admin-item-del" onclick="deleteTheory('${t.id}')"><i class="ti ti-trash" style="font-size:13px"></i> Xóa</button>
     </div>`).join(''):'<div class="empty-state" style="padding:1.25rem"><i class="ti ti-mood-empty"></i><p>Chưa có lý thuyết nào được thêm</p></div>';
-}
-
-/* ═══════════════════════════════════
-   PLAYGROUND (GeoGebra)
-═══════════════════════════════════ */
-let _pgApplet=null;
-let _pgInitDone=false;
-let _pgAppletReady=false;
-
-window.pgGgbReady=function(){
-  _pgApplet=window.ggbApplet;
-  _pgAppletReady=true;
-  try{
-    _pgApplet.setCoordSystem(-10,10,-10,10);
-    _pgApplet.setAxesVisible(true,true);
-    _pgApplet.setGridVisible(true);
-  }catch(e){console.warn('GeoGebra init warning',e);}
-};
-
-function pgInit(){
-  if(_pgInitDone)return;
-  const wrap=document.getElementById('ggbbox');
-  if(!wrap)return;
-  if(typeof GGBApplet==='undefined'){
-    showToast('Không tải được GeoGebra API. Kiểm tra kết nối mạng.',false);
-    return;
-  }
-  const params={
-    appName:'geometry',id:'ggbApplet',
-    width:wrap.clientWidth||900,height:wrap.clientHeight||620,
-    showToolBar:true,showToolBarHelp:true,showAlgebraInput:true,
-    showMenuBar:true,showResetIcon:true,showZoomButtons:true,
-    showFullscreenButton:true,allowStyleBar:true,enableLabelDrags:true,
-    enableShiftDragZoom:true,enableRightClick:true,
-    appletOnLoad:'pgGgbReady',borderColor:'#ffffff',
-    language:'vi',useBrowserForJS:false
-  };
-  new GGBApplet(params,true).inject('ggbbox');
-  _pgInitDone=true;
-  window.addEventListener('resize',pgResizeApplet);
-}
-
-function pgResizeApplet(){
-  const wrap=document.getElementById('ggbbox');
-  if(!_pgAppletReady||!wrap)return;
-  try{_pgApplet.setSize(wrap.clientWidth,wrap.clientHeight);}catch(e){}
 }
 
 /* ═══════════════════════════════════
