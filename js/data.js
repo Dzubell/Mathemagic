@@ -23,87 +23,322 @@ const LESSONS = {
 
 /* ══════════ LỚP 6 ══════════ */
 'so-hoc': `
-<div class="cb"><div class="cb-heading">Số nguyên và tập hợp số</div>
-<div class="defbox">Tập hợp số: \\(\\mathbb{N}\\subset\\mathbb{Z}\\subset\\mathbb{Q}\\subset\\mathbb{R}\\).</div>
+<div class="cb"><div class="cb-heading">1. Tập hợp số & Tính chia hết</div>
+<div class="defbox">Tập hợp số: \\(\\mathbb{N}\\subset\\mathbb{Z}\\subset\\mathbb{Q}\\subset\\mathbb{R}\\). Số nguyên gồm số nguyên âm, 0 và số nguyên dương.</div>
 <div class="fbox">
-  <div class="frow"><span class="lbl">Chia hết cho tổng</span><span class="val">Nếu \\(a\\vdots m\\) và \\(b\\vdots m\\) thì \\((a+b)\\vdots m\\)</span></div>
-  <div class="frow"><span class="lbl">Số ước của \\(n\\)</span><span class="val">\\(n=p_1^{a_1}\\cdot p_2^{a_2}\\cdots\\) → số ước \\(=(a_1+1)(a_2+1)\\cdots\\)</span></div>
+  <div class="frow"><span class="lbl">Chia hết cho tổng</span><span class="val">Nếu \\(a\\vdots m\\) và \\(b\\vdots m\\) thì \\((a+b)\\vdots m\\) và \\((a-b)\\vdots m\\)</span></div>
+  <div class="frow"><span class="lbl">Dấu hiệu chia hết 2, 5</span><span class="val">Xét chữ số tận cùng</span></div>
+  <div class="frow"><span class="lbl">Dấu hiệu chia hết 3, 9</span><span class="val">Tổng các chữ số chia hết cho 3 (hoặc 9)</span></div>
   <div class="frow"><span class="lbl">Quy tắc dấu ngoặc</span><span class="val">\\(a-(b-c)=a-b+c\\)</span></div>
 </div>
-<div class="note"><strong>Lỗi thường gặp:</strong> Bỏ ngoặc sau dấu trừ phải đổi dấu <em>tất cả</em> hạng tử.</div>
+<div class="note"><strong>Lỗi thường gặp:</strong> Bỏ ngoặc sau dấu trừ phải đổi dấu <em>tất cả</em> hạng tử trong ngoặc.</div>
+</div>
+
+<div class="cb"><div class="cb-heading">2. Ước, bội & Phân tích ra thừa số nguyên tố</div>
+<div class="fbox green">
+  <div class="frow"><span class="lbl">Phân tích nguyên tố</span><span class="val">\\(n=p_1^{a_1}\\cdot p_2^{a_2}\\cdots\\)</span></div>
+  <div class="frow"><span class="lbl">Số ước của \\(n\\)</span><span class="val">\\((a_1+1)(a_2+1)\\cdots\\)</span></div>
+  <div class="frow"><span class="lbl">ƯCLN(a,b)</span><span class="val">Tích các thừa số nguyên tố chung, lấy số mũ <em>nhỏ nhất</em></span></div>
+  <div class="frow"><span class="lbl">BCNN(a,b)</span><span class="val">Tích các thừa số nguyên tố (chung và riêng), lấy số mũ <em>lớn nhất</em></span></div>
+</div>
+<div class="fbox amber">
+  <strong>Ví dụ:</strong> \\(36=2^2\\cdot3^2\\). Số ước của 36: \\((2+1)(2+1)=9\\) ước.<br>
+  \\(\\text{ƯCLN}(12,18)=6\\), \\(\\text{BCNN}(12,18)=36\\).
+</div>
 </div>`,
 
 'phan-so': `
-<div class="cb"><div class="cb-heading">Phân số và các phép tính</div>
+<div class="cb"><div class="cb-heading">1. Phân số — Định nghĩa & Rút gọn</div>
+<div class="defbox">Phân số \\(\\dfrac{a}{b}\\) (\\(b\\neq0\\)) biểu diễn \\(a\\) phần bằng nhau trong \\(b\\) phần của một đơn vị.</div>
 <div class="fbox">
   <div class="frow"><span class="lbl">Rút gọn</span><span class="val">\\(\\dfrac{a}{b}=\\dfrac{a\\div d}{b\\div d}\\), \\(d=\\text{ƯCLN}(a,b)\\)</span></div>
+  <div class="frow"><span class="lbl">So sánh (cùng mẫu dương)</span><span class="val">\\(\\dfrac{a}{m} < \\dfrac{b}{m} \\Leftrightarrow a<b \\)</span></div>
+  <div class="frow"><span class="lbl">Phân số tối giản</span><span class="val">\\(\\text{ƯCLN}(a,b)=1\\)</span></div>
+</div>
+<div class="fbox amber">
+  <strong>Ví dụ:</strong> Rút gọn \\(\\dfrac{18}{24}\\): \\(\\text{ƯCLN}(18,24)=6\\Rightarrow\\dfrac{18}{24}=\\dfrac{3}{4}\\).
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">2. Các phép tính trên phân số</div>
+<div class="fbox green">
   <div class="frow"><span class="lbl">Cộng / Trừ</span><span class="val">\\(\\dfrac{a}{b}\\pm\\dfrac{c}{d}=\\dfrac{ad\\pm bc}{bd}\\)</span></div>
-  <div class="frow"><span class="lbl">Nhân / Chia</span><span class="val">\\(\\dfrac{a}{b}\\times\\dfrac{c}{d}=\\dfrac{ac}{bd}\\); \\(\\dfrac{a}{b}\\div\\dfrac{c}{d}=\\dfrac{ad}{bc}\\)</span></div>
-</div></div>`,
+  <div class="frow"><span class="lbl">Nhân</span><span class="val">\\(\\dfrac{a}{b}\\times\\dfrac{c}{d}=\\dfrac{ac}{bd}\\)</span></div>
+  <div class="frow"><span class="lbl">Chia</span><span class="val">\\(\\dfrac{a}{b}\\div\\dfrac{c}{d}=\\dfrac{a}{b}\\times\\dfrac{d}{c}=\\dfrac{ad}{bc}\\)</span></div>
+</div>
+<div class="fbox amber">
+  <strong>Ví dụ:</strong> \\(\\dfrac{2}{3}+\\dfrac{1}{4}=\\dfrac{8}{12}+\\dfrac{3}{12}=\\dfrac{11}{12}\\)
+</div>
+<div class="note"><strong>Lỗi thường gặp:</strong> Cộng/trừ phân số <em>không</em> được cộng tử với tử, mẫu với mẫu — phải quy đồng mẫu trước.</div>
+</div>
+
+<div class="cb"><div class="cb-heading">3. Số thập phân & Chuyển đổi</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Phân số → số thập phân</span><span class="val">Thực hiện phép chia tử cho mẫu</span></div>
+  <div class="frow"><span class="lbl">Số thập phân → phân số</span><span class="val">Viết dưới dạng \\(\\dfrac{\\text{phần thập phân}}{10^k}\\) rồi rút gọn</span></div>
+</div>
+<div class="fbox amber">
+  <strong>Ví dụ:</strong> \\(0{,}75=\\dfrac{75}{100}=\\dfrac{3}{4}\\)
+</div>
+</div>`,
 
 'hinh-co-ban': `
-<div class="cb"><div class="cb-heading">Tam giác cơ bản</div>
+<div class="cb"><div class="cb-heading">1. Điểm, đường thẳng, đoạn thẳng, tia</div>
+<div class="defbox">
+  Qua hai điểm phân biệt, có một và chỉ một đường thẳng. Đường thẳng kéo dài vô hạn hai phía; đoạn thẳng có hai đầu mút cố định; tia có một gốc và kéo dài vô hạn về một phía.
+</div>
+<svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg" style="max-width:480px;height:auto;display:block;margin:0 auto">
+<defs><marker id="ah1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1L9 5L1 9Z" fill="var(--primary)"/></marker></defs>
+<line x1="40" y1="40" x2="520" y2="40" stroke="var(--primary)" stroke-width="2" marker-start="url(#ah1)" marker-end="url(#ah1)"/>
+<circle cx="140" cy="40" r="4" fill="var(--text)"/>
+<circle cx="280" cy="40" r="4" fill="var(--text)"/>
+<circle cx="420" cy="40" r="4" fill="var(--text)"/>
+<text x="140" y="26" text-anchor="middle" font-size="14" font-weight="700" fill="var(--text)">A</text>
+<text x="280" y="26" text-anchor="middle" font-size="14" font-weight="700" fill="var(--text)">B</text>
+<text x="420" y="26" text-anchor="middle" font-size="14" font-weight="700" fill="var(--text)">C</text>
+<text x="540" y="44" font-size="12" fill="var(--text3)">Đường thẳng</text>
+<line x1="140" y1="125" x2="140" y2="135" stroke="var(--text)" stroke-width="1.5"/>
+<line x1="140" y1="130" x2="420" y2="130" stroke="var(--primary)" stroke-width="2"/>
+<line x1="420" y1="125" x2="420" y2="135" stroke="var(--text)" stroke-width="1.5"/>
+<circle cx="140" cy="130" r="4" fill="var(--text)"/>
+<circle cx="420" cy="130" r="4" fill="var(--text)"/>
+<text x="140" y="116" text-anchor="middle" font-size="14" font-weight="700" fill="var(--text)">A</text>
+<text x="420" y="116" text-anchor="middle" font-size="14" font-weight="700" fill="var(--text)">B</text>
+<text x="540" y="134" font-size="12" fill="var(--text3)">Đoạn thẳng</text>
+<line x1="140" y1="205" x2="140" y2="215" stroke="var(--text)" stroke-width="1.5"/>
+<line x1="140" y1="210" x2="510" y2="210" stroke="var(--primary)" stroke-width="2" marker-end="url(#ah1)"/>
+<circle cx="140" cy="210" r="4" fill="var(--text)"/>
+<circle cx="300" cy="210" r="4" fill="var(--text)"/>
+<text x="140" y="196" text-anchor="middle" font-size="14" font-weight="700" fill="var(--text)">A</text>
+<text x="300" y="196" text-anchor="middle" font-size="14" font-weight="700" fill="var(--text)">B</text>
+<text x="540" y="214" font-size="12" fill="var(--text3)">Tia</text>
+</svg>
+<div class="note"><strong>Phân biệt:</strong> Đường thẳng <em>AC</em> không có độ dài (vô hạn); đoạn thẳng <em>AB</em> có độ dài đo được; tia <em>AB</em> chỉ giới hạn một đầu (gốc <em>A</em>).</div>
+</div>
+
+<div class="cb"><div class="cb-heading">2. Góc</div>
+<div class="defbox">Góc \\(xOy\\) là hình gồm hai tia \\(Ox\\), \\(Oy\\) chung gốc \\(O\\). \\(O\\) gọi là đỉnh góc, \\(Ox\\) và \\(Oy\\) là hai cạnh góc.</div>
+<svg viewBox="0 0 460 230" xmlns="http://www.w3.org/2000/svg" style="max-width:380px;height:auto;display:block;margin:0 auto">
+<defs><marker id="ah2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1L9 5L1 9Z" fill="var(--primary)"/></marker></defs>
+<line x1="150" y1="200" x2="400" y2="200" stroke="var(--primary)" stroke-width="2" marker-end="url(#ah2)"/>
+<line x1="150" y1="200" x2="278.6" y2="46.8" stroke="var(--primary)" stroke-width="2" marker-end="url(#ah2)"/>
+<path d="M 188.0 200.0 L 187.9 196.7 L 187.4 193.4 L 186.7 190.2 L 185.7 187.0 L 184.4 183.9 L 182.9 181.0 L 181.1 178.2 L 179.1 175.6 L 176.9 173.1 L 174.4 170.9" fill="none" stroke="var(--amber)" stroke-width="2"/>
+<circle cx="150" cy="200" r="4" fill="var(--text)"/>
+<text x="132" y="214" font-size="14" font-weight="700" fill="var(--text)">O</text>
+<text x="408" y="204" font-size="14" font-weight="700" fill="var(--text)">x</text>
+<text x="278" y="32" font-size="14" font-weight="700" fill="var(--text)">y</text>
+<text x="202" y="180" font-size="13" font-weight="700" fill="var(--amber)">α</text>
+</svg>
+${tbl('<table class="kbt"><tr><th>Loại góc</th><th>Số đo</th></tr><tr><td>Góc nhọn</td><td>\\(0°<\\alpha<90°\\)</td></tr><tr><td>Góc vuông</td><td>\\(\\alpha=90°\\)</td></tr><tr><td>Góc tù</td><td>\\(90°<\\alpha<180°\\)</td></tr><tr><td>Góc bẹt</td><td>\\(\\alpha=180°\\)</td></tr></table>')}
+</div>
+
+<div class="cb"><div class="cb-heading">3. Tam giác</div>
+<svg viewBox="0 0 460 260" xmlns="http://www.w3.org/2000/svg" style="max-width:420px;height:auto;display:block;margin:0 auto">
+<polygon points="60,220 420,220 220,60" fill="none" stroke="var(--primary)" stroke-width="2"/>
+<line x1="220" y1="60" x2="220" y2="220" stroke="var(--teal)" stroke-width="1.5" stroke-dasharray="5 4"/>
+<rect x="212" y="212" width="16" height="8" fill="none" stroke="var(--teal)" stroke-width="1.5"/>
+<path d="M 90.0 220.0 L 89.9 217.1 L 89.4 214.1 L 88.7 211.3 L 87.7 208.5 L 86.5 205.9 L 84.9 203.3 L 83.2 201.0 L 81.2 198.8" fill="none" stroke="var(--amber)" stroke-width="2"/>
+<path d="M 390.0 220.0 L 390.1 217.5 L 390.4 215.0 L 391.0 212.5 L 391.7 210.1 L 392.6 207.7 L 393.8 205.5 L 395.1 203.3 L 396.6 201.3" fill="none" stroke="var(--amber)" stroke-width="2"/>
+<path d="M 201.6 78.4 L 205.9 81.8 L 210.7 84.3 L 216.0 85.7 L 221.4 86.0 L 226.8 85.1 L 231.9 83.1 L 236.5 80.1 L 240.3 76.2" fill="none" stroke="var(--amber)" stroke-width="2"/>
+<circle cx="60" cy="220" r="4" fill="var(--text)"/>
+<circle cx="420" cy="220" r="4" fill="var(--text)"/>
+<circle cx="220" cy="60" r="4" fill="var(--text)"/>
+<circle cx="220" cy="220" r="3.5" fill="var(--teal)"/>
+<text x="42" y="234" font-size="14" font-weight="700" fill="var(--text)">A</text>
+<text x="424" y="234" font-size="14" font-weight="700" fill="var(--text)">B</text>
+<text x="220" y="46" text-anchor="middle" font-size="14" font-weight="700" fill="var(--text)">C</text>
+<text x="226" y="234" font-size="13" font-weight="700" fill="var(--teal)">H</text>
+<text x="102" y="206" font-size="13" font-weight="700" fill="var(--amber)">A</text>
+<text x="377" y="208" font-size="13" font-weight="700" fill="var(--amber)">B</text>
+<text x="222" y="102" text-anchor="middle" font-size="13" font-weight="700" fill="var(--amber)">C</text>
+<text x="225" y="142" font-size="13" font-weight="700" fill="var(--teal)">h</text>
+</svg>
 <div class="fbox green">
   <div class="frow"><span class="lbl">Tổng 3 góc</span><span class="val">\\(\\widehat{A}+\\widehat{B}+\\widehat{C}=180°\\)</span></div>
-  <div class="frow"><span class="lbl">Diện tích</span><span class="val">\\(S=\\dfrac{1}{2}\\times\\text{đáy}\\times h\\)</span></div>
-</div></div>`,
+  <div class="frow"><span class="lbl">Diện tích</span><span class="val">\\(S=\\dfrac{1}{2}\\times\\text{đáy}\\times h\\) (\\(h\\) là đường cao ứng với đáy)</span></div>
+  <div class="frow"><span class="lbl">Bất đẳng thức tam giác</span><span class="val">Mỗi cạnh nhỏ hơn tổng và lớn hơn hiệu hai cạnh còn lại</span></div>
+</div>
+<div class="fbox amber">
+  <strong>Ví dụ:</strong> Tam giác \\(ABC\\) có đáy \\(AB=12\\) cm, đường cao \\(CH=5\\) cm.<br>
+  \\(S=\\dfrac{1}{2}\\times12\\times5=30\\) cm².
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">4. Tứ giác</div>
+<svg viewBox="0 0 460 290" xmlns="http://www.w3.org/2000/svg" style="max-width:420px;height:auto;display:block;margin:0 auto">
+<polygon points="80,250 280,260 380,100 150,60" fill="none" stroke="var(--primary)" stroke-width="2"/>
+<path d="M 108.0 251.4 L 107.8 247.0 L 107.0 242.6 L 105.5 238.4 L 103.4 234.6 L 100.6 231.1 L 97.4 228.1 L 93.7 225.6 L 89.7 223.7" fill="none" stroke="var(--amber)" stroke-width="2"/>
+<path d="M 252.0 258.6 L 253.3 251.5 L 256.4 244.9 L 261.1 239.3 L 267.0 235.2 L 273.9 232.7 L 281.1 232.0 L 288.2 233.2 L 294.8 236.3" fill="none" stroke="var(--amber)" stroke-width="2"/>
+<path d="M 365.2 123.7 L 361.8 121.3 L 358.9 118.4 L 356.4 115.1 L 354.4 111.4 L 353.0 107.5 L 352.2 103.5 L 352.0 99.3 L 352.4 95.2" fill="none" stroke="var(--amber)" stroke-width="2"/>
+<path d="M 140.3 86.3 L 146.3 87.7 L 152.4 87.9 L 158.4 86.7 L 164.0 84.3 L 168.9 80.6 L 172.9 76.0 L 175.9 70.7 L 177.6 64.8" fill="none" stroke="var(--amber)" stroke-width="2"/>
+<circle cx="80" cy="250" r="4" fill="var(--text)"/>
+<circle cx="280" cy="260" r="4" fill="var(--text)"/>
+<circle cx="380" cy="100" r="4" fill="var(--text)"/>
+<circle cx="150" cy="60" r="4" fill="var(--text)"/>
+<text x="58" y="264" font-size="14" font-weight="700" fill="var(--text)">A</text>
+<text x="284" y="280" font-size="14" font-weight="700" fill="var(--text)">B</text>
+<text x="392" y="98" font-size="14" font-weight="700" fill="var(--text)">C</text>
+<text x="132" y="50" font-size="14" font-weight="700" fill="var(--text)">D</text>
+<text x="108" y="230" font-size="13" font-weight="700" fill="var(--amber)">A</text>
+<text x="252" y="225" font-size="13" font-weight="700" fill="var(--amber)">B</text>
+<text x="333" y="120" font-size="13" font-weight="700" fill="var(--amber)">C</text>
+<text x="163" y="100" font-size="13" font-weight="700" fill="var(--amber)">D</text>
+</svg>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Tổng 4 góc</span><span class="val">\\(\\widehat{A}+\\widehat{B}+\\widehat{C}+\\widehat{D}=360°\\)</span></div>
+</div>
+<div class="note"><strong>Ghi nhớ:</strong> Tứ giác bất kỳ luôn chia được thành 2 tam giác bằng một đường chéo, mỗi tam giác góc tổng 180° → tổng 4 góc tứ giác \\(=2\\times180°=360°\\).</div>
+</div>`,
 
 /* ══════════ LỚP 7 ══════════ */
 'ty-le': `
-<div class="cb"><div class="cb-heading">Tỉ lệ thức</div>
+<div class="cb"><div class="cb-heading">1. Tỉ lệ thức</div>
+<div class="defbox">Tỉ lệ thức là đẳng thức giữa hai tỉ số: \\(\\dfrac{a}{b}=\\dfrac{c}{d}\\).</div>
 <div class="fbox">
   <div class="frow"><span class="lbl">Định nghĩa</span><span class="val">\\(\\dfrac{a}{b}=\\dfrac{c}{d}\\Leftrightarrow a\\cdot d=b\\cdot c\\)</span></div>
-  <div class="frow"><span class="lbl">Tính chất dãy tỉ số</span><span class="val">\\(\\dfrac{a}{b}=\\dfrac{c}{d}=\\dfrac{a+c}{b+d}\\)</span></div>
-</div></div>
-<div class="cb"><div class="cb-heading">Đại lượng tỉ lệ</div>
+  <div class="frow"><span class="lbl">Tính chất dãy tỉ số bằng nhau</span><span class="val">\\(\\dfrac{a}{b}=\\dfrac{c}{d}=\\dfrac{a+c}{b+d}=\\dfrac{a-c}{b-d}\\)</span></div>
+</div>
+<div class="fbox amber">
+  <strong>Ví dụ:</strong> Tìm \\(x,y\\) biết \\(\\dfrac{x}{3}=\\dfrac{y}{5}\\) và \\(x+y=24\\).<br>
+  Theo tính chất dãy tỉ số: \\(\\dfrac{x}{3}=\\dfrac{y}{5}=\\dfrac{x+y}{3+5}=\\dfrac{24}{8}=3\\Rightarrow x=9,\\;y=15\\).
+</div>
+<div class="note"><strong>Lỗi thường gặp:</strong> Khi áp dụng tính chất dãy tỉ số, mẫu phải cộng/trừ tương ứng với tử — không trộn dấu.</div>
+</div>
+
+<div class="cb"><div class="cb-heading">2. Đại lượng tỉ lệ thuận, tỉ lệ nghịch</div>
 <div class="fbox green">
-  <div class="frow"><span class="lbl">Tỉ lệ thuận</span><span class="val">\\(y=kx\\)</span></div>
-  <div class="frow"><span class="lbl">Tỉ lệ nghịch</span><span class="val">\\(xy=k\\) (hằng số)</span></div>
-</div></div>`,
+  <div class="frow"><span class="lbl">Tỉ lệ thuận</span><span class="val">\\(y=kx\\) (\\(k\\neq0\\) là hệ số tỉ lệ); \\(\\dfrac{y_1}{x_1}=\\dfrac{y_2}{x_2}=k\\)</span></div>
+  <div class="frow"><span class="lbl">Tỉ lệ nghịch</span><span class="val">\\(xy=k\\) (hằng số); \\(x_1y_1=x_2y_2=k\\)</span></div>
+</div>
+<div class="fbox amber">
+  <strong>Ví dụ:</strong> 5 công nhân làm xong việc trong 12 ngày. Hỏi 6 công nhân (cùng năng suất) làm xong trong mấy ngày?<br>
+  Số công nhân và số ngày là hai đại lượng tỉ lệ nghịch: \\(5\\times12=6\\times x\\Rightarrow x=10\\) ngày.
+</div>
+</div>`,
 
 'ham-so-bac1': `
-<div class="cb"><div class="cb-heading">Hàm số bậc nhất \\(y=ax+b\\)</div>
+<div class="cb"><div class="cb-heading">1. Hàm số bậc nhất \\(y=ax+b\\)</div>
+<div class="defbox">Hàm số bậc nhất có dạng \\(y=ax+b\\) (\\(a\\neq0\\)), đồ thị là một đường thẳng.</div>
 <div class="fbox">
-  <div class="frow"><span class="lbl">Đồng biến / Nghịch biến</span><span class="val">\\(a>0\\) tăng; \\(a<0\\) giảm</span></div>
-  <div class="frow"><span class="lbl">Giao trục \\(Oy\\)</span><span class="val">\\((0,b)\\)</span></div>
-  <div class="frow"><span class="lbl">Giao trục \\(Ox\\)</span><span class="val">\\((-b/a,0)\\)</span></div>
-</div></div>
-<div class="cb"><div class="cb-heading">Vị trí tương đối</div>
+  <div class="frow"><span class="lbl">Đồng biến / Nghịch biến</span><span class="val">\\(a>0\\) hàm số đồng biến (tăng); \\(a<0\\) nghịch biến (giảm)</span></div>
+  <div class="frow"><span class="lbl">Giao trục \\(Oy\\)</span><span class="val">Cho \\(x=0\\Rightarrow y=b\\): điểm \\((0,b)\\)</span></div>
+  <div class="frow"><span class="lbl">Giao trục \\(Ox\\)</span><span class="val">Cho \\(y=0\\Rightarrow x=-b/a\\): điểm \\((-b/a,0)\\)</span></div>
+</div>
+<div class="fbox amber">
+  <strong>Ví dụ:</strong> Xác định \\(y=ax+b\\) biết đồ thị đi qua \\(A(1;3)\\) và \\(B(-1;-1)\\).<br>
+  Thế tọa độ: \\(\\begin{cases}a+b=3\\\\-a+b=-1\\end{cases}\\Rightarrow a=2,\\;b=1\\). Vậy \\(y=2x+1\\).
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">2. Vị trí tương đối của hai đường thẳng</div>
 ${tbl('<table class="kbt"><tr><th>Vị trí</th><th>Điều kiện</th></tr><tr><td>Cắt nhau</td><td>\\(a_1\\neq a_2\\)</td></tr><tr><td>Song song</td><td>\\(a_1=a_2,b_1\\neq b_2\\)</td></tr><tr><td>Trùng nhau</td><td>\\(a_1=a_2,b_1=b_2\\)</td></tr><tr><td>Vuông góc</td><td>\\(a_1 a_2=-1\\)</td></tr></table>')}
+<div class="note"><strong>Lỗi thường gặp:</strong> Hai đường song song chỉ cần <em>cùng hệ số góc</em> \\(a\\) — quên kiểm tra \\(b_1\\neq b_2\\) sẽ nhầm với trùng nhau.</div>
 </div>`,
 
 'thong-ke': `
-<div class="cb"><div class="cb-heading">Số đặc trưng & Xác suất</div>
+<div class="cb"><div class="cb-heading">1. Số đặc trưng của mẫu dữ liệu</div>
 <div class="fbox">
-  <div class="frow"><span class="lbl">Trung bình</span><span class="val">\\(\\bar{x}=(x_1+\\cdots+x_n)/n\\)</span></div>
-  <div class="frow"><span class="lbl">Xác suất</span><span class="val">\\(P(A)=\\text{số thuận lợi}/\\text{tổng}\\)</span></div>
-</div></div>`,
+  <div class="frow"><span class="lbl">Số trung bình</span><span class="val">\\(\\bar{x}=\\dfrac{x_1+x_2+\\cdots+x_n}{n}\\)</span></div>
+  <div class="frow"><span class="lbl">Số trung vị (Median)</span><span class="val">Sắp xếp tăng dần, lấy giá trị ở giữa (hoặc trung bình hai giá trị giữa nếu \\(n\\) chẵn)</span></div>
+  <div class="frow"><span class="lbl">Mốt (Mode)</span><span class="val">Giá trị xuất hiện nhiều nhất</span></div>
+</div>
+<div class="fbox amber">
+  <strong>Ví dụ:</strong> Dữ liệu: 2, 3, 5, 7, 7, 9.<br>
+  Trung bình: \\(\\bar{x}=\\dfrac{2+3+5+7+7+9}{6}=\\dfrac{33}{6}=5{,}5\\).<br>
+  Trung vị: giá trị giữa thứ 3,4 là 5 và 7 → \\(\\dfrac{5+7}{2}=6\\). Mốt: \\(M_0=7\\) (xuất hiện 2 lần).
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">2. Xác suất của một biến cố</div>
+<div class="defbox">Xác suất biến cố \\(A\\) trong phép thử có các kết quả đồng khả năng: \\(P(A)=\\dfrac{\\text{số kết quả thuận lợi cho }A}{\\text{số kết quả có thể xảy ra}}\\).</div>
+<div class="fbox green">
+  <div class="frow"><span class="lbl">Biến cố chắc chắn</span><span class="val">\\(P(A)=1\\)</span></div>
+  <div class="frow"><span class="lbl">Biến cố không thể</span><span class="val">\\(P(A)=0\\)</span></div>
+  <div class="frow"><span class="lbl">Mọi biến cố</span><span class="val">\\(0\\leq P(A)\\leq1\\)</span></div>
+</div>
+<div class="fbox amber">
+  <strong>Ví dụ:</strong> Gieo một con xúc xắc 6 mặt. Tính xác suất ra mặt số chẵn.<br>
+  Kết quả thuận lợi: \\(\\{2,4,6\\}\\) → \\(P=\\dfrac{3}{6}=\\dfrac{1}{2}\\).
+</div>
+</div>`,
 
 /* ══════════ LỚP 8 ══════════ */
 'hang-dang-thuc': `
-<div class="cb"><div class="cb-heading">7 Hằng đẳng thức đáng nhớ</div>
+<div class="cb"><div class="cb-heading">1. Bảng 7 hằng đẳng thức đáng nhớ</div>
 ${tbl('<table class="kbt"><tr><th>#</th><th>Tên</th><th>Công thức</th></tr><tr><td>1</td><td>Bình phương tổng</td><td>\\((a+b)^2=a^2+2ab+b^2\\)</td></tr><tr><td>2</td><td>Bình phương hiệu</td><td>\\((a-b)^2=a^2-2ab+b^2\\)</td></tr><tr><td>3</td><td>Hiệu hai bình phương</td><td>\\(a^2-b^2=(a+b)(a-b)\\)</td></tr><tr><td>4</td><td>Lập phương tổng</td><td>\\((a+b)^3=a^3+3a^2b+3ab^2+b^3\\)</td></tr><tr><td>5</td><td>Lập phương hiệu</td><td>\\((a-b)^3=a^3-3a^2b+3ab^2-b^3\\)</td></tr><tr><td>6</td><td>Tổng hai lập phương</td><td>\\(a^3+b^3=(a+b)(a^2-ab+b^2)\\)</td></tr><tr><td>7</td><td>Hiệu hai lập phương</td><td>\\(a^3-b^3=(a-b)(a^2+ab+b^2)\\)</td></tr></table>')}
-<div class="note"><strong>Lỗi thường gặp:</strong> \\((a+b)^2\\neq a^2+b^2\\).</div></div>`,
+<div class="note"><strong>Lỗi thường gặp:</strong> \\((a+b)^2\\neq a^2+b^2\\) — thiếu hạng tử \\(2ab\\).</div>
+</div>
+
+<div class="cb"><div class="cb-heading">2. Áp dụng tính nhanh</div>
+<div class="fbox amber">
+  <strong>Ví dụ 1:</strong> Tính nhanh \\(99^2\\).<br>
+  Viết \\(99=100-1\\): \\(99^2=(100-1)^2=10000-200+1=9801\\).
+</div>
+<div class="fbox amber">
+  <strong>Ví dụ 2:</strong> Tính nhanh \\(52\\times48\\).<br>
+  Viết \\(52=50+2,\\;48=50-2\\): \\(52\\times48=(50+2)(50-2)=50^2-2^2=2500-4=2496\\).
+</div>
+<div class="fbox green">
+  <div class="frow"><span class="lbl">Mở rộng hữu ích</span><span class="val">\\(a^2+b^2=(a+b)^2-2ab=(a-b)^2+2ab\\)</span></div>
+</div>
+</div>`,
 
 'phan-tich-nttu': `
-<div class="cb"><div class="cb-heading">Các phương pháp phân tích</div>
+<div class="cb"><div class="cb-heading">1. Các phương pháp phân tích</div>
 <div class="fbox">
   <div class="frow"><span class="lbl">Đặt nhân tử chung</span><span class="val">\\(ab+ac=a(b+c)\\)</span></div>
-  <div class="frow"><span class="lbl">Hằng đẳng thức</span><span class="val">\\(x^2-4=(x+2)(x-2)\\)</span></div>
-  <div class="frow"><span class="lbl">Nhóm hạng tử</span><span class="val">\\(ac+bc+ad+bd=(a+b)(c+d)\\)</span></div>
+  <div class="frow"><span class="lbl">Dùng hằng đẳng thức</span><span class="val">\\(x^2-4=(x-2)(x+2)\\)</span></div>
+  <div class="frow"><span class="lbl">Nhóm hạng tử</span><span class="val">\\(ac+bc+ad+bd=c(a+b)+d(a+b)=(a+b)(c+d)\\)</span></div>
+  <div class="frow"><span class="lbl">Tách hạng tử (PT bậc 2)</span><span class="val">\\(x^2+5x+6=x^2+2x+3x+6=(x+2)(x+3)\\)</span></div>
 </div>
-<div class="note"><strong>Thứ tự:</strong> ① Đặt nhân tử chung → ② HĐT → ③ Nhóm</div></div>`,
+<div class="note"><strong>Thứ tự ưu tiên:</strong> ① Đặt nhân tử chung → ② Hằng đẳng thức → ③ Nhóm hạng tử → ④ Tách hạng tử (nếu cần).</div>
+</div>
+
+<div class="cb"><div class="cb-heading">2. Ví dụ tổng hợp</div>
+<div class="fbox amber">
+  <strong>Ví dụ 1:</strong> Phân tích \\(x^3-3x^2+3x-1\\).<br>
+  Nhận dạng hằng đẳng thức lập phương hiệu với \\(a=x,b=1\\): \\(=(x-1)^3\\).
+</div>
+<div class="fbox amber">
+  <strong>Ví dụ 2:</strong> Phân tích \\(2x^2-5x+2\\).<br>
+  Tách \\(-5x=-4x-x\\): \\(2x^2-4x-x+2=2x(x-2)-(x-2)=(x-2)(2x-1)\\).
+</div>
+<div class="fbox green">
+  <strong>Ví dụ 3:</strong> Phân tích \\(x^2-y^2+4x+4\\).<br>
+  Nhóm: \\((x^2+4x+4)-y^2=(x+2)^2-y^2=(x+2-y)(x+2+y)\\).
+</div>
+</div>`,
 
 'pt-bac1': `
-<div class="cb"><div class="cb-heading">Phương trình & Hệ phương trình</div>
+<div class="cb"><div class="cb-heading">1. Phương trình bậc nhất một ẩn</div>
 <div class="fbox">
-  <div class="frow"><span class="lbl">PT bậc nhất</span><span class="val">\\(ax+b=0\\Rightarrow x=-b/a\\)</span></div>
-</div></div>
-<div class="cb"><div class="cb-heading">Hệ PT 2 ẩn</div>
+  <div class="frow"><span class="lbl">Dạng tổng quát</span><span class="val">\\(ax+b=0\\) (\\(a\\neq0\\)) \\(\\Rightarrow x=-\\dfrac{b}{a}\\)</span></div>
+</div>
+<div class="fbox amber">
+  <strong>Ví dụ:</strong> Giải \\(3x-7=2\\).<br>
+  \\(3x=9\\Rightarrow x=3\\).
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">2. Hệ phương trình bậc nhất hai ẩn</div>
 <div class="fbox green">
-  <div class="frow"><span class="lbl">Phương pháp thế</span><span class="val">Biểu diễn \\(x\\) qua \\(y\\), thế vào PT kia</span></div>
-  <div class="frow"><span class="lbl">Phương pháp cộng</span><span class="val">Triệt tiêu 1 ẩn bằng cách nhân và cộng</span></div>
-</div></div>`,
+  <div class="frow"><span class="lbl">Phương pháp thế</span><span class="val">Biểu diễn \\(x\\) theo \\(y\\) (hoặc ngược lại) từ một PT, thế vào PT còn lại</span></div>
+  <div class="frow"><span class="lbl">Phương pháp cộng đại số</span><span class="val">Nhân hai PT với hệ số phù hợp để triệt tiêu một ẩn, rồi cộng/trừ</span></div>
+</div>
+<div class="fbox amber">
+  <strong>Ví dụ:</strong> Giải hệ \\(\\begin{cases}2x+y=7\\\\x-y=2\\end{cases}\\).<br>
+  Cộng hai PT: \\(3x=9\\Rightarrow x=3\\), thay vào PT thứ hai: \\(y=1\\).
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">3. Giải bài toán bằng cách lập hệ phương trình</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Bước 1</span><span class="val">Gọi ẩn, đặt điều kiện cho ẩn</span></div>
+  <div class="frow"><span class="lbl">Bước 2</span><span class="val">Lập hệ phương trình theo đề bài</span></div>
+  <div class="frow"><span class="lbl">Bước 3</span><span class="val">Giải hệ, đối chiếu điều kiện rồi kết luận</span></div>
+</div>
+<div class="note"><strong>Lỗi thường gặp:</strong> Quên đặt điều kiện cho ẩn (ví dụ số sản phẩm, số ngày phải là số nguyên dương) dẫn đến nhận nghiệm không hợp lý.</div>
+</div>`,
 
 /* ══════════════════════════════════════════════
    LỚP 9 — ĐẦY ĐỦ LÝ THUYẾT + VÍ DỤ MINH HỌA

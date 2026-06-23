@@ -685,7 +685,10 @@ function openExercise(id,diff){
           ${e._custom?'<span class="badge" style="background:rgba(55,48,163,.12);color:var(--primary)">Mới</span>':''}
         </div>
       </div>
-      ${e._custom?`<button class="del-btn" onclick="deleteExercise('${e.id}','${diff}')"><i class="ti ti-trash" style="font-size:13px"></i> Xóa</button>`:''}
+      ${e._custom?`<div class="ex-detail-actions">
+      <button class="edit-btn" onclick="editExercise('${e.id}','${diff}')"><i class="ti ti-pencil" style="font-size:13px"></i> Sửa</button>
+      <button class="del-btn" onclick="deleteExercise('${e.id}','${diff}')"><i class="ti ti-trash" style="font-size:13px"></i> Xóa</button>
+    </div>`:''}
     </div>
     <div class="ex-detail-question">${e.q}</div>
     <div class="ex-detail-btns">
@@ -720,6 +723,163 @@ async function deleteExercise(id,diff){
   showExerciseList();
   showToast('Đã xóa bài tập!');
 }
+
+/* ═══════════════════════════════════
+   EDIT EXERCISE (modal, ngay trên trang bài tập)
+═══════════════════════════════════ */
+function editExercise(id,diff){
+  if(!isAdmin){showToast('Bạn không có quyền sửa!',false);return;}
+  const ex=getExCache();
+  const e=(ex[diff]||[]).find(x=>x.id===id);
+  if(!e){showToast('Không tìm thấy bài tập để sửa!',false);return;}
+  renderEditExerciseModal(e,diff);
+}
+
+function ensureEditExerciseOverlay(){
+  let ov=document.getElementById('edit-ex-overlay');
+  if(!ov){
+    ov=document.createElement('div');
+    ov.id='edit-ex-overlay';
+    ov.className='edit-ex-overlay';
+    ov.onclick=function(ev){ if(ev.target===ov) closeEditExercise(); };
+    ov.innerHTML='<div class="edit-ex-modal" id="edit-ex-modal"></div>';
+    document.body.appendChild(ov);
+  }
+  return ov;
+}
+
+function renderEditExerciseModal(e,diff){
+  const ov=ensureEditExerciseOverlay();
+  const modal=document.getElementById('edit-ex-modal');
+  modal.innerHTML=`
+    <div class="edit-ex-header">
+      <div class="edit-ex-title"><i class="ti ti-pencil"></i> Sửa bài tập</div>
+      <button class="edit-ex-close" onclick="closeEditExercise()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="edit-ex-body">
+      <div class="form-row trio">
+        <div class="form-field"><label><i class="ti ti-school" style="font-size:13px"></i> Lớp</label>
+          <select id="eex-grade"><option value="6">Lớp 6</option><option value="7">Lớp 7</option><option value="8">Lớp 8</option><option value="9">Lớp 9</option></select></div>
+        <div class="form-field"><label><i class="ti ti-layers" style="font-size:13px"></i> Cấp độ</label>
+          <select id="eex-diff"><option value="easy">Dễ</option><option value="med">Trung bình</option><option value="hard">Khó</option><option value="pro">Chuyên</option></select></div>
+        <div class="form-field"><label><i class="ti ti-tag" style="font-size:13px"></i> Chủ đề</label>
+          <input type="text" id="eex-topic"></div>
+      </div>
+      <div class="form-row trio">
+        <div class="form-field"><label><i class="ti ti-map-pin" style="font-size:13px"></i> Tỉnh/Thành phố</label>
+          <input type="text" id="eex-city"></div>
+        <div class="form-field"><label><i class="ti ti-calendar" style="font-size:13px"></i> Năm thi</label>
+          <input type="number" id="eex-year" min="2000" max="2099"></div>
+        <div class="form-field"><label><i class="ti ti-building-school" style="font-size:13px"></i> Trường</label>
+          <input type="text" id="eex-school"></div>
+      </div>
+      <div class="form-field" style="margin-bottom:1rem">
+        <label><i class="ti ti-heading" style="font-size:13px"></i> Tiêu đề <span style="color:var(--red)">*</span></label>
+        <input type="text" id="eex-title">
+      </div>
+      <div class="form-field" style="margin-bottom:1rem">
+        <label><i class="ti ti-question-mark" style="font-size:13px"></i> Đề bài <span style="color:var(--red)">*</span></label>
+        <textarea id="eex-question" class="tall"></textarea>
+        <div class="form-hint">💡 LaTeX: \\( ... \\) hoặc \\[ ... \\]</div>
+      </div>
+      <div class="form-row">
+        <div class="form-field"><label><i class="ti ti-bulb" style="font-size:13px"></i> Gợi ý</label><textarea id="eex-hint"></textarea></div>
+        <div class="form-field"><label><i class="ti ti-check" style="font-size:13px"></i> Đáp án <span style="color:var(--red)">*</span></label><textarea id="eex-answer"></textarea></div>
+      </div>
+      <div class="form-field" style="margin-bottom:0">
+        <label><i class="ti ti-writing" style="font-size:13px"></i> Lời giải chi tiết</label>
+        <textarea id="eex-solution" class="tall"></textarea>
+      </div>
+    </div>
+    <div class="edit-ex-footer">
+      <button class="cancel-btn" onclick="closeEditExercise()">Hủy</button>
+      <button class="submit-btn" id="eex-submit-btn" onclick="submitEditExercise('${e.id}','${diff}')"><i class="ti ti-device-floppy"></i> Lưu thay đổi</button>
+    </div>`;
+  document.getElementById('eex-grade').value=e.grade;
+  document.getElementById('eex-diff').value=diff;
+  document.getElementById('eex-topic').value=e.topic||'';
+  document.getElementById('eex-city').value=e.city||'';
+  document.getElementById('eex-year').value=e.year||'';
+  document.getElementById('eex-school').value=e.school||'';
+  document.getElementById('eex-title').value=e.title||'';
+  document.getElementById('eex-question').value=e.q||'';
+  document.getElementById('eex-hint').value=e.hint||'';
+  document.getElementById('eex-answer').value=e.ans||'';
+  document.getElementById('eex-solution').value=e.sol||'';
+  ov.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeEditExercise(){
+  const ov=document.getElementById('edit-ex-overlay');
+  if(ov)ov.classList.remove('open');
+  document.body.style.overflow='';
+}
+
+async function submitEditExercise(originalId,originalDiff){
+  if(!isAdmin){showToast('Bạn không có quyền!',false);return;}
+  const grade=document.getElementById('eex-grade').value;
+  const diff=document.getElementById('eex-diff').value;
+  const topic=document.getElementById('eex-topic').value.trim()||'Tổng hợp';
+  const title=document.getElementById('eex-title').value.trim();
+  const city=document.getElementById('eex-city').value.trim();
+  const year=document.getElementById('eex-year').value.trim();
+  const school=document.getElementById('eex-school').value.trim();
+  const q=document.getElementById('eex-question').value.trim();
+  const hint=document.getElementById('eex-hint').value.trim();
+  const ans=document.getElementById('eex-answer').value.trim();
+  const sol=document.getElementById('eex-solution').value.trim();
+  if(!title||!q||!ans){showToast('Vui lòng điền tiêu đề, đề bài và đáp án!',false);return;}
+  const updated={id:originalId,title,topic,grade:parseInt(grade),diff,
+    city:city||null,year:year?parseInt(year):null,school:school||null,
+    q,hint,ans,sol};
+  const btn=document.getElementById('eex-submit-btn');
+  if(btn){btn.disabled=true;btn.textContent='Đang lưu...';}
+  try{
+    await saveExercises_fb(updated);
+    if(_exCache[originalDiff]) _exCache[originalDiff]=_exCache[originalDiff].filter(x=>x.id!==originalId);
+    if(!_exCache[diff])_exCache[diff]=[];
+    _exCache[diff].push(updated);
+    showToast('Đã lưu thay đổi!');
+    closeEditExercise();
+    renderExercises();renderManageList();
+    if(document.getElementById('exercise-detail').style.display!=='none') openExercise(originalId,diff);
+  }catch(e){
+  }finally{
+    if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-device-floppy"></i> Lưu thay đổi';}
+  }
+}
+
+function injectEditExerciseStyles(){
+  if(document.getElementById('edit-ex-styles'))return;
+  const css=`
+.edit-ex-overlay{position:fixed;inset:0;background:rgba(15,15,20,.55);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity .18s;padding:20px}
+.edit-ex-overlay.open{opacity:1;pointer-events:auto}
+.edit-ex-modal{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);width:100%;max-width:720px;max-height:88vh;overflow-y:auto;display:flex;flex-direction:column}
+.edit-ex-header{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 1.4rem;border-bottom:1.5px solid var(--border);position:sticky;top:0;background:var(--bg2);z-index:1}
+.edit-ex-title{font-size:1rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:7px}
+.edit-ex-close{background:none;border:none;color:var(--text3);cursor:pointer;padding:6px;border-radius:8px;font-size:18px;display:flex}
+.edit-ex-close:hover{color:var(--red);background:rgba(185,28,28,.08)}
+.edit-ex-body{padding:1.4rem}
+.edit-ex-footer{display:flex;justify-content:flex-end;gap:.6rem;padding:1rem 1.4rem;border-top:1.5px solid var(--border);position:sticky;bottom:0;background:var(--bg2)}
+.cancel-btn{padding:9px 18px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text2);font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer}
+.cancel-btn:hover{border-color:var(--text3)}
+.ex-detail-actions{display:flex;gap:.5rem}
+.edit-btn{display:flex;align-items:center;gap:5px;padding:7px 14px;border:1.5px solid rgba(55,48,163,.3);border-radius:var(--radius-sm);background:rgba(55,48,163,.06);color:var(--primary);font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;transition:background .15s}
+.edit-btn:hover{background:rgba(55,48,163,.14)}
+`;
+  const tag=document.createElement('style');
+  tag.id='edit-ex-styles';
+  tag.textContent=css;
+  document.head.appendChild(tag);
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    const ov=document.getElementById('edit-ex-overlay');
+    if(ov&&ov.classList.contains('open'))closeEditExercise();
+  }
+});
+injectEditExerciseStyles();
 
 /* ═══════════════════════════════════
    ADMIN
