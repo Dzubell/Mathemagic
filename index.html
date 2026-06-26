@@ -150,10 +150,16 @@
           <div class="fchip easy active" onclick="toggleDiffFilter('easy',this)"><i class="ti ti-circle-check" style="font-size:12px"></i> Dễ</div>
           <div class="fchip med active" onclick="toggleDiffFilter('med',this)"><i class="ti ti-flame" style="font-size:12px"></i> Trung bình</div>
           <div class="fchip hard active" onclick="toggleDiffFilter('hard',this)"><i class="ti ti-bolt" style="font-size:12px"></i> Khó</div>
-          <div class="fchip pro active" onclick="toggleDiffFilter('pro',this)"><i class="ti ti-star" style="font-size:12px"></i> Chuyên</div>
         </div>
       </div>
-      <!-- Row 2: Tags + Sort -->
+      <!-- Row 2: Loại đề (Chuyên) -->
+      <div class="ex-filter-row">
+        <span class="ex-filter-label"><i class="ti ti-star" style="font-size:13px"></i> Loại đề</span>
+        <div class="ex-filter-chips">
+          <div class="fchip" id="fchip-chuyen" onclick="toggleChuyenFilter(this)"><i class="ti ti-star" style="font-size:12px"></i> Chuyên</div>
+        </div>
+      </div>
+      <!-- Row 3: Tags + Sort -->
       <div class="ex-filter-row">
         <span class="ex-filter-label"><i class="ti ti-map-pin" style="font-size:13px"></i> Lọc thêm</span>
         <div class="ex-filter-tags">

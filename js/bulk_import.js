@@ -70,6 +70,10 @@ function parseExerciseImport(json){
 
   const parsed = list.map(item=>{
     if(!item.q || !item.ans) return null; // bắt buộc
+    const diff = ['easy','med','hard'].includes(item.diff) ? item.diff : (item.diff==='pro'?'hard':'med');
+    const chuyen = item.chuyen===true || item.diff==='pro' || meta.chuyen===true || false;
+    const city = item.city || meta.city || null;
+    const origin = item.origin || meta.origin || (city ? `Sở GD&ĐT ${city}` : null);
     return {
       id: uid(),
       title: item.title || '',
@@ -79,10 +83,14 @@ function parseExerciseImport(json){
       sol: item.sol || '',
       topic: item.topic || meta.topic || 'Tổng hợp',
       grade: parseInt(item.grade || meta.grade || 9),
-      diff: ['easy','med','hard','pro'].includes(item.diff) ? item.diff : 'med',
-      city: item.city || meta.city || null,
+      diff,
+      chuyen,
+      city,
       year: item.year ? parseInt(item.year) : (meta.year ? parseInt(meta.year) : null),
       school: item.school || meta.school || null,
+      origin,
+      createdBy: typeof _currentAuthorName==='function' ? _currentAuthorName() : 'Admin',
+      createdAt: Date.now(),
     };
   }).filter(Boolean);
 
@@ -142,7 +150,7 @@ function renderImportQueue(){
   if(!_impQueue.length){ wrap.style.display='none'; return; }
   wrap.style.display = 'block';
 
-  const lblEx = {easy:'Dễ',med:'TB',hard:'Khó',pro:'Chuyên'};
+  const lblEx = {easy:'Dễ',med:'TB',hard:'Khó'};
   const lblQz = {easy:'Dễ',hard:'Khó',pro:'Chuyên'};
 
   list.innerHTML = _impQueue.map((item,i)=>{
@@ -154,10 +162,13 @@ function renderImportQueue(){
       <div class="import-item-header">
         <span class="import-item-idx">#${i+1}</span>
         <span class="import-item-badge ${d.diff}">${lbl[d.diff]||d.diff}</span>
+        ${(!isQuiz&&d.chuyen)?'<span class="import-item-badge">⭐ Chuyên</span>':''}
         <span class="import-item-badge">Lớp ${d.grade}</span>
         <span class="import-item-badge">${d.topic}</span>
         ${d.city?`<span class="import-item-badge">📍 ${d.city}</span>`:''}
         ${d.year?`<span class="import-item-badge">📅 ${d.year}</span>`:''}
+        ${(!isQuiz&&d.origin)?`<span class="import-item-badge">🏛️ ${d.origin}</span>`:''}
+        ${(!isQuiz&&d.createdBy)?`<span class="import-item-badge">✍️ ${d.createdBy}</span>`:''}
         <span class="import-item-status ${item.status}">
           ${item.status==='approved'?'✅ Duyệt':item.status==='rejected'?'❌ Bỏ':'⏳ Chờ'}
         </span>
@@ -270,7 +281,7 @@ async function iqCommit(){
   }
 
   if(!isQuiz) renderExercises();
-  if(isQuiz && typeof renderQuizAdminTab==='function') renderQuizAdminTab();
+  if(isQuiz && typeof loadQuizManageList==='function') loadQuizManageList();
   if(progress) progress.style.display='none';
   if(commitBtn) commitBtn.disabled = false;
 }

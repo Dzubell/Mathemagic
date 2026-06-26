@@ -22,7 +22,7 @@ function renderCommentPanel(exercise){
   const signedIn = !!user;
 
   const name = signedIn
-    ? (user.firstName || (user.emailAddresses?.[0]?.emailAddress?.split('@')[0]) || 'User')
+    ? (user.username || user.firstName || (user.emailAddresses?.[0]?.emailAddress?.split('@')[0]) || 'User')
     : '';
 
   return `
@@ -198,7 +198,7 @@ async function postComment(){
   if(!text){ showToast('Nhập nội dung bình luận!', false); return; }
   if(text.length>1000){ showToast('Bình luận quá dài (tối đa 1000 ký tự)!', false); return; }
 
-  const name = user.firstName || (user.emailAddresses?.[0]?.emailAddress?.split('@')[0]) || 'User';
+  const name = user.username || user.firstName || (user.emailAddresses?.[0]?.emailAddress?.split('@')[0]) || 'User';
 
   const comment = {
     id: uid(),

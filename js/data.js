@@ -52,7 +52,7 @@ const LESSONS = {
 <div class="defbox">Phân số \\(\\dfrac{a}{b}\\) (\\(b\\neq0\\)) biểu diễn \\(a\\) phần bằng nhau trong \\(b\\) phần của một đơn vị.</div>
 <div class="fbox">
   <div class="frow"><span class="lbl">Rút gọn</span><span class="val">\\(\\dfrac{a}{b}=\\dfrac{a\\div d}{b\\div d}\\), \\(d=\\text{ƯCLN}(a,b)\\)</span></div>
-  <div class="frow"><span class="lbl">So sánh (cùng mẫu dương)</span><span class="val">\\(\\dfrac{a}{m} < \\dfrac{b}{m} \\Leftrightarrow a<b \\)</span></div>
+  <div class="frow"><span class="lbl">So sánh (cùng mẫu dương)</span><span class="val">\\(\\dfrac{a}{m}\\lt\\dfrac{b}{m} \\Leftrightarrow a\\lt b \\)</span></div>
   <div class="frow"><span class="lbl">Phân số tối giản</span><span class="val">\\(\\text{ƯCLN}(a,b)=1\\)</span></div>
 </div>
 <div class="fbox amber">

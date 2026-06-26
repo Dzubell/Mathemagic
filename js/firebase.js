@@ -28,8 +28,13 @@ window._fbReady = true;
 
 window.fbGetExercises = async function(){
   const snap = await getDocs(collection(db,'exercises'));
-  const ex = {easy:[],med:[],hard:[],pro:[]};
-  snap.forEach(d=>{ const e=d.data(); if(ex[e.diff]) ex[e.diff].push(e); });
+  const ex = {easy:[],med:[],hard:[]};
+  snap.forEach(d=>{
+    const e=d.data();
+    const diff = e.diff==='pro' ? 'hard' : e.diff;
+    const chuyen = !!(e.chuyen || e.diff==='pro');
+    if(ex[diff]) ex[diff].push({...e, diff, chuyen});
+  });
   return ex;
 };
 
@@ -39,6 +44,24 @@ window.fbSaveExercise = async function(exercise){
 
 window.fbDeleteExercise = async function(id){
   await deleteDoc(doc(db,'exercises', id));
+};
+
+// Migration một lần: chuyển các bài tập diff='pro' cũ sang diff='hard' + chuyen:true trong Firestore.
+// fbGetExercises đã tự remap khi đọc, nên migration này không bắt buộc phải chạy ngay —
+// nhưng nên chạy 1 lần để dữ liệu trong Firestore sạch (tránh phải remap mỗi lần đọc).
+// Chạy từ console (đăng nhập admin trước): await window.migrateProToChuyen()
+window.migrateProToChuyen = async function(){
+  const snap = await getDocs(collection(db,'exercises'));
+  let count = 0;
+  for(const d of snap.docs){
+    const e = d.data();
+    if(e.diff === 'pro'){
+      await setDoc(doc(db,'exercises', d.id), {...e, diff:'hard', chuyen:true});
+      count++;
+    }
+  }
+  console.log(`Migration xong: đã chuyển ${count} bài tập từ 'pro' sang 'hard' + chuyen:true.`);
+  return count;
 };
 
 window.fbGetTheories = async function(){

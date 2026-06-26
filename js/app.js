@@ -370,12 +370,12 @@ async function loadAllData(){
   }catch(e){
     console.error('Firebase load error:',e);
     showToast('Lỗi kết nối Firebase. Kiểm tra cấu hình!', false);
-    _exCache = {easy:[],med:[],hard:[],pro:[]};
+    _exCache = {easy:[],med:[],hard:[]};
     _thCache = [];
   }
 }
 
-function getExCache(){ return _exCache || {easy:[],med:[],hard:[],pro:[]}; }
+function getExCache(){ return _exCache || {easy:[],med:[],hard:[]}; }
 function getThCache(){ return _thCache || []; }
 
 async function saveExercises_fb(exercise){
@@ -565,7 +565,8 @@ function closePdfEmbed(){
 /* ═══════════════════════════════════
    EXERCISES
 ═══════════════════════════════════ */
-let exFilterDiff=new Set(['easy','med','hard','pro']);
+let exFilterDiff=new Set(['easy','med','hard']);
+let exFilterChuyen=false; // false = chỉ hiện bài thường (ẩn Chuyên); true = hiện cả thường + Chuyên
 
 function toggleDiffFilter(d,el){
   if(exFilterDiff.has(d)){
@@ -577,9 +578,18 @@ function toggleDiffFilter(d,el){
   renderExercises();
 }
 
+function toggleChuyenFilter(el){
+  exFilterChuyen=!exFilterChuyen;
+  el.classList.add('pro'); // tái dùng màu tím phát sáng đã có sẵn cho .fchip.pro.active
+  el.classList.toggle('active',exFilterChuyen);
+  renderExercises();
+}
+
 function clearFilters(){
-  exFilterDiff=new Set(['easy','med','hard','pro']);
+  exFilterDiff=new Set(['easy','med','hard']);
+  exFilterChuyen=false;
   document.querySelectorAll('.fchip').forEach(c=>c.classList.add('active'));
+  document.getElementById('fchip-chuyen')?.classList.remove('active');
   document.getElementById('filter-city').value='';
   document.getElementById('filter-year').value='';
   document.getElementById('filter-school').value='';
@@ -590,11 +600,11 @@ function clearFilters(){
 
 function getAllExercisesFlat(){
   const ex=getExCache();
-  const diffs=['easy','med','hard','pro'];
+  const diffs=['easy','med','hard'];
   let all=[];
   diffs.forEach(d=>{
-    (BASE_EXERCISES[d]||[]).forEach(e=>all.push({...e,diff:d,_custom:false}));
-    (ex[d]||[]).forEach(e=>all.push({...e,diff:d,_custom:true}));
+    (BASE_EXERCISES[d]||[]).forEach(e=>all.push({...e,diff:d,chuyen:!!e.chuyen,_custom:false}));
+    (ex[d]||[]).forEach(e=>all.push({...e,diff:d,chuyen:!!e.chuyen,_custom:true}));
   });
   return all;
 }
@@ -614,7 +624,17 @@ function rebuildTagDropdowns(allExercises){
   cityEl.value=cv;yearEl.value=yv;schoolEl.value=sv;
 }
 
-const DIFF_ORDER={easy:0,med:1,hard:2,pro:3};
+const DIFF_ORDER={easy:0,med:1,hard:2};
+
+function _currentAuthorName(){
+  const u=window.Clerk?.user;
+  if(!u) return 'Admin';
+  return u.username || u.firstName || u.emailAddresses?.[0]?.emailAddress?.split('@')[0] || 'Admin';
+}
+function _exDate(ts){
+  if(!ts) return '—';
+  return new Date(ts).toLocaleDateString('vi-VN');
+}
 
 function renderExercises(){
   const el=document.getElementById('exercise-list');
@@ -629,6 +649,7 @@ function renderExercises(){
   rebuildTagDropdowns(all);
   let exs=all.filter(e=>{
     if(!exFilterDiff.has(e.diff))return false;
+    if(!exFilterChuyen&&e.chuyen)return false;
     if(cityF&&e.city!==cityF)return false;
     if(yearF&&String(e.year)!==yearF)return false;
     if(schoolF&&e.school!==schoolF)return false;
@@ -639,7 +660,7 @@ function renderExercises(){
   else if(sortV==='year-asc') exs.sort((a,b)=>(a.year||0)-(b.year||0));
   else if(sortV==='diff-asc') exs.sort((a,b)=>DIFF_ORDER[a.diff]-DIFF_ORDER[b.diff]);
   else if(sortV==='diff-desc') exs.sort((a,b)=>DIFF_ORDER[b.diff]-DIFF_ORDER[a.diff]);
-  const lbl={easy:'Dễ',med:'Trung bình',hard:'Khó',pro:'Chuyên'};
+  const lbl={easy:'Dễ',med:'Trung bình',hard:'Khó'};
   if(rb) rb.innerHTML=`Hiển thị <span>${exs.length} bài tập</span>`;
   el.innerHTML=exs.length?exs.map(e=>`
     <div class="exercise-card" onclick="openExercise('${e.id}','${e.diff}')">
@@ -648,12 +669,15 @@ function renderExercises(){
           <div class="ex-meta">
             ${e.title?`<span class="ex-title">${e.title}</span>`:''}
             <span class="badge ${e.diff}">${lbl[e.diff]}</span>
+            ${e.chuyen?'<span class="badge" style="background:rgba(225,29,72,.1);color:#e11d48">⭐ Chuyên</span>':''}
             <span class="badge topic">${e.topic||'—'} · L${e.grade}</span>
             ${e.city?`<span class="badge" style="background:rgba(14,116,144,.1);color:var(--teal)">📍 ${e.city}</span>`:''}
             ${e.year?`<span class="badge" style="background:rgba(55,48,163,.09);color:var(--primary)">📅 ${e.year}</span>`:''}
             ${e.school?`<span class="badge" style="background:rgba(109,40,217,.09);color:var(--violet)">🏫 ${e.school}</span>`:''}
+            ${e.origin?`<span class="badge" style="background:rgba(180,83,9,.09);color:#b45309">🏛️ ${e.origin}</span>`:''}
             ${e._custom?'<span class="badge" style="background:rgba(55,48,163,.12);color:var(--primary)">Mới</span>':''}
           </div>
+          
           <div class="ex-preview">${e.q}</div>
         </div>
         <i class="ti ti-chevron-right ex-chevron"></i>
@@ -667,7 +691,7 @@ function openExercise(id,diff){
   const allExs=getAllExercisesFlat();
   const e=allExs.find(x=>x.id===id&&x.diff===diff);
   if(!e)return;
-  const lbl={easy:'Dễ',med:'Trung bình',hard:'Khó',pro:'Chuyên'};
+  const lbl={easy:'Dễ',med:'Trung bình',hard:'Khó'};
   document.getElementById('exercise-browse').style.display='none';
   const dv=document.getElementById('exercise-detail');
   dv.style.display='block';
@@ -678,11 +702,17 @@ function openExercise(id,diff){
         <div class="ex-detail-title">${e.title||'Bài tập'}</div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">
           <span class="badge ${diff}">${lbl[diff]}</span>
+          ${e.chuyen?'<span class="badge" style="background:rgba(225,29,72,.1);color:#e11d48">⭐ Chuyên</span>':''}
           <span class="badge topic">${e.topic||'—'} · L${e.grade}</span>
           ${e.city?`<span class="badge" style="background:rgba(14,116,144,.1);color:var(--teal)">📍 ${e.city}</span>`:''}
           ${e.year?`<span class="badge" style="background:rgba(55,48,163,.09);color:var(--primary)">📅 ${e.year}</span>`:''}
           ${e.school?`<span class="badge" style="background:rgba(109,40,217,.09);color:var(--violet)">🏫 ${e.school}</span>`:''}
+          ${e.origin?`<span class="badge" style="background:rgba(180,83,9,.09);color:#b45309">🏛️ ${e.origin}</span>`:''}
           ${e._custom?'<span class="badge" style="background:rgba(55,48,163,.12);color:var(--primary)">Mới</span>':''}
+        </div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:6px;font-size:.8rem;color:var(--text3)">
+          <span>✍️ Tác giả: <strong style="color:var(--text2)">${e.createdBy||'Mathemagic'}</strong></span>
+          <span>📆 Ngày đăng: <strong style="color:var(--text2)">${_exDate(e.createdAt)}</strong></span>
         </div>
       </div>
       ${e._custom?`<div class="ex-detail-actions">
@@ -761,9 +791,15 @@ function renderEditExerciseModal(e,diff){
         <div class="form-field"><label><i class="ti ti-school" style="font-size:13px"></i> Lớp</label>
           <select id="eex-grade"><option value="6">Lớp 6</option><option value="7">Lớp 7</option><option value="8">Lớp 8</option><option value="9">Lớp 9</option></select></div>
         <div class="form-field"><label><i class="ti ti-layers" style="font-size:13px"></i> Cấp độ</label>
-          <select id="eex-diff"><option value="easy">Dễ</option><option value="med">Trung bình</option><option value="hard">Khó</option><option value="pro">Chuyên</option></select></div>
+          <select id="eex-diff"><option value="easy">Dễ</option><option value="med">Trung bình</option><option value="hard">Khó</option></select></div>
         <div class="form-field"><label><i class="ti ti-tag" style="font-size:13px"></i> Chủ đề</label>
           <input type="text" id="eex-topic"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-field" style="display:flex;flex-direction:row;align-items:center;gap:8px;margin-bottom:0">
+          <input type="checkbox" id="eex-chuyen" style="width:16px;height:16px;flex-shrink:0;margin:0">
+          <label for="eex-chuyen" style="margin:0;cursor:pointer">⭐ Đánh dấu là đề Chuyên</label>
+        </div>
       </div>
       <div class="form-row trio">
         <div class="form-field"><label><i class="ti ti-map-pin" style="font-size:13px"></i> Tỉnh/Thành phố</label>
@@ -772,6 +808,10 @@ function renderEditExerciseModal(e,diff){
           <input type="number" id="eex-year" min="2000" max="2099"></div>
         <div class="form-field"><label><i class="ti ti-building-school" style="font-size:13px"></i> Trường</label>
           <input type="text" id="eex-school"></div>
+      </div>
+      <div class="form-field" style="margin-bottom:1rem">
+        <label><i class="ti ti-building-bank" style="font-size:13px"></i> Nguồn (Sở/Phòng GD&ĐT — không bắt buộc)</label>
+        <input type="text" id="eex-origin">
       </div>
       <div class="form-field" style="margin-bottom:1rem">
         <label><i class="ti ti-heading" style="font-size:13px"></i> Tiêu đề <span style="color:var(--red)">*</span></label>
@@ -796,11 +836,13 @@ function renderEditExerciseModal(e,diff){
       <button class="submit-btn" id="eex-submit-btn" onclick="submitEditExercise('${e.id}','${diff}')"><i class="ti ti-device-floppy"></i> Lưu thay đổi</button>
     </div>`;
   document.getElementById('eex-grade').value=e.grade;
-  document.getElementById('eex-diff').value=diff;
+  document.getElementById('eex-diff').value=diff==='pro'?'hard':diff;
+  document.getElementById('eex-chuyen').checked=!!(e.chuyen||diff==='pro');
   document.getElementById('eex-topic').value=e.topic||'';
   document.getElementById('eex-city').value=e.city||'';
   document.getElementById('eex-year').value=e.year||'';
   document.getElementById('eex-school').value=e.school||'';
+  document.getElementById('eex-origin').value=e.origin||'';
   document.getElementById('eex-title').value=e.title||'';
   document.getElementById('eex-question').value=e.q||'';
   document.getElementById('eex-hint').value=e.hint||'';
@@ -820,24 +862,30 @@ async function submitEditExercise(originalId,originalDiff){
   if(!isAdmin){showToast('Bạn không có quyền!',false);return;}
   const grade=document.getElementById('eex-grade').value;
   const diff=document.getElementById('eex-diff').value;
+  const chuyen=document.getElementById('eex-chuyen').checked;
   const topic=document.getElementById('eex-topic').value.trim()||'Tổng hợp';
   const title=document.getElementById('eex-title').value.trim();
   const city=document.getElementById('eex-city').value.trim();
   const year=document.getElementById('eex-year').value.trim();
   const school=document.getElementById('eex-school').value.trim();
+  const origin=document.getElementById('eex-origin').value.trim();
   const q=document.getElementById('eex-question').value.trim();
   const hint=document.getElementById('eex-hint').value.trim();
   const ans=document.getElementById('eex-answer').value.trim();
   const sol=document.getElementById('eex-solution').value.trim();
   if(!title||!q||!ans){showToast('Vui lòng điền tiêu đề, đề bài và đáp án!',false);return;}
-  const updated={id:originalId,title,topic,grade:parseInt(grade),diff,
-    city:city||null,year:year?parseInt(year):null,school:school||null,
+  const normalizedOriginalDiff=originalDiff==='pro'?'hard':originalDiff;
+  const orig=(_exCache[normalizedOriginalDiff]||[]).find(x=>x.id===originalId);
+  const updated={id:originalId,title,topic,grade:parseInt(grade),diff,chuyen,
+    city:city||null,year:year?parseInt(year):null,school:school||null,origin:origin||null,
+    createdBy:orig?.createdBy||_currentAuthorName(),
+    createdAt:orig?.createdAt||Date.now(),
     q,hint,ans,sol};
   const btn=document.getElementById('eex-submit-btn');
   if(btn){btn.disabled=true;btn.textContent='Đang lưu...';}
   try{
     await saveExercises_fb(updated);
-    if(_exCache[originalDiff]) _exCache[originalDiff]=_exCache[originalDiff].filter(x=>x.id!==originalId);
+    if(_exCache[normalizedOriginalDiff]) _exCache[normalizedOriginalDiff]=_exCache[normalizedOriginalDiff].filter(x=>x.id!==originalId);
     if(!_exCache[diff])_exCache[diff]=[];
     _exCache[diff].push(updated);
     showToast('Đã lưu thay đổi!');
@@ -908,7 +956,7 @@ function renderAdminContent(){
     <div class="admin-tabs">
       <div class="admin-tab active" onclick="setAdminTab('add-ex')" id="atab-add-ex"><i class="ti ti-plus"></i> Thêm bài tập</div>
       <div class="admin-tab" onclick="setAdminTab('add-theory')" id="atab-add-theory"><i class="ti ti-book-2"></i> Thêm lý thuyết</div>
-      <div class="admin-tab" onclick="setAdminTab('manage')" id="atab-manage"><i class="ti ti-list"></i> Quản lý nội dung</div>
+      <div class="admin-tab" onclick="setAdminTab('manage')" id="atab-manage"><i class="ti ti-list"></i> Nội dung đã thêm</div>
       <div class="admin-tab" onclick="setAdminTab('import')" id="atab-import"><i class="ti ti-file-upload"></i> Nhập hàng loạt</div>
       <div class="admin-tab" onclick="setAdminTab('add-quiz')" id="atab-add-quiz"><i class="ti ti-list-check"></i> Trắc nghiệm</div>
     </div>
@@ -917,9 +965,15 @@ function renderAdminContent(){
         <div class="form-field"><label><i class="ti ti-school" style="font-size:13px"></i> Lớp</label>
           <select id="ex-grade"><option value="6">Lớp 6</option><option value="7">Lớp 7</option><option value="8">Lớp 8</option><option value="9" selected>Lớp 9</option></select></div>
         <div class="form-field"><label><i class="ti ti-layers" style="font-size:13px"></i> Cấp độ</label>
-          <select id="ex-diff"><option value="easy">Dễ</option><option value="med" selected>Trung bình</option><option value="hard">Khó</option><option value="pro">Chuyên</option></select></div>
+          <select id="ex-diff"><option value="easy">Dễ</option><option value="med" selected>Trung bình</option><option value="hard">Khó</option></select></div>
         <div class="form-field"><label><i class="ti ti-tag" style="font-size:13px"></i> Chủ đề</label>
           <input type="text" id="ex-topic" placeholder="VD: Căn thức, Vi-ét..."></div>
+      </div>
+      <div class="form-row">
+        <div class="form-field" style="display:flex;flex-direction:row;align-items:center;gap:8px;margin-bottom:0">
+          <input type="checkbox" id="ex-chuyen" style="width:16px;height:16px;flex-shrink:0;margin:0">
+          <label for="ex-chuyen" style="margin:0;cursor:pointer">⭐ Đánh dấu là đề Chuyên</label>
+        </div>
       </div>
       <div class="form-row trio">
         <div class="form-field"><label><i class="ti ti-map-pin" style="font-size:13px"></i> Tỉnh/Thành phố</label>
@@ -928,6 +982,10 @@ function renderAdminContent(){
           <input type="number" id="ex-year" placeholder="VD: 2025" min="2000" max="2099"></div>
         <div class="form-field"><label><i class="ti ti-building-school" style="font-size:13px"></i> Trường</label>
           <input type="text" id="ex-school" placeholder="VD: THPT Chuyên Lê Hồng Phong..."></div>
+      </div>
+      <div class="form-field" style="margin-bottom:1rem">
+        <label><i class="ti ti-building-bank" style="font-size:13px"></i> Nguồn (Sở/Phòng GD&ĐT — không bắt buộc)</label>
+        <input type="text" id="ex-origin" placeholder="VD: Sở GD&ĐT Tây Ninh, Phòng GD&ĐT TP. Tây Ninh...">
       </div>
       <div class="form-field" style="margin-bottom:1rem">
         <label><i class="ti ti-heading" style="font-size:13px"></i> Tiêu đề bài <span style="color:var(--red)">*</span></label>
@@ -975,6 +1033,10 @@ function renderAdminContent(){
         <div class="admin-list-title"><i class="ti ti-books"></i> Lý thuyết đã thêm (từ Admin)</div>
         <div id="manage-th-items"></div>
       </div>
+      <div class="admin-list" style="margin-top:1.5rem">
+        <div class="admin-list-title"><i class="ti ti-list-check"></i> Trắc nghiệm đã thêm (từ Admin)</div>
+        <div id="quiz-manage-items"></div>
+      </div>
     </div>
     <div class="admin-form" id="aform-import">
       <div class="imp-mode-tabs">
@@ -992,7 +1054,7 @@ function renderAdminContent(){
         Mảng đơn giản: <code>[{"title":"...", "q":"...", "ans":"...", ...}, ...]</code><br>
         Gói đề thi (metadata tự điền): <code>{"meta":{"city":"TP. HCM","year":2025,"school":"..."}, "exercises":[...]}</code><br><br>
         <strong>Các trường:</strong>
-        <code>title</code> · <code>q</code> <em>(đề bài, bắt buộc)</em> · <code>ans</code> <em>(đáp án, bắt buộc)</em> · <code>hint</code> · <code>sol</code> · <code>topic</code> · <code>grade</code> · <code>diff</code> <em>(easy/med/hard/pro)</em> · <code>city</code> · <code>year</code> · <code>school</code>
+        <code>title</code> · <code>q</code> <em>(đề bài, bắt buộc)</em> · <code>ans</code> <em>(đáp án, bắt buộc)</em> · <code>hint</code> · <code>sol</code> · <code>topic</code> · <code>grade</code> · <code>diff</code> <em>(easy/med/hard)</em> · <code>chuyen</code> <em>(true/false)</em> · <code>city</code> · <code>year</code> · <code>school</code> · <code>origin</code>
       </div>
       <div class="import-schema-hint" id="imp-hint-quiz" style="display:none">
         <strong>📋 Định dạng JSON — Trắc nghiệm:</strong><br>
@@ -1063,10 +1125,6 @@ function renderAdminContent(){
           <input type="text" id="qz-sol" placeholder="Giải thích ngắn gọn..."></div>
       </div>
       <button class="submit-btn" onclick="submitQuizQuestion()"><i class="ti ti-send"></i> Đăng câu hỏi</button>
-      <div class="admin-list" style="margin-top:2rem">
-        <div class="admin-list-title"><i class="ti ti-list-check"></i> Câu trắc nghiệm đã thêm</div>
-        <div id="quiz-manage-items"></div>
-      </div>
     </div>
   </div>`;
 }
@@ -1076,27 +1134,29 @@ function setAdminTab(name){
   document.querySelectorAll('.admin-form').forEach(f=>f.classList.remove('active'));
   document.getElementById('atab-'+name).classList.add('active');
   document.getElementById('aform-'+name).classList.add('active');
-  if(name==='manage')renderManageList();
+  if(name==='manage'){renderManageList();loadQuizManageList();}
   if(name==='import')setTimeout(initImportDragDrop,50);
-  if(name==='add-quiz')renderQuizAdminTab();
 }
 
 async function submitExercise(){
   if(!isAdmin){showToast('Bạn không có quyền!',false);return;}
   const grade=document.getElementById('ex-grade').value;
   const diff=document.getElementById('ex-diff').value;
+  const chuyen=document.getElementById('ex-chuyen').checked;
   const topic=document.getElementById('ex-topic').value.trim()||'Tổng hợp';
   const title=document.getElementById('ex-title').value.trim();
   const city=document.getElementById('ex-city').value.trim();
   const year=document.getElementById('ex-year').value.trim();
   const school=document.getElementById('ex-school').value.trim();
+  const origin=document.getElementById('ex-origin').value.trim();
   const q=document.getElementById('ex-question').value.trim();
   const hint=document.getElementById('ex-hint').value.trim();
   const ans=document.getElementById('ex-answer').value.trim();
   const sol=document.getElementById('ex-solution').value.trim();
   if(!title||!q||!ans){showToast('Vui lòng điền tiêu đề, đề bài và đáp án!',false);return;}
-  const exercise={id:uid(),title,topic,grade:parseInt(grade),diff,
-    city:city||null,year:year?parseInt(year):null,school:school||null,
+  const exercise={id:uid(),title,topic,grade:parseInt(grade),diff,chuyen,
+    city:city||null,year:year?parseInt(year):null,school:school||null,origin:origin||null,
+    createdBy:_currentAuthorName(),createdAt:Date.now(),
     q,hint,ans,sol};
   const btn=document.querySelector('#aform-add-ex .submit-btn');
   if(btn){btn.disabled=true;btn.textContent='Đang lưu...';}
@@ -1104,7 +1164,8 @@ async function submitExercise(){
     await saveExercises_fb(exercise);
     if(!_exCache[diff])_exCache[diff]=[];
     _exCache[diff].push(exercise);
-    ['ex-topic','ex-title','ex-city','ex-year','ex-school','ex-question','ex-hint','ex-answer','ex-solution'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    ['ex-topic','ex-title','ex-city','ex-year','ex-school','ex-origin','ex-question','ex-hint','ex-answer','ex-solution'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    document.getElementById('ex-chuyen').checked=false;
     showToast('Đã thêm bài tập thành công!');
     renderExercises();renderManageList();
   }finally{
@@ -1146,20 +1207,19 @@ async function deleteTheory(id){
 function renderManageList(){
   const ex=getExCache();
   const th=getThCache();
-  const lbl={easy:'Dễ',med:'Trung bình',hard:'Khó',pro:'Chuyên'};
+  const lbl={easy:'Dễ',med:'Trung bình',hard:'Khó'};
   const exEl=document.getElementById('manage-ex-items');
   const thEl=document.getElementById('manage-th-items');
   if(!exEl||!thEl)return;
   const allCustomEx=[
     ...((ex.easy||[]).map(e=>({...e,diff:'easy'}))),
     ...((ex.med||[]).map(e=>({...e,diff:'med'}))),
-    ...((ex.hard||[]).map(e=>({...e,diff:'hard'}))),
-    ...((ex.pro||[]).map(e=>({...e,diff:'pro'})))
+    ...((ex.hard||[]).map(e=>({...e,diff:'hard'})))
   ];
   exEl.innerHTML=allCustomEx.length?allCustomEx.map(e=>`
     <div class="admin-item">
       <div class="admin-item-body">
-        <div class="admin-item-meta"><span>Lớp ${e.grade}</span><span>${lbl[e.diff]}</span><span>${e.topic}</span>${e.city?`<span>📍 ${e.city}</span>`:''}${e.year?`<span>📅 ${e.year}</span>`:''}${e.school?`<span>🏫 ${e.school}</span>`:''}</div>
+        <div class="admin-item-meta"><span>Lớp ${e.grade}</span><span>${lbl[e.diff]}</span>${e.chuyen?'<span>⭐ Chuyên</span>':''}<span>${e.topic}</span>${e.city?`<span>📍 ${e.city}</span>`:''}${e.year?`<span>📅 ${e.year}</span>`:''}${e.school?`<span>🏫 ${e.school}</span>`:''}${e.origin?`<span>🏛️ ${e.origin}</span>`:''}<span>✍️ ${e.createdBy||'Mathemagic'}</span><span>📆 ${_exDate(e.createdAt)}</span></div>
         <div class="admin-item-q" title="${(e.title||e.q).replace(/"/g,'&quot;')}">${e.title?`${e.title} - `:''}${e.q.replace(/<[^>]+>/g,'').slice(0,80)}${e.q.length>80?'…':''}</div>
       </div>
       <button class="admin-item-del" onclick="deleteExercise('${e.id}','${e.diff}')"><i class="ti ti-trash" style="font-size:13px"></i> Xóa</button>

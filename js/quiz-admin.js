@@ -1,16 +1,8 @@
 /* ═══════════════════════════════════
-   QUIZ ADMIN — Tab "Thêm trắc nghiệm"
-   Gọi renderQuizAdminTab() khi admin tab active
+   QUIZ ADMIN — Form "Trắc nghiệm", danh sách hiện trong tab "Nội dung đã thêm"
 ═══════════════════════════════════ */
 
 let _quizManageCache = [];
-
-function renderQuizAdminTab(){
-  const el = document.getElementById('aform-add-quiz');
-  if(!el) return;
-  // Form already injected by renderAdminContent patch — just load manage list
-  loadQuizManageList();
-}
 
 async function loadQuizManageList(){
   try{
