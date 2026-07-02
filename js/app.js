@@ -833,6 +833,7 @@ function renderEditExerciseModal(e,diff){
     </div>
     <div class="edit-ex-footer">
       <button class="cancel-btn" onclick="closeEditExercise()">Hủy</button>
+      <button class="history-btn" onclick="openExerciseHistory('${e.id}')"><i class="ti ti-history" style="font-size:13px"></i> Lịch sử</button>
       <button class="submit-btn" id="eex-submit-btn" onclick="submitEditExercise('${e.id}','${diff}')"><i class="ti ti-device-floppy"></i> Lưu thay đổi</button>
     </div>`;
   document.getElementById('eex-grade').value=e.grade;
@@ -884,6 +885,8 @@ async function submitEditExercise(originalId,originalDiff){
   const btn=document.getElementById('eex-submit-btn');
   if(btn){btn.disabled=true;btn.textContent='Đang lưu...';}
   try{
+    // snapshot current version to history before overwrite
+    if(orig) await window.fbSaveExerciseHistory(originalId, orig, _currentAuthorName());
     await saveExercises_fb(updated);
     if(_exCache[normalizedOriginalDiff]) _exCache[normalizedOriginalDiff]=_exCache[normalizedOriginalDiff].filter(x=>x.id!==originalId);
     if(!_exCache[diff])_exCache[diff]=[];
@@ -912,9 +915,43 @@ function injectEditExerciseStyles(){
 .edit-ex-footer{display:flex;justify-content:flex-end;gap:.6rem;padding:1rem 1.4rem;border-top:1.5px solid var(--border);position:sticky;bottom:0;background:var(--bg2)}
 .cancel-btn{padding:9px 18px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text2);font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer}
 .cancel-btn:hover{border-color:var(--text3)}
+.history-btn{padding:9px 16px;border:1.5px solid rgba(55,48,163,.3);border-radius:var(--radius-sm);background:none;color:var(--primary);font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;margin-right:auto}
+.history-btn:hover{background:rgba(55,48,163,.07)}
 .ex-detail-actions{display:flex;gap:.5rem}
 .edit-btn{display:flex;align-items:center;gap:5px;padding:7px 14px;border:1.5px solid rgba(55,48,163,.3);border-radius:var(--radius-sm);background:rgba(55,48,163,.06);color:var(--primary);font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;transition:background .15s}
 .edit-btn:hover{background:rgba(55,48,163,.14)}
+.admin-item-actions{display:flex;gap:6px;flex-shrink:0;align-items:center}
+.admin-item-hist{background:none;border:1.5px solid var(--border);color:var(--text3);cursor:pointer;padding:5px 8px;border-radius:6px;display:flex;align-items:center;transition:color .15s,border-color .15s}
+.admin-item-hist:hover{color:var(--primary);border-color:var(--primary)}
+/* ── History modal ── */
+.hist-overlay{position:fixed;inset:0;background:rgba(15,15,20,.6);display:flex;align-items:center;justify-content:center;z-index:1100;opacity:0;pointer-events:none;transition:opacity .18s;padding:20px}
+.hist-overlay.open{opacity:1;pointer-events:auto}
+.hist-modal{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);width:100%;max-width:660px;max-height:82vh;overflow-y:auto;display:flex;flex-direction:column}
+.hist-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.3rem;border-bottom:1.5px solid var(--border);position:sticky;top:0;background:var(--bg2)}
+.hist-title{font-size:.95rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:7px}
+.hist-body{padding:1.1rem}
+.hist-entry{border:1.5px solid var(--border);border-radius:var(--radius-sm);margin-bottom:.75rem;overflow:hidden}
+.hist-entry-head{display:flex;align-items:center;gap:10px;padding:.6rem 1rem;background:var(--bg3);cursor:pointer;user-select:none}
+.hist-entry-head:hover{background:var(--bg)}
+.hist-entry-time{font-size:.8rem;font-weight:800;color:var(--text2)}
+.hist-entry-by{font-size:.76rem;color:var(--text3);margin-left:auto}
+.hist-entry-detail{display:none;padding:.75rem 1rem;border-top:1px solid var(--border)}
+.hist-entry.open .hist-entry-detail{display:block}
+.hist-diff-row{display:grid;grid-template-columns:100px 1fr 1fr;gap:6px;font-size:.78rem;margin-bottom:4px;align-items:start}
+.hist-diff-label{font-weight:800;color:var(--text3)}
+.hist-diff-old{color:var(--red);word-break:break-word}
+.hist-diff-new{color:var(--teal);word-break:break-word}
+.hist-rollback-btn{margin-top:.75rem;padding:7px 16px;background:rgba(55,48,163,.08);border:1.5px solid rgba(55,48,163,.25);border-radius:var(--radius-sm);color:var(--primary);font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer}
+.hist-rollback-btn:hover{background:rgba(55,48,163,.16)}
+/* ── Dup warning modal ── */
+.dup-overlay{position:fixed;inset:0;background:rgba(15,15,20,.65);display:flex;align-items:center;justify-content:center;z-index:1200;opacity:0;pointer-events:none;transition:opacity .18s;padding:20px}
+.dup-overlay.open{opacity:1;pointer-events:auto}
+.dup-modal{background:var(--bg2);border:1.5px solid rgba(217,119,6,.4);border-radius:var(--radius);box-shadow:var(--shadow);width:100%;max-width:640px;max-height:80vh;overflow-y:auto;padding:1.5rem}
+.dup-title{font-size:1rem;font-weight:800;color:#b45309;margin-bottom:.75rem;display:flex;align-items:center;gap:8px}
+.dup-item{border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.6rem .9rem;margin-bottom:.5rem;font-size:.82rem}
+.dup-item-match{font-weight:700;color:var(--text)}
+.dup-item-score{color:var(--text3);margin-left:auto;font-size:.75rem}
+.dup-actions{display:flex;justify-content:flex-end;gap:.6rem;margin-top:1rem}
 `;
   const tag=document.createElement('style');
   tag.id='edit-ex-styles';
@@ -925,9 +962,196 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
     const ov=document.getElementById('edit-ex-overlay');
     if(ov&&ov.classList.contains('open'))closeEditExercise();
+    const hv=document.getElementById('hist-overlay');
+    if(hv&&hv.classList.contains('open'))closeHistoryModal();
   }
 });
 injectEditExerciseStyles();
+
+/* ═══════════════════════════════════
+   VERSION HISTORY
+═══════════════════════════════════ */
+const _HIST_DIFF_FIELDS=['title','q','hint','ans','sol','diff','chuyen','grade','topic','city','year','school','origin'];
+
+async function openExerciseHistory(exerciseId){
+  let entries;
+  try{
+    entries=await window.fbGetExerciseHistory(exerciseId);
+  }catch(e){
+    showToast('Lỗi tải lịch sử: '+e.message,false); return;
+  }
+  let ov=document.getElementById('hist-overlay');
+  if(!ov){
+    ov=document.createElement('div');
+    ov.id='hist-overlay';
+    ov.className='hist-overlay';
+    ov.onclick=ev=>{if(ev.target===ov)closeHistoryModal();};
+    ov.innerHTML='<div class="hist-modal" id="hist-modal"></div>';
+    document.body.appendChild(ov);
+  }
+  const modal=document.getElementById('hist-modal');
+  if(!entries.length){
+    modal.innerHTML=`<div class="hist-header"><div class="hist-title"><i class="ti ti-history"></i> Lịch sử chỉnh sửa</div><button class="edit-ex-close" onclick="closeHistoryModal()"><i class="ti ti-x"></i></button></div><div class="hist-body"><div class="cmt-empty"><i class="ti ti-mood-empty"></i> Chưa có lịch sử chỉnh sửa.</div></div>`;
+    ov.classList.add('open'); return;
+  }
+  // fetch current exercise for diff
+  const allEx=getAllExercisesFlat();
+  const current=allEx.find(x=>x.id===exerciseId);
+  modal.innerHTML=`
+    <div class="hist-header">
+      <div class="hist-title"><i class="ti ti-history"></i> Lịch sử chỉnh sửa (${entries.length} phiên bản)</div>
+      <button class="edit-ex-close" onclick="closeHistoryModal()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="hist-body">
+      ${entries.map((h,i)=>{
+        const next = i===0 ? current : entries[i-1]; // what it became after this snapshot
+        const diffs = next ? _HIST_DIFF_FIELDS.filter(f=>JSON.stringify(h[f])!==JSON.stringify(next[f])) : [];
+        return `<div class="hist-entry" id="hentry-${i}">
+          <div class="hist-entry-head" onclick="toggleHistEntry(${i})">
+            <i class="ti ti-chevron-right" style="font-size:12px;transition:transform .2s" id="hchev-${i}"></i>
+            <span class="hist-entry-time">${new Date(h._savedAt).toLocaleString('vi-VN')}</span>
+            ${diffs.length?`<span style="font-size:.74rem;color:var(--text3)">${diffs.length} trường thay đổi</span>`:''}
+            <span class="hist-entry-by">bởi ${h._savedBy||'?'}</span>
+          </div>
+          <div class="hist-entry-detail">
+            ${diffs.length?diffs.map(f=>`
+              <div class="hist-diff-row">
+                <span class="hist-diff-label">${f}</span>
+                <span class="hist-diff-old">${String(h[f]??'—').slice(0,120)}</span>
+                <span class="hist-diff-new">${String(next[f]??'—').slice(0,120)}</span>
+              </div>`).join(''):'<div style="font-size:.8rem;color:var(--text3)">Không phát hiện thay đổi cụ thể.</div>'}
+            <button class="hist-rollback-btn" onclick="rollbackExercise('${exerciseId}',${i})"><i class="ti ti-arrow-back-up" style="font-size:13px"></i> Khôi phục phiên bản này</button>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  ov.classList.add('open');
+  document.body.style.overflow='hidden';
+  // store entries for rollback
+  ov._histEntries=entries;
+  ov._histExId=exerciseId;
+}
+
+function toggleHistEntry(i){
+  const el=document.getElementById('hentry-'+i);
+  const chev=document.getElementById('hchev-'+i);
+  el?.classList.toggle('open');
+  if(chev) chev.style.transform=el?.classList.contains('open')?'rotate(90deg)':'';
+}
+
+function closeHistoryModal(){
+  const ov=document.getElementById('hist-overlay');
+  if(ov){ov.classList.remove('open');}
+  document.body.style.overflow='';
+}
+
+async function rollbackExercise(exerciseId, entryIdx){
+  if(!isAdmin){showToast('Bạn không có quyền!',false);return;}
+  const ov=document.getElementById('hist-overlay');
+  const entries=ov?._histEntries;
+  if(!entries||!entries[entryIdx]){showToast('Không tìm thấy phiên bản.',false);return;}
+  if(!confirm('Khôi phục về phiên bản này? Trạng thái hiện tại sẽ được lưu vào lịch sử.'))return;
+  const snapshot={...entries[entryIdx]};
+  delete snapshot._savedAt; delete snapshot._savedBy;
+  // current → history first
+  const allEx=getAllExercisesFlat();
+  const current=allEx.find(x=>x.id===exerciseId);
+  try{
+    if(current) await window.fbSaveExerciseHistory(exerciseId,current,_currentAuthorName());
+    await window.fbSaveExercise(snapshot);
+    // update cache
+    const d=snapshot.diff||'hard';
+    ['easy','med','hard'].forEach(k=>{ if(_exCache[k]) _exCache[k]=_exCache[k].filter(x=>x.id!==exerciseId); });
+    if(!_exCache[d])_exCache[d]=[];
+    _exCache[d].push(snapshot);
+    showToast('Đã khôi phục!');
+    closeHistoryModal();
+    renderExercises();renderManageList();
+    if(document.getElementById('exercise-detail').style.display!=='none') openExercise(exerciseId,d);
+  }catch(e){
+    showToast('Lỗi khôi phục: '+e.message,false);
+  }
+}
+
+/* ═══════════════════════════════════
+   DUPLICATE DETECTOR (trigram Jaccard)
+═══════════════════════════════════ */
+function _stripForDup(text){
+  return (text||'')
+    .replace(/\\[a-zA-Z]+\{[^}]*\}/g,' ')  // \cmd{...}
+    .replace(/\\\([\s\S]*?\\\)/g,' ')        // \(...\)
+    .replace(/\\\[[\s\S]*?\\\]/g,' ')        // \[...\]
+    .replace(/<[^>]+>/g,' ')                 // html tags
+    .replace(/[^\p{L}\p{N}\s]/gu,' ')        // keep only letters/numbers
+    .toLowerCase().replace(/\s+/g,' ').trim();
+}
+
+function _trigrams(s){
+  const set=new Set();
+  for(let i=0;i<s.length-2;i++) set.add(s.slice(i,i+3));
+  return set;
+}
+
+function _jaccard(a,b){
+  if(!a.size||!b.size) return 0;
+  let inter=0;
+  for(const t of a) if(b.has(t)) inter++;
+  return inter/(a.size+b.size-inter);
+}
+
+function checkDuplicates(incoming, threshold=0.72){
+  const pool=getAllExercisesFlat();
+  const results=[];
+  for(const inc of incoming){
+    const incTri=_trigrams(_stripForDup(inc.q));
+    if(incTri.size<5) continue; // too short to compare meaningfully
+    for(const ex of pool){
+      const score=_jaccard(incTri,_trigrams(_stripForDup(ex.q)));
+      if(score>=threshold){
+        results.push({incoming:inc, existing:ex, score});
+        break; // one match per incoming item is enough to flag
+      }
+    }
+  }
+  return results;
+}
+
+function showDupWarning(dups, onProceed, onAutoReject){
+  let ov=document.getElementById('dup-overlay');
+  if(!ov){
+    ov=document.createElement('div');
+    ov.id='dup-overlay';
+    ov.className='dup-overlay';
+    ov.innerHTML='<div class="dup-modal" id="dup-modal"></div>';
+    document.body.appendChild(ov);
+  }
+  document.getElementById('dup-modal').innerHTML=`
+    <div class="dup-title"><i class="ti ti-alert-triangle"></i> Phát hiện ${dups.length} bài tập có thể trùng lặp</div>
+    ${dups.map(d=>`
+      <div class="dup-item">
+        <div style="display:flex;align-items:center">
+          <span class="dup-item-match">Mới: "${(d.incoming.title||d.incoming.q.slice(0,60)+'…')}"</span>
+          <span class="dup-item-score">Độ tương tự: ${Math.round(d.score*100)}%</span>
+        </div>
+        <div style="font-size:.76rem;color:var(--text3);margin-top:3px">Trùng với: "${d.existing.title||d.existing.q.slice(0,80)+'…'}"</div>
+      </div>`).join('')}
+    <div class="dup-actions">
+      <button class="cancel-btn" onclick="document.getElementById('dup-overlay').classList.remove('open')">Hủy</button>
+      <button class="cancel-btn" style="color:var(--red);border-color:rgba(185,28,28,.3)" onclick="closeDupAndCall(false)">Tự động bỏ bản trùng</button>
+      <button class="submit-btn" onclick="closeDupAndCall(true)">Tiếp tục nhập tất cả</button>
+    </div>`;
+  ov._onProceed=onProceed;
+  ov._onAutoReject=onAutoReject;
+  ov.classList.add('open');
+}
+
+function closeDupAndCall(proceed){
+  const ov=document.getElementById('dup-overlay');
+  if(!ov) return;
+  ov.classList.remove('open');
+  if(proceed) ov._onProceed?.();
+  else ov._onAutoReject?.();
+}
 
 /* ═══════════════════════════════════
    ADMIN
@@ -1222,7 +1446,10 @@ function renderManageList(){
         <div class="admin-item-meta"><span>Lớp ${e.grade}</span><span>${lbl[e.diff]}</span>${e.chuyen?'<span>⭐ Chuyên</span>':''}<span>${e.topic}</span>${e.city?`<span>📍 ${e.city}</span>`:''}${e.year?`<span>📅 ${e.year}</span>`:''}${e.school?`<span>🏫 ${e.school}</span>`:''}${e.origin?`<span>🏛️ ${e.origin}</span>`:''}<span>✍️ ${e.createdBy||'Mathemagic'}</span><span>📆 ${_exDate(e.createdAt)}</span></div>
         <div class="admin-item-q" title="${(e.title||e.q).replace(/"/g,'&quot;')}">${e.title?`${e.title} - `:''}${e.q.replace(/<[^>]+>/g,'').slice(0,80)}${e.q.length>80?'…':''}</div>
       </div>
-      <button class="admin-item-del" onclick="deleteExercise('${e.id}','${e.diff}')"><i class="ti ti-trash" style="font-size:13px"></i> Xóa</button>
+      <div class="admin-item-actions">
+        <button class="admin-item-hist" onclick="openExerciseHistory('${e.id}')"><i class="ti ti-history" style="font-size:13px"></i></button>
+        <button class="admin-item-del" onclick="deleteExercise('${e.id}','${e.diff}')"><i class="ti ti-trash" style="font-size:13px"></i> Xóa</button>
+      </div>
     </div>`).join(''):'<div class="empty-state" style="padding:1.25rem"><i class="ti ti-mood-empty"></i><p>Chưa có bài tập nào được thêm</p></div>';
   thEl.innerHTML=th.length?th.map(t=>`
     <div class="admin-item">

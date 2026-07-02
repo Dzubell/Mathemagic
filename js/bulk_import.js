@@ -242,6 +242,34 @@ async function iqCommit(){
   const approved = _impQueue.filter(i=>i.status==='approved');
   if(!approved.length){ showToast('Không có mục nào được duyệt!', false); return; }
 
+  const isQuiz = _impMode==='quiz';
+
+  // Kiểm tra trùng lặp (chỉ áp dụng cho bài tập, không áp dụng cho trắc nghiệm)
+  if(!isQuiz && typeof checkDuplicates==='function'){
+    const dups = checkDuplicates(approved.map(i=>i.data));
+    if(dups.length){
+      showDupWarning(dups,
+        ()=>_iqCommitProceed(approved,isQuiz), // Tiếp tục nhập tất cả
+        ()=>{ // Tự động bỏ các bản trùng khỏi hàng chờ rồi tiếp tục với phần còn lại
+          const dupIds = new Set(dups.map(d=>d.incoming.id));
+          const remaining = approved.filter(i=>!dupIds.has(i.data.id));
+          dups.forEach(d=>{
+            const idx=_impQueue.findIndex(i=>i.data.id===d.incoming.id);
+            if(idx>-1) _impQueue[idx].status='rejected';
+          });
+          renderImportQueue();
+          if(remaining.length) _iqCommitProceed(remaining,isQuiz);
+          else showToast('Đã bỏ tất cả các mục trùng lặp.');
+        }
+      );
+      return;
+    }
+  }
+
+  await _iqCommitProceed(approved,isQuiz);
+}
+
+async function _iqCommitProceed(approved,isQuiz){
   const progress = document.getElementById('import-progress');
   const progressBar = document.getElementById('import-progress-bar');
   const progressText = document.getElementById('import-progress-text');
@@ -250,7 +278,6 @@ async function iqCommit(){
   if(commitBtn) commitBtn.disabled = true;
 
   let done = 0;
-  const isQuiz = _impMode==='quiz';
 
   for(const item of approved){
     try{

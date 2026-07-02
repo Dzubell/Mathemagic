@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, onSnapshot, query, where, runTransaction }
+import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, onSnapshot, query, where, orderBy, runTransaction }
   from "https://www.gstatic.com/firebasejs/11.9.0/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL }
   from "https://www.gstatic.com/firebasejs/11.9.0/firebase-storage.js";
@@ -44,6 +44,21 @@ window.fbSaveExercise = async function(exercise){
 
 window.fbDeleteExercise = async function(id){
   await deleteDoc(doc(db,'exercises', id));
+};
+
+// Subcollection: exercises/{id}/history/{timestamp} — snapshot lưu TRƯỚC khi ghi đè (không phải sau).
+// Gọi hàm này ngay trước fbSaveExercise() khi sửa (không gọi khi thêm mới).
+window.fbSaveExerciseHistory = async function(exerciseId, previousVersion, savedBy){
+  const ts = Date.now();
+  const snapshot = {...previousVersion, _savedAt: ts, _savedBy: savedBy || 'Admin'};
+  await setDoc(doc(db, 'exercises', exerciseId, 'history', String(ts)), snapshot);
+};
+
+// Trả về các phiên bản cũ, mới nhất trước (dùng cho modal Lịch sử)
+window.fbGetExerciseHistory = async function(exerciseId){
+  const q = query(collection(db, 'exercises', exerciseId, 'history'), orderBy('_savedAt', 'desc'));
+  const snap = await getDocs(q);
+  return snap.docs.map(d=>d.data());
 };
 
 // Migration một lần: chuyển các bài tập diff='pro' cũ sang diff='hard' + chuyen:true trong Firestore.

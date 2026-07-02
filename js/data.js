@@ -17,6 +17,9 @@ const TOPICS=[
   {id:'duong-tron',grade:9,title:'Đường tròn & tứ giác nội tiếp',icon:'ti-circle',color:'rgba(180,83,9,.1)',iconColor:'var(--amber)',desc:'Góc nội tiếp, tiếp tuyến, chứng minh tứ giác nội tiếp.',badge:'Hình học',bc:'rgba(14,116,144,.1)',bt:'var(--teal)'},
   {id:'hinh-khong-gian',grade:9,title:'Hình học không gian',icon:'ti-3d-cube-sphere',color:'rgba(185,28,28,.1)',iconColor:'var(--red)',desc:'Trụ, nón, cầu — diện tích & thể tích.',badge:'Hình học',bc:'rgba(14,116,144,.1)',bt:'var(--teal)'},
   {id:'bdt',grade:9,title:'Bất đẳng thức — AM-GM & BCS',icon:'ti-math-greater',color:'rgba(109,40,217,.12)',iconColor:'var(--violet)',desc:'Cauchy, AM-GM, Bunhiacopski — tìm min/max.',badge:'Nâng cao',bc:'rgba(109,40,217,.1)',bt:'var(--violet)'},
+  {id:'bat-bien',grade:10,title:'Nguyên lý bất biến',icon:'ti-infinity',color:'rgba(185,28,28,.1)',iconColor:'var(--red)',desc:'Đại lượng không đổi qua các phép biến đổi — tổng, hiệu, số dư, tô màu.',badge:'Chuyên đề',bc:'rgba(185,28,28,.1)',bt:'var(--red)'},
+  {id:'dirichlet',grade:10,title:'Nguyên lý Dirichlet',icon:'ti-grid-dots',color:'rgba(180,83,9,.1)',iconColor:'var(--amber)',desc:'Nguyên lý chuồng - thỏ và các dạng bài suy luận, chia hết, hình học.',badge:'Chuyên đề',bc:'rgba(180,83,9,.1)',bt:'var(--amber)'},
+  {id:'dong-du',grade:10,title:'Đồng dư thức',icon:'ti-percentage',color:'rgba(14,116,144,.1)',iconColor:'var(--teal)',desc:'Tính chất đồng dư, Fermat, Wilson, Euler — số dư, chia hết, chữ số tận cùng.',badge:'Chuyên đề',bc:'rgba(14,116,144,.1)',bt:'var(--teal)'},
 ];
 
 const LESSONS = {
@@ -734,6 +737,279 @@ pro:[
   {id:'p7', title:'Viet_5',     topic:'PT bậc 2 chuyên', grade:9, q:'(Đề chuyên) PT \\(x^2-2(m+1)x+4m=0\\) có hai nghiệm \\(x_1,x_2\\). Tìm \\(m\\) để \\(\\dfrac{1}{x_1}+\\dfrac{1}{x_2}=1\\).', hint:'\\(\\dfrac{1}{x_1}+\\dfrac{1}{x_2}=\\dfrac{x_1+x_2}{x_1x_2}\\)', ans:'\\(\\dfrac{2(m+1)}{4m}=1\\Rightarrow m=2\\). Kiểm tra: \\(\\Delta=4(m-1)^2\\geq0\\) ✓'},
   
 ]};
+
+/* ══════════ CHUYÊN ĐỀ ══════════ */
+LESSONS['bat-bien'] = `
+<div class="cb"><div class="cb-heading">1. Nguyên lý bất biến là gì?</div>
+<div class="defbox">Trong nhiều bài toán (trò chơi, thao tác lặp trên bảng số, dãy số, hình vẽ...), một đối tượng liên tục bị biến đổi qua nhiều bước, nhưng tồn tại một đại lượng (tổng, hiệu, tích, số dư, tính chẵn lẻ, màu sắc, ...) không đổi — hoặc chỉ đổi theo quy luật xác định — trong suốt quá trình. Đại lượng đó gọi là <strong>bất biến</strong> của bài toán.</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Bước 1</span><span class="val">Phát hiện đại lượng bất biến ẩn trong bài toán (khó nhất, cần luyện tập nhiều)</span></div>
+  <div class="frow"><span class="lbl">Bước 2</span><span class="val">Tính giá trị/tính chất của đại lượng đó ở trạng thái ban đầu và trạng thái cần xét, so sánh để kết luận</span></div>
+</div>
+<div class="note"><strong>Các loại bất biến thường gặp:</strong> tổng/hiệu/tích các số trên bảng; tính chẵn lẻ của tổng hoặc số các số âm; số dư khi chia cho một số cố định (2, 3, 4, 9, ...); cách tô màu xen kẽ (bàn cờ, hình quạt); bất biến dạng modulo kết hợp đại lượng đại số.</div>
+</div>
+
+<div class="cb"><div class="cb-heading">2. Ví dụ 1 — Bất biến là DẤU / TÍCH các số ±1</div>
+<div class="fbox amber">
+  <strong>Bài toán:</strong> Trên bảng viết 10 dấu cộng và 15 dấu trừ. Mỗi lần xóa 2 dấu bất kỳ, viết vào đó 1 dấu cộng nếu 2 dấu vừa xóa giống nhau, 1 dấu trừ nếu khác nhau. Sau 24 lần thao tác, trên bảng còn lại dấu gì?
+</div>
+<div class="fbox">
+  Thay dấu cộng bởi số 1, dấu trừ bởi số \\(-1\\). Tích ban đầu: \\(1^{10}\\cdot(-1)^{15}=-1\\).<br>
+  Khi xóa 2 số và thay bằng đúng tích của chúng, <strong>tích của tất cả các số còn lại trên bảng không đổi</strong>. Vậy sau 24 lần thao tác, tích vẫn bằng \\(-1\\).<br>
+  <strong>Kết luận:</strong> dấu còn lại trên bảng là <strong>dấu trừ</strong>.
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">3. Ví dụ 2 — Bất biến là TÍNH CHẴN LẺ của tổng</div>
+<div class="fbox amber">
+  <strong>Bài toán:</strong> Cho \\(n\\) lẻ. Viết các số từ 1 đến \\(2n\\) lên bảng. Chọn 2 số \\(a,b\\) bất kỳ rồi thay bằng \\(|a-b|\\). Chứng minh số cuối cùng còn lại là số lẻ.
+</div>
+<div class="fbox">
+  Tổng ban đầu \\(S=1+2+\\cdots+2n=n(2n+1)\\) là số lẻ vì \\(n\\) lẻ.<br>
+  Mỗi lần thay \\(a>b\\) bởi \\(|a-b|=a-b\\), tổng giảm đi \\(2b\\) (số chẵn) \\(\\Rightarrow\\) <strong>tính chẵn lẻ của tổng không đổi</strong>.<br>
+  Vì tổng ban đầu lẻ nên số cuối cùng còn lại (chính là tổng lúc đó) là số lẻ. (đpcm)
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">4. Ví dụ 3 — Chẵn lẻ kết hợp số phần tử</div>
+<div class="fbox amber">
+  <strong>Bài toán:</strong> Các số 2, 8, 1, 0, 1, 9, 9, 5 viết trên vòng tròn. Mỗi lần chọn 2 số cạnh nhau và cộng thêm 1 vào mỗi số. Các số trên vòng tròn có thể đều bằng nhau không?
+</div>
+<div class="fbox">
+  Tổng ban đầu \\(=2+8+1+0+1+9+9+5=35\\) (lẻ). Mỗi thao tác tổng tăng thêm 2 \\(\\Rightarrow\\) tổng luôn lẻ.<br>
+  Có 8 số (chẵn); nếu tất cả bằng \\(k\\) thì tổng \\(=8k\\) (chẵn) — mâu thuẫn.<br>
+  <strong>Kết luận:</strong> không thể.
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">5. Ví dụ 4 — Bất biến là số dư khi chia cho 5</div>
+<div class="fbox amber">
+  <strong>Bài toán:</strong> Một tờ giấy bị cắt thành 6 mảnh hoặc 11 mảnh, các mảnh có thể tiếp tục cắt tương tự. Có thể nhận được 2005 mảnh không?
+</div>
+<div class="fbox">
+  Mỗi lần cắt, số mảnh tăng thêm 5 (cắt 1→6) hoặc 10 (cắt 1→11) — đều là bội của 5.<br>
+  Số mảnh luôn có dạng \\(1+5k\\). Vì \\(2005=5\\times401\\) có dạng \\(5k\\) (không phải \\(5k+1\\)) \\(\\Rightarrow\\) <strong>không thể</strong>.
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">6. Ví dụ 5 — Số dư chia cho 9, tính tuần hoàn</div>
+<div class="fbox amber">
+  <strong>Bài toán:</strong> Mỗi số trong dãy \\(2^1,2^2,\\ldots,2^{2005}\\) được thay bởi tổng các chữ số của nó, lặp lại tới khi còn 1 chữ số. Chứng minh số các số 2 nhiều hơn số các số 1.
+</div>
+<div class="fbox">
+  Một số và tổng các chữ số của nó có cùng số dư khi chia cho 9. Số dư của \\(2^k \\bmod 9\\) tuần hoàn chu kỳ 6: \\(2,4,8,7,5,1,\\ldots\\)<br>
+  Vì \\(2005=334\\times6+1\\), dư "2" xuất hiện 335 lần, các dư khác đúng 334 lần \\(\\Rightarrow\\) số 2 nhiều hơn số 1 đúng 1 lần. (đpcm)
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">7. Ví dụ 6 — Tô màu xen kẽ</div>
+<div class="fbox amber">
+  <strong>Bài toán:</strong> Hình tròn chia 10 ô hình quạt, mỗi ô 1 viên bi. Mỗi lần lấy 2 ô bất kỳ, chuyển mỗi viên sang ô liền kề theo 2 chiều ngược nhau. Có thể dồn hết bi về 1 ô không?
+</div>
+<div class="fbox">
+  Tô xen kẽ 5 ô màu, 5 ô trắng. Xét tổng số bi ở 5 ô màu: mọi thao tác chỉ làm tổng đó không đổi hoặc thay đổi \\(\\pm2\\) \\(\\Rightarrow\\) <strong>tính chẵn lẻ không đổi</strong>.<br>
+  Ban đầu tổng \\(=5\\) (lẻ) nên luôn lẻ, do đó luôn khác 0 và khác 10. <strong>Kết luận:</strong> không thể.
+</div>
+</div>
+
+<div class="note"><strong>Ghi chú chung:</strong> Khi giải bằng nguyên lý bất biến, thử lần lượt các loại bất biến phổ biến (tổng, hiệu, tích, số dư, chẵn lẻ, tô màu), kiểm tra đại lượng đó có thực sự không đổi (hoặc đổi theo quy luật) qua mỗi bước, rồi so sánh trạng thái đầu và trạng thái cần xét.</div>`;
+
+LESSONS['dirichlet'] = `
+<div class="cb"><div class="cb-heading">1. Nội dung nguyên lý (chuồng - thỏ)</div>
+<div class="defbox">Nếu nhốt \\(n\\cdot m+r\\) con thỏ (\\(m,n,r\\) nguyên dương) vào \\(n\\) cái chuồng thì phải có ít nhất một chuồng chứa không ít hơn \\(m+1\\) con thỏ.</div>
+<div class="fbox amber">
+  <strong>Trường hợp hay dùng nhất:</strong> nếu nhốt \\(n+1\\) con thỏ vào \\(n\\) cái chuồng thì tồn tại ít nhất một chuồng chứa từ 2 con thỏ trở lên.
+</div>
+<div class="fbox">
+  <strong>Chứng minh:</strong> Giả sử mỗi chuồng chứa không quá \\(m\\) con thỏ. Khi đó tổng số thỏ \\(\\le m\\cdot n\\), mâu thuẫn với tổng thỏ \\(=mn+r\\). Vậy phải có một chuồng chứa \\(\\ge m+1\\) con.
+</div>
+<div class="note"><strong>Nhận xét quan trọng:</strong> Cái khó là phát hiện "chất Dirichlet" ẩn trong bài — xác định đâu là "thỏ" (đối tượng phân chia) và đâu là "chuồng" (nhóm/khả năng). Nhiều bài phải khéo léo "xây chuồng, tạo thỏ" trước khi áp dụng. Nguyên tắc: số thỏ luôn phải nhiều hơn số chuồng (thường hơn đúng 1) để đảm bảo có chuồng chứa \\(\\ge2\\) thỏ.</div>
+<div class="fbox green">
+  <strong>Dạng mở rộng:</strong> Nếu có \\(m\\) vật đặt vào \\(n\\) ngăn kéo và \\(m>k\\cdot n\\) thì có ít nhất một ngăn kéo chứa \\(\\ge k+1\\) vật.
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">2. Dạng 1 — Toán chia hết</div>
+<div class="fbox">Khi chia số \\(a\\) cho \\(m\\ne0\\), số dư nhận 1 trong \\(m\\) giá trị \\(0,\\ldots,m-1\\) ("\\(m\\) chuồng"). Chia \\(m+1\\) số khác nhau cho \\(m\\) ("\\(m+1\\) thỏ") luôn có 2 số cùng số dư \\(\\Rightarrow\\) hiệu của chúng chia hết cho \\(m\\).</div>
+<div class="fbox amber">
+  <strong>Bài toán:</strong> Chứng minh tồn tại số dạng \\(1978\\,1978\\ldots1978\\,0\\ldots0\\) (một số nhóm "1978" nối tiếp, sau đó là một số chữ số 0) chia hết cho 2012.
+</div>
+<div class="fbox">
+  Xét 2013 số \\(a_k=\\) (\\(k\\) nhóm "1978" nối tiếp), \\(k=1,\\ldots,2013\\). Chia cho 2012 chỉ có tối đa 2012 số dư \\(\\Rightarrow\\) tồn tại \\(a_m,a_n\\) (\\(m>n\\)) cùng số dư. Khi đó \\(a_m-a_n\\) chia hết cho 2012, và hiệu này chính là \\((m-n)\\) nhóm "1978" theo sau bởi các chữ số 0 — đúng dạng cần tìm. (đpcm)
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">3. Dạng 2 — Toán suy luận</div>
+<div class="fbox">"Chuồng" là các giá trị một đại lượng có thể nhận (số trận đã đấu, số người quen...), "thỏ" là các đối tượng (đội, học sinh...). Nhiều khi 2 giá trị biên loại trừ nhau khiến số chuồng giảm 1.</div>
+<div class="fbox amber">
+  <strong>Bài toán:</strong> 10 đội thi đấu vòng tròn 1 lượt. Chứng minh vào bất cứ thời điểm nào cũng có 2 đội đã đấu số trận bằng nhau.
+</div>
+<div class="fbox">
+  Số trận mỗi đội đã đấu \\(\\in\\{0,\\ldots,9\\}\\) (10 khả năng), nhưng không thể vừa có đội đấu đủ 9 trận vừa có đội chưa đấu trận nào (2 đội đó phải đấu với nhau). Nên thực chất chỉ 9 khả năng (9 chuồng) cho 10 đội (10 thỏ) \\(\\Rightarrow\\) tồn tại 2 đội cùng số trận. (đpcm)
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">4. Dạng 3 — Sự tương hỗ</div>
+<div class="fbox amber">
+  <strong>Bài toán:</strong> Cho 5 người tùy ý (quen nhau có tính đối xứng). Chứng minh có ít nhất 2 người có số người quen bằng nhau.
+</div>
+<div class="fbox">
+  Số người quen mỗi người \\(\\in\\{0,\\ldots,4\\}\\) (5 khả năng), nhưng 0 và 4 không thể cùng xuất hiện (người quen 0 người thì không ai quen đủ 4 người). Còn 4 chuồng cho 5 người \\(\\Rightarrow\\) tồn tại 2 người cùng số người quen. (đpcm)
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">5. Dạng 4 — Sự sắp xếp</div>
+<div class="fbox amber">
+  <strong>Bài toán:</strong> Viết 16 số thuộc \\(\\{1,2,3,4\\}\\), ghép thành 8 cặp. Chứng minh tồn tại 2 cặp có tổng bằng nhau.
+</div>
+<div class="fbox">
+  Tổng mỗi cặp \\(\\in[2,8]\\): 7 giá trị có thể (7 chuồng), có 8 cặp (8 thỏ) \\(\\Rightarrow\\) tồn tại 2 cặp cùng tổng. (đpcm)
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">6. Dạng 5 — Bài toán hình học</div>
+<div class="fbox amber">
+  <strong>Bài toán:</strong> Trong tam giác đều cạnh 4, lấy 17 điểm. Chứng minh có 2 điểm cách nhau \\(\\le1\\).
+</div>
+<div class="fbox">
+  Chia tam giác cạnh 4 thành 16 tam giác đều cạnh 1 (chia đều mỗi cạnh làm 4 phần). Vì \\(17>16\\), có ít nhất 1 tam giác nhỏ chứa \\(\\ge2\\) điểm; khoảng cách 2 điểm trong tam giác cạnh 1 luôn \\(\\le1\\). (đpcm)
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">7. Dạng 6 — Sự trùng lặp (Dirichlet mở rộng)</div>
+<div class="fbox amber">
+  <strong>Bài toán:</strong> 45 học sinh làm bài, không ai dưới điểm 2, chỉ 2 học sinh điểm 10. Chứng minh có ít nhất 6 học sinh cùng điểm.
+</div>
+<div class="fbox">
+  Loại 2 học sinh điểm 10, còn 43 học sinh có điểm \\(\\in\\{2,\\ldots,9\\}\\): 8 loại điểm (8 chuồng) cho 43 học sinh (43 thỏ). Vì \\(43=8\\times5+3\\), theo Dirichlet mở rộng có ít nhất \\(5+1=6\\) học sinh cùng điểm. (đpcm)
+</div>
+</div>
+
+<div class="note"><strong>Ghi chú chung — các bước áp dụng:</strong> (1) Xác định rõ "thỏ" và "chuồng" (xây dựng nếu chưa có sẵn); (2) Đếm số thỏ, số chuồng, kiểm tra số thỏ \\(>k\\times\\) số chuồng; (3) Áp dụng nguyên lý Dirichlet (cơ bản hoặc mở rộng) để kết luận.</div>`;
+
+LESSONS['dong-du'] = `
+<div class="cb"><div class="cb-heading">1. Định nghĩa</div>
+<div class="defbox">Cho \\(m>0\\) nguyên. Nếu \\(a,b\\) chia cho \\(m\\) có cùng số dư thì \\(a\\) đồng dư \\(b\\) theo mô-đun \\(m\\): \\(a\\equiv b\\pmod m\\).</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">Tương đương</span><span class="val">\\(a\\equiv b\\pmod m \\Leftrightarrow (a-b)\\vdots m \\Leftrightarrow \\exists t\\in\\mathbb{Z}: a=b+mt\\)</span></div>
+  <div class="frow"><span class="lbl">Không đồng dư</span><span class="val">Ký hiệu \\(a\\not\\equiv b\\pmod m\\)</span></div>
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">2. Các tính chất cơ bản</div>
+<div class="fbox">
+  <div class="frow"><span class="lbl">1. Phản xạ</span><span class="val">\\(a\\equiv a\\pmod m\\)</span></div>
+  <div class="frow"><span class="lbl">2. Đối xứng</span><span class="val">\\(a\\equiv b\\Rightarrow b\\equiv a\\pmod m\\)</span></div>
+  <div class="frow"><span class="lbl">3. Bắc cầu</span><span class="val">\\(a\\equiv b,\\ b\\equiv c\\Rightarrow a\\equiv c\\pmod m\\)</span></div>
+  <div class="frow"><span class="lbl">4. Cộng/trừ</span><span class="val">\\(a\\equiv b,\\ c\\equiv d\\Rightarrow a\\pm c\\equiv b\\pm d\\pmod m\\)</span></div>
+  <div class="frow"><span class="lbl">5. Nhân với \\(k\\)</span><span class="val">\\(a\\equiv b\\Rightarrow ka\\equiv kb\\pmod m\\); nhân cả mô-đun: \\(ka\\equiv kb\\pmod{km}\\)</span></div>
+  <div class="frow"><span class="lbl">6. Nhân từng vế</span><span class="val">\\(a\\equiv b,\\ c\\equiv d\\Rightarrow ac\\equiv bd\\pmod m\\)</span></div>
+  <div class="frow"><span class="lbl">7. Nâng lũy thừa</span><span class="val">\\(a\\equiv b\\Rightarrow a^k\\equiv b^k\\pmod m\\)</span></div>
+  <div class="frow"><span class="lbl">8. Nhiều mô-đun</span><span class="val">Đồng dư theo \\(m_1,\\ldots,m_k\\) \\(\\Rightarrow\\) đồng dư theo \\(\\text{BCNN}(m_1,\\ldots,m_k)\\); nếu đôi một nguyên tố cùng nhau thì theo \\(m_1m_2\\cdots m_k\\)</span></div>
+  <div class="frow"><span class="lbl">9. Ước chung</span><span class="val">\\(a\\equiv b\\pmod m\\Rightarrow(a,m)=(b,m)\\)</span></div>
+  <div class="frow"><span class="lbl">10. Chia cho ước chung \\(k\\)</span><span class="val">\\(\\dfrac{a}{k}\\equiv\\dfrac{b}{k}\\pmod{m/k}\\); nếu \\(ac\\equiv bc\\pmod m\\) thì \\(a\\equiv b\\pmod{m/(c,m)}\\)</span></div>
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">3. Ba định lý quan trọng (thừa nhận)</div>
+<div class="fbox amber">
+  <div class="frow"><span class="lbl">Fermat bé</span><span class="val">\\(p\\) nguyên tố: \\(a^p\\equiv a\\pmod p\\); nếu \\((a,p)=1\\) thì \\(a^{p-1}\\equiv1\\pmod p\\)</span></div>
+  <div class="frow"><span class="lbl">Wilson</span><span class="val">\\(p\\) nguyên tố: \\((p-1)!\\equiv-1\\pmod p\\)</span></div>
+  <div class="frow"><span class="lbl">Euler</span><span class="val">\\((a,m)=1\\Rightarrow a^{\\varphi(m)}\\equiv1\\pmod m\\), với \\(\\varphi(m)=m\\prod(1-\\tfrac1{p_i})\\)</span></div>
+</div>
+<div class="note"><strong>Bốn dạng toán thường gặp:</strong> (1) tìm số dư / chữ số tận cùng; (2) chứng minh chia hết; (3) dấu hiệu chia hết; (4) dùng Fermat, Wilson, Euler cho bài toán nâng cao.</div>
+</div>
+
+<div class="cb"><div class="cb-heading">4. Dạng 1 — Tìm số dư</div>
+<div class="fbox amber">
+  <strong>VD1a:</strong> Tìm dư của \\(153^{25}-1\\) cho 9. <strong>VD1b:</strong> Tìm dư của \\(2016^{2018}+2\\) cho 5.
+</div>
+<div class="fbox">
+  a) \\(153=9\\cdot17\\equiv0\\), nhưng chú ý đề gốc: \\(1532\\equiv2\\pmod9\\Rightarrow153^{2}5\\equiv2^5=32\\equiv5\\pmod9\\Rightarrow153^{25}-1\\equiv4\\pmod9\\). Số dư là <strong>4</strong>.<br>
+  b) \\(2016\\equiv1\\pmod5\\Rightarrow2016^{2018}\\equiv1\\Rightarrow2016^{2018}+2\\equiv3\\pmod5\\). Số dư là <strong>3</strong>.
+</div>
+<div class="fbox amber">
+  <strong>VD2:</strong> Chứng minh \\((2013^{2016}+2014^{2016}-2015^{2016})^{10}\\ \\vdots\\ 10^6\\).
+</div>
+<div class="fbox">
+  \\(2013\\equiv-1,\\ 2014\\equiv0,\\ 2015\\equiv1\\pmod{10^6}\\Rightarrow2013^{2016}\\equiv1,\\ 2014^{2016}\\equiv0,\\ 2015^{2016}\\equiv1\\).<br>
+  Biểu thức trong ngoặc \\(\\equiv1+0-1=0\\pmod{10^6}\\Rightarrow\\) lũy thừa 10 của nó cũng \\(\\equiv0\\pmod{10^6}\\). (đpcm)
+</div>
+<div class="fbox amber">
+  <strong>VD3:</strong> a) Chữ số tận cùng của \\(9^{9^{10}}\\)? b) Hai chữ số tận cùng của \\(3^{1000}\\)?
+</div>
+<div class="fbox">
+  a) \\(9^{2n+1}\\equiv9\\pmod{10}\\) với mọi \\(n\\); \\(9^{10}\\) lẻ \\(\\Rightarrow\\) tận cùng là <strong>9</strong>.<br>
+  b) \\(3^4=81\\equiv-19\\pmod{100}\\Rightarrow3^8\\equiv361\\equiv61\\Rightarrow3^{10}\\equiv61\\cdot9=549\\equiv49\\Rightarrow3^{20}\\equiv49^2=2401\\equiv1\\pmod{100}\\).<br>
+  \\(3^{1000}=(3^{20})^{50}\\equiv1\\pmod{100}\\). Hai chữ số tận cùng: <strong>01</strong>.
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">5. Dạng 2 — Chứng minh chia hết</div>
+<div class="defbox">Nguyên tắc: \\(a\\ \\vdots\\ m \\Leftrightarrow a\\equiv0\\pmod m\\).</div>
+<div class="fbox amber">
+  <strong>VD4:</strong> Chứng minh \\(4^{2018}-7\\ \\vdots\\ 9\\).
+</div>
+<div class="fbox">
+  \\(4^3=64\\equiv1\\pmod9\\Rightarrow4^{2016}=(4^3)^{672}\\equiv1\\). \\(4^2=16\\equiv7\\pmod9\\Rightarrow4^{2018}\\equiv1\\cdot7=7\\pmod9\\Rightarrow4^{2018}-7\\equiv0\\pmod9\\). (đpcm)
+</div>
+<div class="fbox amber">
+  <strong>VD5:</strong> Chứng minh \\(12^{2n+1}+11^{n+2}\\ \\vdots\\ 133\\) (\\(n\\in\\mathbb{N}\\)).
+</div>
+<div class="fbox">
+  \\(12^2=144\\equiv11\\pmod{133}\\); \\(11^2=121\\equiv-12\\pmod{133}\\).<br>
+  \\(12^{2n+1}=12\\cdot(12^2)^n\\equiv12\\cdot11^n\\); \\(11^{n+2}=11^2\\cdot11^n\\equiv-12\\cdot11^n\\pmod{133}\\).<br>
+  Cộng lại: \\(\\equiv12\\cdot11^n-12\\cdot11^n=0\\pmod{133}\\). (đpcm)
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">6. Dạng 3 — Dấu hiệu chia hết</div>
+<div class="fbox amber">
+  <strong>VD6:</strong> Xác định dấu hiệu chia hết cho 3 và cho 4 của số \\(a=\\overline{a_n\\cdots a_1a_0}\\).
+</div>
+<div class="fbox">
+  a) \\(10\\equiv1\\pmod3\\Rightarrow a_i\\cdot10^i\\equiv a_i\\pmod3\\Rightarrow a\\equiv(a_n+\\cdots+a_0)\\pmod3\\). Vậy \\(a\\ \\vdots\\ 3\\Leftrightarrow\\) tổng chữ số \\(\\vdots\\ 3\\).<br>
+  b) \\(10^2\\equiv0\\pmod4\\Rightarrow\\) các số hạng từ \\(a_2\\) trở lên \\(\\equiv0\\); \\(a\\equiv(a_1\\cdot10+a_0)\\pmod4\\). Vậy \\(a\\ \\vdots\\ 4\\Leftrightarrow\\) số tạo bởi 2 chữ số cuối \\(\\vdots\\ 4\\).
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">7. Dạng 4 — Sử dụng Fermat, Euler</div>
+<div class="fbox amber">
+  <strong>VD7 (Fermat bé):</strong> Chứng minh \\(23^{4n+1}+32^{4n+1}+2007\\ \\vdots\\ 22\\), \\(\\forall n\\in\\mathbb{N}\\).
+</div>
+<div class="fbox">
+  \\(2^{10}\\equiv1,\\ 3^{10}\\equiv1\\pmod{11}\\) (Fermat). Rút gọn số mũ modulo 10, thay vào được biểu thức \\(\\equiv2^3+3^2+5=22\\equiv0\\pmod{11}\\). Biểu thức cũng là số chẵn, mà \\((2,11)=1\\Rightarrow\\) chia hết cho \\(22\\). (đpcm)
+</div>
+<div class="fbox amber">
+  <strong>VD8 (nhiều mô-đun):</strong> Chứng minh \\(a_1+\\cdots+a_{2016}\\ \\vdots\\ 30 \\Leftrightarrow a_1^5+\\cdots+a_{2016}^5\\ \\vdots\\ 30\\).
+</div>
+<div class="fbox">
+  Với mọi \\(a\\) nguyên dương: \\(a^2\\equiv a\\pmod2\\Rightarrow a^5\\equiv a\\pmod2\\); \\(a^3\\equiv a\\pmod3\\Rightarrow a^5\\equiv a\\pmod3\\); \\(a^5\\equiv a\\pmod5\\) (Fermat). Vì \\(2,3,5\\) đôi một nguyên tố cùng nhau \\(\\Rightarrow a^5\\equiv a\\pmod{30}\\). Cộng cho 2016 số \\(\\Rightarrow(\\sum a_i^5)-(\\sum a_i)\\ \\vdots\\ 30\\). (đpcm)
+</div>
+<div class="fbox amber">
+  <strong>VD9 (Euler):</strong> Tồn tại \\(k\\in\\mathbb{N}\\) sao cho \\(1983^k-1\\ \\vdots\\ 10^5\\)? (HSG toàn quốc 1983)
+</div>
+<div class="fbox">
+  \\((1983,10^5)=1\\Rightarrow\\) theo Euler \\(1983^{\\varphi(10^5)}\\equiv1\\pmod{10^5}\\). \\(\\varphi(10^5)=10^5(1-\\tfrac12)(1-\\tfrac15)=4\\times10^4\\). Vậy \\(k=4\\times10^4\\).
+</div>
+</div>
+
+<div class="cb"><div class="cb-heading">8. Dạng 5 — Bài toán khác</div>
+<div class="fbox amber">
+  <strong>VD10:</strong> Chứng minh \\(1^{4k}+2^{4k}+3^{4k}+4^{4k}\\) không chia hết cho 5.
+</div>
+<div class="fbox">
+  Fermat bé (\\(p=5\\)): \\(a^4\\equiv1\\pmod5\\) với \\(a=1,2,3,4\\Rightarrow a^{4k}\\equiv1\\). Tổng \\(\\equiv4\\pmod5\\ne0\\). (đpcm)
+</div>
+<div class="fbox amber">
+  <strong>VD11:</strong> Với mỗi số nguyên tố \\(p\\), tồn tại vô số \\(n\\) sao cho \\(2^n-n\\ \\vdots\\ p\\). (Canada 1983)
+</div>
+<div class="fbox">
+  \\(p=2\\): chọn \\(n=2k\\). \\(p\\ne2\\): \\((2,p)=1\\Rightarrow2^{p-1}\\equiv1\\pmod p\\) (Fermat). Với \\(n=(p-1)\\cdot2^k\\) (\\(k\\ge2\\)): \\(2^n=2^{(p-1)2^k}\\equiv1\\pmod p\\) và \\(n=(p-1)2^k\\equiv1\\pmod p\\) (vì \\((p-1)\\equiv-1\\), \\(2^k\\) chẵn lớn), suy ra \\(2^n-n\\equiv0\\pmod p\\) cho vô số \\(k\\). (đpcm)
+</div>
+</div>
+
+<div class="note"><strong>Ghi chú chung:</strong> Kỹ thuật cốt lõi là quy các số lớn về đồng dư với số có giá trị tuyệt đối nhỏ nhất (tốt nhất \\(\\pm1\\)), rồi nâng lũy thừa hoặc nhân các đồng dư thức. Kết hợp Fermat/Wilson/Euler khi số mũ lớn hoặc mô-đun là số nguyên tố (lũy thừa nguyên tố).</div>`;
 
 const BOOK_DATA = {
   'ket-noi': {
