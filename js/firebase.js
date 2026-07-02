@@ -151,5 +151,29 @@ window._setupRealtimeListeners = function(){
 };
 
 
+// Collection: flags/{exerciseId_userId} — báo lỗi bài tập.
+// Doc ID ghép exerciseId+userId → mỗi người dùng chỉ có 1 báo cáo/bài tập,
+// báo lại sẽ ghi đè mô tả cũ (không tạo bản ghi trùng).
+window.fbFlagExercise = async function(flag){
+  const id = `${flag.exerciseId}_${flag.userId}`;
+  await setDoc(doc(db,'flags', id), {...flag, id});
+};
+
+window.fbGetFlags = async function(){
+  const snap = await getDocs(collection(db,'flags'));
+  return snap.docs.map(d=>({id:d.id,...d.data()}));
+};
+
+window.fbResolveFlag = async function(flagId){
+  const snap = await getDocs(collection(db,'flags'));
+  const target = snap.docs.find(d=>d.id===flagId);
+  if(!target) return;
+  await setDoc(doc(db,'flags', flagId), {...target.data(), status:'resolved', resolvedAt:Date.now()});
+};
+
+window.fbDeleteFlag = async function(flagId){
+  await deleteDoc(doc(db,'flags', flagId));
+};
+
 // Signal app that Firebase is fully ready
 window.dispatchEvent(new Event('firebase-ready'));

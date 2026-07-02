@@ -715,10 +715,11 @@ function openExercise(id,diff){
           <span>📆 Ngày đăng: <strong style="color:var(--text2)">${_exDate(e.createdAt)}</strong></span>
         </div>
       </div>
-      ${e._custom?`<div class="ex-detail-actions">
-      <button class="edit-btn" onclick="editExercise('${e.id}','${diff}')"><i class="ti ti-pencil" style="font-size:13px"></i> Sửa</button>
-      <button class="del-btn" onclick="deleteExercise('${e.id}','${diff}')"><i class="ti ti-trash" style="font-size:13px"></i> Xóa</button>
-    </div>`:''}
+      <div class="ex-detail-actions">
+        ${window.Clerk?.user?`<button class="flag-btn" onclick="openFlagModal('${e.id}','${diff}')"><i class="ti ti-flag" style="font-size:13px"></i> Báo lỗi</button>`:''}
+        ${e._custom?`<button class="edit-btn" onclick="editExercise('${e.id}','${diff}')"><i class="ti ti-pencil" style="font-size:13px"></i> Sửa</button>
+        <button class="del-btn" onclick="deleteExercise('${e.id}','${diff}')"><i class="ti ti-trash" style="font-size:13px"></i> Xóa</button>`:''}
+      </div>
     </div>
     <div class="ex-detail-question">${e.q}</div>
     <div class="ex-detail-btns">
@@ -952,6 +953,30 @@ function injectEditExerciseStyles(){
 .dup-item-match{font-weight:700;color:var(--text)}
 .dup-item-score{color:var(--text3);margin-left:auto;font-size:.75rem}
 .dup-actions{display:flex;justify-content:flex-end;gap:.6rem;margin-top:1rem}
+/* ── Flag feature ── */
+.flag-btn{display:flex;align-items:center;gap:5px;padding:7px 14px;border:1.5px solid rgba(217,119,6,.3);border-radius:var(--radius-sm);background:rgba(217,119,6,.06);color:#b45309;font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;transition:background .15s}
+.flag-btn:hover{background:rgba(217,119,6,.14)}
+.admin-tab-badge{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:#e11d48;color:#fff;font-size:.68rem;font-weight:800;margin-left:4px}
+.flag-overlay{position:fixed;inset:0;background:rgba(15,15,20,.6);display:flex;align-items:center;justify-content:center;z-index:1150;opacity:0;pointer-events:none;transition:opacity .18s;padding:20px}
+.flag-overlay.open{opacity:1;pointer-events:auto}
+.flag-modal{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);width:100%;max-width:480px;padding:1.5rem}
+.flag-modal-title{font-size:1rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px;margin-bottom:.9rem}
+.flag-modal textarea{width:100%;min-height:90px;padding:10px 13px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;font-size:.87rem;line-height:1.5;resize:vertical}
+.flag-modal textarea:focus{outline:none;border-color:#b45309}
+.flag-modal-actions{display:flex;justify-content:flex-end;gap:.6rem;margin-top:1rem}
+.flag-submit-btn{padding:9px 18px;background:#b45309;border:none;border-radius:var(--radius-sm);color:#fff;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;cursor:pointer}
+.flag-submit-btn:hover{opacity:.9}
+.flag-submit-btn:disabled{opacity:.6;cursor:not-allowed}
+.flag-item{border:1.5px solid rgba(217,119,6,.25);border-radius:var(--radius-sm);padding:.85rem 1rem;margin-bottom:.75rem;background:rgba(217,119,6,.03)}
+.flag-item-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:.4rem}
+.flag-item-ex-title{font-weight:800;color:var(--text);font-size:.88rem}
+.flag-item-by{font-size:.76rem;color:var(--text3);margin-left:auto}
+.flag-item-desc{font-size:.85rem;color:var(--text2);background:var(--bg);border-radius:6px;padding:.6rem .8rem;margin-bottom:.6rem;white-space:pre-wrap}
+.flag-item-actions{display:flex;gap:.5rem;flex-wrap:wrap}
+.flag-act-btn{display:flex;align-items:center;gap:5px;padding:6px 13px;border-radius:var(--radius-sm);font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;border:1.5px solid var(--border);background:var(--bg)}
+.flag-act-btn.view:hover{border-color:var(--primary);color:var(--primary)}
+.flag-act-btn.edit:hover{border-color:var(--primary);color:var(--primary)}
+.flag-act-btn.dismiss:hover{border-color:var(--teal);color:var(--teal)}
 `;
   const tag=document.createElement('style');
   tag.id='edit-ex-styles';
@@ -964,9 +989,146 @@ document.addEventListener('keydown',e=>{
     if(ov&&ov.classList.contains('open'))closeEditExercise();
     const hv=document.getElementById('hist-overlay');
     if(hv&&hv.classList.contains('open'))closeHistoryModal();
+    const fv=document.getElementById('flag-overlay');
+    if(fv&&fv.classList.contains('open'))closeFlagModal();
   }
 });
 injectEditExerciseStyles();
+
+/* ═══════════════════════════════════
+   FLAG EXERCISE (báo lỗi bài tập)
+   Collection: flags/{exerciseId_userId} — mỗi người dùng chỉ có 1 flag/bài tập,
+   báo lại sẽ ghi đè mô tả cũ thay vì tạo bản ghi mới.
+═══════════════════════════════════ */
+function openFlagModal(exerciseId, diff){
+  const user = window.Clerk?.user;
+  if(!user){ showToast('Bạn cần đăng nhập để báo lỗi!', false); return; }
+  let ov=document.getElementById('flag-overlay');
+  if(!ov){
+    ov=document.createElement('div');
+    ov.id='flag-overlay';
+    ov.className='flag-overlay';
+    ov.onclick=ev=>{if(ev.target===ov)closeFlagModal();};
+    ov.innerHTML='<div class="flag-modal" id="flag-modal"></div>';
+    document.body.appendChild(ov);
+  }
+  document.getElementById('flag-modal').innerHTML=`
+    <div class="flag-modal-title"><i class="ti ti-flag" style="color:#b45309"></i> Báo lỗi bài tập</div>
+    <textarea id="flag-desc" placeholder="Mô tả ngắn gọn lỗi bạn thấy: sai đề, sai đáp án, hình vẽ lỗi, lời giải không đúng..."></textarea>
+    <div class="flag-modal-actions">
+      <button class="cancel-btn" onclick="closeFlagModal()">Hủy</button>
+      <button class="flag-submit-btn" id="flag-submit-btn" onclick="submitFlag('${exerciseId}','${diff}')"><i class="ti ti-send" style="font-size:13px"></i> Gửi báo cáo</button>
+    </div>`;
+  ov.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeFlagModal(){
+  const ov=document.getElementById('flag-overlay');
+  if(ov)ov.classList.remove('open');
+  document.body.style.overflow='';
+}
+
+async function submitFlag(exerciseId, diff){
+  const user=window.Clerk?.user;
+  if(!user){ showToast('Bạn cần đăng nhập!', false); return; }
+  const desc=document.getElementById('flag-desc').value.trim();
+  if(!desc){ showToast('Vui lòng mô tả lỗi bạn thấy!', false); return; }
+  if(desc.length>500){ showToast('Mô tả quá dài (tối đa 500 ký tự)!', false); return; }
+  const allEx=getAllExercisesFlat();
+  const ex=allEx.find(x=>x.id===exerciseId);
+  const userName=_currentAuthorName();
+  const btn=document.getElementById('flag-submit-btn');
+  if(btn){btn.disabled=true;btn.textContent='Đang gửi...';}
+  try{
+    await window.fbFlagExercise({
+      exerciseId, diff,
+      exerciseTitle: ex?.title||ex?.q?.slice(0,60)||'',
+      userId:user.id, userName, desc,
+      createdAt:Date.now(), status:'open'
+    });
+    showToast('Đã gửi báo cáo, cảm ơn bạn!');
+    closeFlagModal();
+    refreshFlagsBadge();
+  }catch(e){
+    showToast('Lỗi gửi báo cáo: '+e.message,false);
+  }finally{
+    if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-send" style="font-size:13px"></i> Gửi báo cáo';}
+  }
+}
+
+let _flagsCache=[];
+
+async function loadFlagsList(){
+  const el=document.getElementById('flags-items');
+  if(!el)return;
+  try{
+    _flagsCache=await window.fbGetFlags();
+    renderFlagsList();
+    refreshFlagsBadge();
+  }catch(e){
+    el.innerHTML=`<div class="empty-state" style="padding:1.25rem"><i class="ti ti-alert-triangle"></i><p>Lỗi tải danh sách: ${e.message}</p></div>`;
+  }
+}
+
+function renderFlagsList(){
+  const el=document.getElementById('flags-items');
+  if(!el)return;
+  const open=_flagsCache.filter(f=>f.status==='open');
+  if(!open.length){
+    el.innerHTML='<div class="empty-state" style="padding:1.25rem"><i class="ti ti-mood-smile"></i><p>Không có báo cáo nào đang chờ xử lý 🎉</p></div>';
+    return;
+  }
+  el.innerHTML=open.map(f=>`
+    <div class="flag-item" id="flag-${f.id}">
+      <div class="flag-item-head">
+        <span class="flag-item-ex-title">${f.exerciseTitle||'(không có tiêu đề)'}</span>
+        <span class="flag-item-by">bởi ${f.userName||'?'} · ${_exDate(f.createdAt)}</span>
+      </div>
+      <div class="flag-item-desc">${(f.desc||'').replace(/</g,'&lt;')}</div>
+      <div class="flag-item-actions">
+        <button class="flag-act-btn view" onclick="viewFlaggedExercise('${f.exerciseId}','${f.diff}')"><i class="ti ti-eye" style="font-size:13px"></i> Xem bài tập</button>
+        <button class="flag-act-btn edit" onclick="editFlaggedExercise('${f.exerciseId}','${f.diff}')"><i class="ti ti-pencil" style="font-size:13px"></i> Sửa</button>
+        <button class="flag-act-btn dismiss" onclick="resolveFlag('${f.id}')"><i class="ti ti-check" style="font-size:13px"></i> Đã xử lý</button>
+      </div>
+    </div>`).join('');
+}
+
+async function refreshFlagsBadge(){
+  try{
+    const flags=await window.fbGetFlags();
+    const openCount=flags.filter(f=>f.status==='open').length;
+    const badge=document.getElementById('flags-count-badge');
+    if(badge){
+      if(openCount>0){badge.textContent=openCount;badge.style.display='inline-flex';}
+      else badge.style.display='none';
+    }
+  }catch(e){/* silent — badge is non-critical */}
+}
+
+function viewFlaggedExercise(exerciseId, diff){
+  const normDiff=diff==='pro'?'hard':diff;
+  showSection('exercises');
+  openExercise(exerciseId, normDiff);
+}
+
+function editFlaggedExercise(exerciseId, diff){
+  const normDiff=diff==='pro'?'hard':diff;
+  editExercise(exerciseId, normDiff);
+}
+
+async function resolveFlag(flagId){
+  if(!isAdmin){showToast('Bạn không có quyền!',false);return;}
+  try{
+    await window.fbResolveFlag(flagId);
+    _flagsCache=_flagsCache.map(f=>f.id===flagId?{...f,status:'resolved'}:f);
+    renderFlagsList();
+    refreshFlagsBadge();
+    showToast('Đã đánh dấu xử lý!');
+  }catch(e){
+    showToast('Lỗi: '+e.message,false);
+  }
+}
 
 /* ═══════════════════════════════════
    VERSION HISTORY
@@ -1183,6 +1345,7 @@ function renderAdminContent(){
       <div class="admin-tab" onclick="setAdminTab('manage')" id="atab-manage"><i class="ti ti-list"></i> Nội dung đã thêm</div>
       <div class="admin-tab" onclick="setAdminTab('import')" id="atab-import"><i class="ti ti-file-upload"></i> Nhập hàng loạt</div>
       <div class="admin-tab" onclick="setAdminTab('add-quiz')" id="atab-add-quiz"><i class="ti ti-list-check"></i> Trắc nghiệm</div>
+      <div class="admin-tab" onclick="setAdminTab('flags')" id="atab-flags"><i class="ti ti-flag"></i> Bài tập bị báo lỗi <span id="flags-count-badge" class="admin-tab-badge" style="display:none"></span></div>
     </div>
     <div class="admin-form active" id="aform-add-ex">
       <div class="form-row trio">
@@ -1350,6 +1513,12 @@ function renderAdminContent(){
       </div>
       <button class="submit-btn" onclick="submitQuizQuestion()"><i class="ti ti-send"></i> Đăng câu hỏi</button>
     </div>
+    <div class="admin-form" id="aform-flags">
+      <div class="admin-list" id="flags-list-wrap">
+        <div class="admin-list-title"><i class="ti ti-flag"></i> Bài tập bị báo lỗi</div>
+        <div id="flags-items"><div class="cmt-loading"><i class="ti ti-loader-2 spin"></i> Đang tải...</div></div>
+      </div>
+    </div>
   </div>`;
 }
 
@@ -1360,6 +1529,7 @@ function setAdminTab(name){
   document.getElementById('aform-'+name).classList.add('active');
   if(name==='manage'){renderManageList();loadQuizManageList();}
   if(name==='import')setTimeout(initImportDragDrop,50);
+  if(name==='flags')loadFlagsList();
 }
 
 async function submitExercise(){
@@ -1466,3 +1636,4 @@ function renderManageList(){
 ═══════════════════════════════════ */
 renderTopics();
 renderExercises();
+if(typeof isAdmin!=='undefined'&&isAdmin&&typeof refreshFlagsBadge==='function') refreshFlagsBadge();
